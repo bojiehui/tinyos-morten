@@ -1,11 +1,8 @@
-This contains Morten's TinyOS Tree which is a replica of the main
-TinyOS tree from:
-
-http://code.google.com/p/tinyos-main
-
-we added features.
+This contains Morten's TinyOS Tree which is an extended version of the
+main TinyOS tree from http://code.google.com/p/tinyos-main
 
 The current features include:
+
 
 
 
