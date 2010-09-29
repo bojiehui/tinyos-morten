@@ -52,8 +52,6 @@ def loadLinkModel(t, file):
                 #print " ", s[1], " ", s[2], " ", s[3];
                 r.setNoise(int(s[1]), float(s[2]), float(s[3]))
                 nodes.append(int(s[1]))
-            #if int(s[1])>nodecount:
-                #nodecount = int(s[1])
     return nodes
 
 def loadNoiseModel(t, file, nodes):
@@ -74,7 +72,5 @@ def loadNoiseModel(t, file, nodes):
 def initializeNodes(t, nodes):
     #print "Initializing nodes..."
     for i in nodes:
-      #print "nr: ", i
-      #t.getNode(i).bootAtTime((31 + t.ticksPerSecond() / 10) * i + 1);
       t.getNode(i).bootAtTime((31 + t.ticksPerSecond() / 10) + 1);
       
