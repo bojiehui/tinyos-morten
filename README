@@ -3,6 +3,6 @@ main TinyOS tree from http://code.google.com/p/tinyos-main
 
 The current features include:
 
-
-
+- TOSSIM transforms printf(...) statements into dbg("printf",...) statements
+- tinyos/tossim/TossimHelp.py lib added to make TOSSIM scripting easier
 
