@@ -59,14 +59,19 @@ configuration MainC {
 }
 implementation {
   components PlatformC, RealMainP, TinySchedulerC;
-  components PrintfC;
 
   RealMainP.Scheduler -> TinySchedulerC;
   RealMainP.PlatformInit -> PlatformC;
-  PrintfC.MainBoot -> RealMainP;
 
   // Export the SoftwareInit and Booted for applications
   SoftwareInit = RealMainP.SoftwareInit;
+
+#ifndef TOSSIM
+  components PrintfC;
+  PrintfC.MainBoot -> RealMainP;
   Boot = PrintfC;
+#else
+	Boot = RealMainP;
+#endif
 }
 

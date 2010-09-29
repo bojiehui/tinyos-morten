@@ -40,6 +40,13 @@
 #ifndef PRINTF_H
 #define PRINTF_H
 
+#ifdef TOSSIM
+
+#define printf(...) dbg("printf",__VA_ARGS__)
+#define printfflush() 
+
+#else
+
 #ifndef PRINTF_BUFFER_SIZE
 #define PRINTF_BUFFER_SIZE 250 
 #endif
@@ -78,6 +85,8 @@ typedef nx_struct printf_msg {
 enum {
   AM_PRINTF_MSG = 100,
 };
+
+#endif //TOSSIM
 
 #endif //PRINTF_H
 
