@@ -4,14 +4,15 @@ module PacketLinkTestP {
 
 	uses {
 		interface Boot;
-
 		interface Timer<TMilli> as Timer;
 
 		interface SplitControl as RadioControl;
 		interface AMSend as Send;
 		interface Receive;
-		interface PacketLink;
 		interface AMPacket;
+#ifdef PACKET_LINK        
+		interface PacketLink;
+#endif
 	}
 
 } implementation {
@@ -52,8 +53,10 @@ module PacketLinkTestP {
 			t->data[i] = i+1;
 		}
 
+#ifdef PACKET_LINK
 		call PacketLink.setRetries(&data, RETRIES);
 		call PacketLink.setRetryDelay(&data, DELAY);
+#endif
 
 		if(call Send.send(RECEIVER, &data, sizeof(test_msg_t))==SUCCESS) {
 			dataBusy = TRUE;
@@ -63,7 +66,11 @@ module PacketLinkTestP {
   event void Send.sendDone(message_t* msg, error_t error) {
 		dataBusy = FALSE;
 
-		if(error==SUCCESS && call PacketLink.wasDelivered(&data)) {
+		if(error==SUCCESS
+#ifdef PACKET_LINK
+           && call PacketLink.wasDelivered(&data)
+#endif
+           ) {
 			dbg("PacketLinkTest", "**** SENT **** \n");
 		} else {
 			dbg("PacketLinkTest", "**** FAILED **** \n");
