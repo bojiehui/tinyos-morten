@@ -1,0 +1,78 @@
+#include "PacketLinkTest.h"
+
+module PacketLinkTestP {
+
+	uses {
+		interface Boot;
+
+		interface Timer<TMilli> as Timer;
+
+		interface SplitControl as RadioControl;
+		interface AMSend as Send;
+		interface Receive;
+		interface PacketLink;
+		interface AMPacket;
+	}
+
+} implementation {
+	
+	message_t data;
+	bool dataBusy;
+
+	uint32_t seqno;
+
+	/********** Boot **********/
+
+	event void Boot.booted() {
+		call RadioControl.start();
+		dbg("PacketLinkTest", "booted\n");
+	}
+
+	event void RadioControl.startDone(error_t error) {
+		if(TOS_NODE_ID!=RECEIVER) {
+			call Timer.startPeriodic(PERIOD);
+		}
+	}
+
+  event void RadioControl.stopDone(error_t error) {
+
+	}
+
+	/********** Data **********/
+
+	event void Timer.fired() {
+		uint8_t i;
+		test_msg_t* t = call Send.getPayload(&data, sizeof(test_msg_t));
+
+		if(dataBusy) {
+			return;
+		}
+
+		for(i=0; i<sizeof(test_msg_t); i++) {
+			t->data[i] = i+1;
+		}
+
+		call PacketLink.setRetries(&data, RETRIES);
+		call PacketLink.setRetryDelay(&data, DELAY);
+
+		if(call Send.send(RECEIVER, &data, sizeof(test_msg_t))==SUCCESS) {
+			dataBusy = TRUE;
+		}
+	}
+
+  event void Send.sendDone(message_t* msg, error_t error) {
+		dataBusy = FALSE;
+
+		if(error==SUCCESS && call PacketLink.wasDelivered(&data)) {
+			dbg("PacketLinkTest", "**** SENT **** \n");
+		} else {
+			dbg("PacketLinkTest", "**** FAILED **** \n");
+		}
+
+	}
+
+  event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len) {
+		dbg("PacketLinkTest", "**** Received ****\n");
+		return msg;
+	}
+}
