@@ -312,8 +312,8 @@ PyObject* listFromArray(char* type, char* ptr, int len) {
         }
       }
       else {
-        app->variableNames[i] = "<bad string>";
-        app->variableTypes[i] = "<bad string>";
+        app->variableNames[i] = (char*)"<bad string>";
+        app->variableTypes[i] = (char*)"<bad string>";
       }
     }
 
