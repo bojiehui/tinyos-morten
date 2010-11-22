@@ -13,8 +13,6 @@ push( @includes, qw(
   %T/platforms/iris
   %T/platforms/micaz
   %T/platforms/mica
-  %T/platforms/iris/chips/rf230
-  %T/chips/rf230
   %T/lib/rfxlink
   %T/lib/rfxlink/layers
   %T/lib/rfxlink/util
