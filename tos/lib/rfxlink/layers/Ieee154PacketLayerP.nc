@@ -98,7 +98,11 @@ implementation
 
 	async command void Ieee154PacketLayer.createDataFrame(message_t* msg)
 	{
+		bool ackRequired = call Ieee154PacketLayer.getAckRequired(msg);
+		bool framePending = call Ieee154PacketLayer.getFramePending(msg); 
 		getHeader(msg)->fcf = IEEE154_DATA_FRAME_VALUE;
+		call Ieee154PacketLayer.setAckRequired(msg, ackRequired);
+		call Ieee154PacketLayer.setFramePending(msg, framePending);
 	}
 
 	async command bool Ieee154PacketLayer.isAckFrame(message_t* msg)
@@ -280,6 +284,8 @@ implementation
 
 	async command void RadioPacket.clear(message_t* msg)
 	{
+		call Ieee154PacketLayer.setAckRequired(msg, FALSE);
+		call Ieee154PacketLayer.setFramePending(msg, FALSE);
 		call Ieee154PacketLayer.createDataFrame(msg);
 		call SubPacket.clear(msg);
 	}
