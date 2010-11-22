@@ -131,7 +131,7 @@ implementation
 
 	async command bool Ieee154PacketLayer.getAckRequired(message_t* msg)
 	{
-		return getHeader(msg)->fcf & (1 << IEEE154_FCF_ACK_REQ);
+		return getHeader(msg)->fcf & (1 << IEEE154_FCF_ACK_REQ) ? TRUE : FALSE;
 	}
 
 	async command void Ieee154PacketLayer.setAckRequired(message_t* msg, bool ack)
@@ -144,7 +144,7 @@ implementation
 
 	async command bool Ieee154PacketLayer.getFramePending(message_t* msg)
 	{
-		return getHeader(msg)->fcf & (1 << IEEE154_FCF_FRAME_PENDING);
+		return getHeader(msg)->fcf & (1 << IEEE154_FCF_FRAME_PENDING) ? TRUE : FALSE;
 	}
 
 	async command void Ieee154PacketLayer.setFramePending(message_t* msg, bool pending)
