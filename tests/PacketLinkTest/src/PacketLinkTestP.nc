@@ -45,6 +45,8 @@ module PacketLinkTestP {
 		uint8_t i;
 		test_msg_t* t = call Send.getPayload(&data, sizeof(test_msg_t));
 
+        dbg("PacketLinkTest", "Fired!\n");
+
 		if(dataBusy) {
 			return;
 		}

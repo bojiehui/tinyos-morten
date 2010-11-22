@@ -12,7 +12,9 @@ configuration PacketLinkTestC {
 		new AMSenderC(AM_TEST_MSG) as Sender,
 		new AMReceiverC(AM_TEST_MSG) as Receiver;
 
-#if defined(PLATFORM_TELOSB) || defined(PLATFORM_MICAZ)
+#if defined(TOSSIM)
+  components TossimRadioC as PlatformActiveMessageC;
+#elif defined(PLATFORM_TELOSB) || defined(PLATFORM_MICAZ)
   components CC2420ActiveMessageC as PlatformActiveMessageC;
 #elif defined (PLATFORM_MICA2) || defined (PLATFORM_MICA2DOT)
   components CC1000ActiveMessageC as PlatformActiveMessageC;

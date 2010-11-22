@@ -12,6 +12,14 @@ loadNoiseModel(t, "meyer.txt", nodes)
 print "Setting debug channels..."
 t.addChannel("PacketLinkTest", sys.stdout);
 
+#t.addChannel("RadioAlarm.trace", sys.stdout);
+#t.addChannel("RadioAlarm.debug", sys.stdout);
+t.addChannel("RadioAlarm.error", sys.stdout);
+
+#t.addChannel("Driver.trace", sys.stdout);
+#t.addChannel("Driver.debug", sys.stdout);
+t.addChannel("Driver.error", sys.stdout);
+
 #t.addChannel("CC2420ActiveMessage", sys.stdout);
 #t.addChannel("CC2420Csma", sys.stdout);
 #t.addChannel("CC2420Transmit", sys.stdout);
@@ -21,7 +29,7 @@ initializeNodes(t, nodes)
 
 print "Running simulation (press Ctrl-c to stop)..."
 try:
-    for i in range(0,200):
+    for i in range(0,400):
         t.runNextEvent()
 
 except KeyboardInterrupt:
