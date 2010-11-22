@@ -18,13 +18,18 @@ module LplTestP {
 	message_t data;
 	bool dataBusy;
 
-	uint32_t seqno;
 
 	/********** Boot **********/
 
 	event void Boot.booted() {
-		dbg("App", "Booted\n");
-		call RadioControl.start();
+      lpltest_msg_t* msg = (lpltest_msg_t*)call Send.getPayload(&data, sizeof(lpltest_msg_t));
+      uint8_t i;
+      
+      dbg("App", "Booted\n");
+      for(i=0; i<TOSH_DATA_LENGTH; i++) {
+        msg->data[i] = i;
+      }
+      call RadioControl.start();
 	}
 
 	event void RadioControl.startDone(error_t error) {
@@ -41,7 +46,7 @@ module LplTestP {
 	/********** Data **********/
 
 	event void Timer.fired() {
-		lpltest_msg_t* d = (lpltest_msg_t*)call Send.getPayload(&data, sizeof(lpltest_msg_t));
+      //lpltest_msg_t* d = (lpltest_msg_t*)call Send.getPayload(&data, sizeof(lpltest_msg_t));
 
 		dbg("App", "Fired!\n");
 
@@ -52,7 +57,6 @@ module LplTestP {
 
 		call Acks.requestAck(&data);
 
-		d->seqno = ++seqno;
 		
 		if(call Send.send(RECEIVER, &data, sizeof(lpltest_msg_t))==SUCCESS) {
 			dataBusy = TRUE;
@@ -72,7 +76,7 @@ module LplTestP {
 	}
 
   event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len) {
-		lpltest_msg_t*	d = ((lpltest_msg_t*)payload);
+    //lpltest_msg_t*	d = ((lpltest_msg_t*)payload);
 		dbg("App", "RECEIVED!\n");
 		call Leds.led2Toggle();
 		return msg;

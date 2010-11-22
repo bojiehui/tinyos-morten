@@ -9,8 +9,7 @@ enum {
 };
 
 typedef nx_struct lpltest_msg {
-	nx_uint32_t seqno;
-  nx_uint8_t values[TOSH_DATA_LENGTH-sizeof(nx_uint32_t)];
+  nx_uint8_t data[TOSH_DATA_LENGTH];
 } lpltest_msg_t;
 
 #endif
