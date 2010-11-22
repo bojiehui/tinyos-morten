@@ -30,48 +30,53 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * Author: Miklos Maroti
+ * Author: Morten Tranberg Hansen (TOSSIM version)
  */
 
 #include <RadioConfig.h>
 
-configuration ActiveMessageC
+configuration TimeSyncMessageC
 {
 	provides
 	{
 		interface SplitControl;
 
-		interface AMSend[uint8_t id];
 		interface Receive[uint8_t id];
-		interface Receive as Snoop[uint8_t id];
-
+		interface Receive as Snoop[am_id_t id];
 		interface Packet;
 		interface AMPacket;
 
-		interface PacketAcknowledgements;
-		interface LowPowerListening;
-#ifdef PACKET_LINK
-		interface PacketLink;
-#endif
+		interface PacketTimeStamp<TRadio, uint32_t> as PacketTimeStampRadio;
+		interface TimeSyncAMSend<TRadio, uint32_t> as TimeSyncAMSendRadio[am_id_t id];
+		interface TimeSyncPacket<TRadio, uint32_t> as TimeSyncPacketRadio;
+
+		interface PacketTimeStamp<TMilli, uint32_t> as PacketTimeStampMilli;
+		interface TimeSyncAMSend<TMilli, uint32_t> as TimeSyncAMSendMilli[am_id_t id];
+		interface TimeSyncPacket<TMilli, uint32_t> as TimeSyncPacketMilli;
 	}
 }
 
 implementation
 {
-	components RF230ActiveMessageC as MessageC;
+	components TossimRadioC, TimeSyncMessageLayerC;
+  
+	SplitControl	= TossimRadioC;
+	AMPacket	= TimeSyncMessageLayerC;
+  	Receive		= TimeSyncMessageLayerC.Receive;
+	Snoop		= TimeSyncMessageLayerC.Snoop;
+	Packet		= TimeSyncMessageLayerC;
 
-	SplitControl = MessageC;
+	PacketTimeStampRadio	= TossimRadioC;
+	TimeSyncAMSendRadio	= TimeSyncMessageLayerC;
+	TimeSyncPacketRadio	= TimeSyncMessageLayerC;
 
-	AMSend = MessageC;
-	Receive = MessageC.Receive;
-	Snoop = MessageC.Snoop;
+	PacketTimeStampMilli	= TossimRadioC;
+	TimeSyncAMSendMilli	= TimeSyncMessageLayerC;
+	TimeSyncPacketMilli	= TimeSyncMessageLayerC;
 
-	Packet = MessageC;
-	AMPacket = MessageC;
+	TimeSyncMessageLayerC.PacketTimeStampRadio -> TossimRadioC;
+	TimeSyncMessageLayerC.PacketTimeStampMilli -> TossimRadioC;
 
-	PacketAcknowledgements = MessageC;
-	LowPowerListening = MessageC;
-#ifdef PACKET_LINK
-	PacketLink = MessageC;
-#endif
-
+	TimeSyncMessageLayerC.LocalTimeRadio -> TossimRadioC;
+	TimeSyncMessageLayerC.PacketTimeSyncOffset -> TossimRadioC.PacketTimeSyncOffset;
 }

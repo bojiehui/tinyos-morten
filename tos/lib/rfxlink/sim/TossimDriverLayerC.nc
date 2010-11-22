@@ -31,47 +31,73 @@
 
 /**
  * @author Morten Tranberg Hansen
- * @date   November 9 2010
+ * @date   November 20 2010
  */
 
-#include <Tasklet.h>
-
-generic module TossimRadioAdaptorP() {
-
+configuration TossimDriverLayerC {
+  
   provides {
-    // Bare -> Radio
-    interface BareReceive;
-
-    // Radio -> Bare
+    interface RadioState;
+    interface RadioSend;
     interface RadioReceive;
-  }
+    interface RadioCCA;
+    interface RadioPacket;
+    
+    interface PacketField<uint8_t> as PacketTransmitPower;
+    interface PacketField<uint8_t> as PacketRSSI;
+    interface PacketField<uint8_t> as PacketTimeSyncOffset;
+    interface PacketField<uint8_t> as PacketLinkQuality;
+    
+    interface LocalTime<TRadio> as LocalTimeRadio;
 
-  uses {
-    // Bare -> Radio
-    interface RadioReceive as SubRadioReceive;
-
-    // Radio -> Bare
-    interface BareReceive as SubBareReceive;
-  }
-
-} implementation {
-
-  /***************** Bare -> Radio ****************/	
-
-  tasklet_async event bool SubRadioReceive.header(message_t* msg) {
-    return TRUE;
+#ifdef TOSSIM_HARDWARE_ACK
+    interface PacketAcknowledgements;
+#endif
   }
   
-  tasklet_async event message_t* SubRadioReceive.receive(message_t* msg) {
-    return signal BareReceive.receive(msg);
-  }
+  uses {
+    interface Ieee154PacketLayer;
+    interface PacketTimeStamp<TRadio, uint32_t>;
+  }  
+  
+} implementation {
 
-  /***************** Radio -> Bare ****************/	
+  components
+    MainC,
+    TossimDriverLayerP as Driver,
+    new MetadataFlagC() as RSSIFlagC,
+    new MetadataFlagC() as TimeSyncFlagC,
+    RadioAlarmC,
+    CpmModelC as Model;
 
-  event message_t* SubBareReceive.receive(message_t* msg) {
-    dbg("RF230", "radio receice\n");
-    signal RadioReceive.header(msg);
-    return signal RadioReceive.receive(msg);
-  }
+  MainC.SoftwareInit -> Driver;
+  Driver.RSSIFlag -> RSSIFlagC;
+  Driver.TimeSyncFlag -> TimeSyncFlagC;
+  Driver.Ieee154PacketLayer = Ieee154PacketLayer;
+  Driver.PacketTimeStamp = PacketTimeStamp;
+  Driver.LocalTime -> RadioAlarmC;
+  Driver.Model -> Model;
+
+#ifdef TOSSIM_HARDWARE_ACK
+  components
+    new MetadataFlagC() as AckReceivedFlagC;
+  Driver.AckReceivedFlag -> AckReceivedFlagC;
+  PacketAcknowledgements = Driver;
+#endif
+
+  RadioState = Driver;
+  RadioSend = Driver;
+  RadioReceive = Driver;
+  RadioCCA = Driver;
+  RadioPacket = Driver;
+
+  PacketTransmitPower = Driver.PacketTransmitPower;
+  PacketRSSI = Driver.PacketRSSI;
+  PacketTimeSyncOffset = Driver.PacketTimeSyncOffset;
+  PacketLinkQuality = Driver.PacketLinkQuality;
+
+  LocalTimeRadio = RadioAlarmC;
+
+
 
 }

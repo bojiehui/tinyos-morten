@@ -39,7 +39,7 @@
 #error "You cannot use ActiveMessageC with IEEE154FRAMES_ENABLED defined"
 #endif
 
-configuration RF230ActiveMessageC
+configuration ActiveMessageC
 {
 	provides 
 	{
@@ -48,6 +48,7 @@ configuration RF230ActiveMessageC
 		interface AMSend[am_id_t id];
 		interface Receive[am_id_t id];
 		interface Receive as Snoop[am_id_t id];
+		interface SendNotifier[am_id_t id];
 
 		interface Packet;
 		interface AMPacket;
@@ -58,29 +59,45 @@ configuration RF230ActiveMessageC
 		interface PacketLink;
 #endif
 
+		interface RadioChannel;
+
+		interface PacketField<uint8_t> as PacketLinkQuality;
+		interface PacketField<uint8_t> as PacketTransmitPower;
 		interface PacketField<uint8_t> as PacketRSSI;
+
+		interface LocalTime<TRadio> as LocalTimeRadio;
+		interface PacketTimeStamp<TRadio, uint32_t> as PacketTimeStampRadio;
+		interface PacketTimeStamp<TMilli, uint32_t> as PacketTimeStampMilli;
 	}
 }
 
 implementation
 {
-	components RF230RadioC;
+	components TossimRadioC;
 
-	SplitControl = RF230RadioC;
+	SplitControl = TossimRadioC;
 
-	AMSend = RF230RadioC;
-	Receive = RF230RadioC.Receive;
-	Snoop = RF230RadioC.Snoop;
+	AMSend = TossimRadioC;
+	Receive = TossimRadioC.Receive;
+	Snoop = TossimRadioC.Snoop;
+	SendNotifier = TossimRadioC;
 
-	Packet = RF230RadioC.PacketForActiveMessage;
-	AMPacket = RF230RadioC;
+	Packet = TossimRadioC.PacketForActiveMessage;
+	AMPacket = TossimRadioC;
 
-	PacketAcknowledgements = RF230RadioC;
-	LowPowerListening = RF230RadioC;
+	PacketAcknowledgements = TossimRadioC;
+	LowPowerListening = TossimRadioC;
 #ifdef PACKET_LINK
-	PacketLink = RF230RadioC;
+	PacketLink = TossimRadioC;
 #endif
 
-	PacketRSSI = RF230RadioC.PacketRSSI;
+	RadioChannel = TossimRadioC;
 
+	PacketLinkQuality = TossimRadioC.PacketLinkQuality;
+	PacketTransmitPower = TossimRadioC.PacketTransmitPower;
+	PacketRSSI = TossimRadioC.PacketRSSI;
+
+	LocalTimeRadio = TossimRadioC;
+	PacketTimeStampMilli = TossimRadioC;
+	PacketTimeStampRadio = TossimRadioC;
 }
