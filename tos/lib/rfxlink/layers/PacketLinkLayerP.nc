@@ -234,7 +234,7 @@ implementation {
     // printfUART("Signaling done with total retries at 0x%x\n", totalRetries);
 
     call DelayTimer.stop();
-    call PacketLink.setRetries(msg, totalRetries);
+    //call PacketLink.setRetries(msg, totalRetries);
     signal Send.sendDone(msg, error);
   }
 
