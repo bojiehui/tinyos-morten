@@ -172,7 +172,6 @@ call AckReceivedFlag.get(msg)
 
   void transmit_start(sim_event_t* evt) {
     sim_time_t duration;
-    am_addr_t dest;
 
     duration = 8 * getHeader(sending)->length;
     duration /= sim_csma_bits_per_symbol();
@@ -187,11 +186,9 @@ call AckReceivedFlag.get(msg)
     evt->handle = transmit_done;
 
     if(call Ieee154PacketLayer.isDataFrame(sending)) {
-      dest = call Ieee154PacketLayer.getDestAddr(sending);
-      dbg("Driver.debug", "Driver: Transmitting packet to %hu with ACK? %hhu\n", dest, call Ieee154PacketLayer.getAckRequired(sending));
+      dbg("Driver.debug", "Driver: Transmitting packet to %hu with ACK? %hhu\n", call Ieee154PacketLayer.getDestAddr(sending), call Ieee154PacketLayer.getAckRequired(sending));
     } else {
-      dest = TOS_BCAST_ADDR;
-      dbg("Driver.debug", "Driver: Transmitting ACK to %hu\n", dest);
+      dbg("Driver.debug", "Driver: Transmitting ACK to %hu\n", call Ieee154PacketLayer.getDestAddr(sending));
     }
 
     if(call PacketTimeSyncOffset.isSet(sending)) {
@@ -200,7 +197,7 @@ call AckReceivedFlag.get(msg)
       *(timesync_relative_t*)timesync = (*(timesync_absolute_t*)timesync) - call LocalTime.get();      
     }
 
-    call Model.putOnAirTo(dest, sending, call Ieee154PacketLayer.getAckRequired(sending), evt->time, 0.0, 0.0);
+    call Model.putOnAirTo(call Ieee154PacketLayer.getDestAddr(sending), sending, call Ieee154PacketLayer.getAckRequired(sending), evt->time, 0.0, 0.0);
 
     evt->time += (sim_csma_rxtx_delay() *  (sim_ticks_per_sec() / sim_csma_symbols_per_sec()));
 

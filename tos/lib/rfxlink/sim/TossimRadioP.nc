@@ -98,6 +98,7 @@ implementation
 	async command void SoftwareAckConfig.createAckPacket(message_t* data, message_t* ack)
 	{
 		call Ieee154PacketLayer.createAckReply(data, ack);
+		call Ieee154PacketLayer.setDestAddr(ack, call Ieee154PacketLayer.getSrcAddr(data));
 	}
 
 #ifndef SOFTWAREACK_TIMEOUT
