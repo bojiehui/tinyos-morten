@@ -254,7 +254,13 @@ call AckReceivedFlag.get(msg)
 
   event void Model.receive(message_t* msg) {
 
+#ifdef TOSSIM_HW_ADDRESS_RECOGNITION
+#warning "*** TOSSIM HARDWARE ADDRESS RECOGNITION ENABLED ***"
+    tossim_header_t* header = getHeader(msg);
+    if (running && !transmitting && (header->dest==TOS_NODE_ID || header->dest==TOS_BCAST_ADDR)) {
+#else
     if (running && !transmitting) {
+#endif
 
       memcpy(bufferPointer, msg, sizeof(message_t));
 
