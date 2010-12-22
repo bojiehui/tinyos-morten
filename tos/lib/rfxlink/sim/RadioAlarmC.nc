@@ -34,7 +34,7 @@
  * @date   November 20 2010
  */
 
-module RadioAlarmC {
+configuration RadioAlarmC {
 
   provides {
     interface RadioAlarm[uint8_t id];
@@ -42,107 +42,9 @@ module RadioAlarmC {
   }
 
 } implementation {
-
-  enum {
-    NO_CLIENT = 0xFF,
-    TICKS_PER_SECOND = 1048576ULL, 
-  }; 
-
-  uint8_t client = NO_CLIENT;
-  sim_event_t* currentEvent = NULL;;
-
-  sim_time_t clock_to_sim(sim_time_t t) {
-    t *= sim_ticks_per_sec();
-    t /= TICKS_PER_SECOND;
-    return t;
-  }
-
-  sim_time_t sim_to_clock(sim_time_t t) {
-    t *= TICKS_PER_SECOND;
-    t /= sim_ticks_per_sec();
-    return t;
-  }
-
-  /***************** RadioAlarm ****************/
-
-  tasklet_async command bool RadioAlarm.isFree[uint8_t id]() {
-    return client == NO_CLIENT;
-  }
-
-  void alarm_fired(sim_event_t* evt) {
-    if(!evt->cancelled) {
-      uint8_t temp = client;
-      dbg("RadioAlarm.debug", "RadioAlarm: fired for client %hhu\n", client);
-      client = NO_CLIENT;
-      signal RadioAlarm.fired[temp]();
-    } else {
-      dbg("RadioAlarm.debug", "RadioAlarm: event cancelled\n");
-    }
-  }
-
-  tasklet_async command void RadioAlarm.wait[uint8_t id](uint16_t timeout) {
-
-    if(client != NO_CLIENT) { 
-
-      dbgerror("RadioAlarm.error", "RadioAlarm: already being used by client %hhu\n", client);
-
-    } else {
-
-      sim_event_t* alarmEvent = sim_queue_allocate_event();
-
-      alarmEvent->time = sim_time() + clock_to_sim(timeout);
-      alarmEvent->force = FALSE;
-      alarmEvent->cancelled = FALSE;
-      alarmEvent->handle = alarm_fired;
-      alarmEvent->cleanup = sim_queue_cleanup_none;
-
-      client = id;
-      currentEvent = alarmEvent;
-
-      dbg("RadioAlarm.debug", "RadioAlarm: scheduling event with timeout %hu for client %hhu\n", timeout, client);
-      
-      sim_queue_insert(alarmEvent);
-
-    }
-
-  }
   
-  tasklet_async command void RadioAlarm.cancel[uint8_t id]() {
-
-    if(id==client) {
-      dbg("RadioAlarm.debug", "RadioAlarm: cancelling alarm for client %hhu\n", id);
-      currentEvent->cancelled = TRUE;
-      client = NO_CLIENT;
-    } else {
-      dbgerror("RadioAlarm.error", "RadioAlarm: cannot cancel alarm for client %hhu\n", id);
-    }
-
-  }
-  
-  async command uint16_t RadioAlarm.getNow[uint8_t id]() {
-    uint16_t now;    
-    sim_time_t elapsed = sim_time()-sim_mote_start_time(sim_node());
-    elapsed = sim_to_clock(elapsed);
-    now = (uint16_t)(elapsed & 0xFFFF);
-    dbg("RadioAlarm.trace", "RadioAlarm: now is  %hu\n", now);
-    return now;
-  }
-
-
-  /***************** LocalTime ****************/  
-
-  async command uint32_t LocalTime.get() {
-    uint32_t lt;
-    sim_time_t elapsed = sim_time()-sim_mote_start_time(sim_node());
-    elapsed = sim_to_clock(elapsed);
-    lt = (uint32_t)(elapsed & 0xFFFFFFFF);
-    dbg("RadioAlarm.trace", "RadioAlarm: localtime is %lu\n", lt);
-    return lt;
-  }
-
-
-  /***************** Defaults ****************/  
-
-  default tasklet_async event void RadioAlarm.fired[uint8_t id]() {}
+  components new RadioAlarmP();
+  RadioAlarm = RadioAlarmP;
+  LocalTime = RadioAlarmP;
 
 }
