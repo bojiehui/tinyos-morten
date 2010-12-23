@@ -36,7 +36,7 @@
 
 #include <TimeSyncMessageLayer.h>
 
-module TossimDriverLayerP {
+generic module TossimDriverLayerP() {
 
   provides {
     interface Init;
@@ -447,32 +447,6 @@ call AckReceivedFlag.get(msg)
     return call AckReceivedFlag.get(msg);
   }
 #endif
-
-  /***************** AM Injection Handling ****************/
-    
-  void active_message_deliver_handle(sim_event_t* evt) {
-    message_t* m = (message_t*)evt->data;
-    dbg("Packet", "Delivering packet to %i at %s\n", (int)sim_node(), sim_time_string());
-    signal Model.receive(m);
-  }
-  
-  sim_event_t* allocate_deliver_event(int node, message_t* msg, sim_time_t t) {
-    sim_event_t* evt = (sim_event_t*)malloc(sizeof(sim_event_t));
-    evt->mote = node;
-    evt->time = t;
-    evt->handle = active_message_deliver_handle;
-    evt->cleanup = sim_queue_cleanup_event;
-    evt->cancelled = 0;
-    evt->force = 0;
-    evt->data = msg;
-    return evt;
-  }
-  
-  void active_message_deliver(int node, message_t* msg, sim_time_t t) @C() @spontaneous() {
-    sim_event_t* evt = allocate_deliver_event(node, msg, t);
-    sim_queue_insert(evt);
-  }
-
 
   /***************** Defaults ****************/
   

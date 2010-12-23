@@ -75,10 +75,15 @@ implementation
 {
 	components TossimRadioC;
 
+	components AMPacketInjectorP;
+	AMPacketInjectorP.SubReceive -> TossimRadioC.Receive;
+	AMPacketInjectorP.AMPacket -> TossimRadioC;
+	AMPacketInjectorP.Packet -> TossimRadioC.PacketForActiveMessage;
+
 	SplitControl = TossimRadioC;
 
 	AMSend = TossimRadioC;
-	Receive = TossimRadioC.Receive;
+	Receive = AMPacketInjectorP;
 	Snoop = TossimRadioC.Snoop;
 	SendNotifier = TossimRadioC;
 

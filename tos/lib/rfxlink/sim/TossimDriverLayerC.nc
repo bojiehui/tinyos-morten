@@ -64,7 +64,7 @@ configuration TossimDriverLayerC {
 
   components
     MainC,
-    TossimDriverLayerP as Driver,
+    new TossimDriverLayerP() as Driver,
     new MetadataFlagC() as RSSIFlagC,
     new MetadataFlagC() as TimeSyncFlagC,
     RadioAlarmC,
