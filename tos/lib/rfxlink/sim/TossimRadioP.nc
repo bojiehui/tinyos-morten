@@ -37,7 +37,7 @@
 #include <RadioConfig.h>
 #include <Tasklet.h>
 
-module TossimRadioP
+generic module TossimRadioP()
 {
 	provides
 	{

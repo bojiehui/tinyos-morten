@@ -84,7 +84,7 @@ configuration TossimRadioC
 
 implementation
 {
-	components TossimRadioP, RadioAlarmC;
+	components new TossimRadioP(), RadioAlarmC;
 
 #ifdef RADIO_DEBUG
 	components AssertC;
