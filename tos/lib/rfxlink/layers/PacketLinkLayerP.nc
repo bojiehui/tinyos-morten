@@ -92,7 +92,6 @@ implementation
 
 				state = STATE_SENDING;
 				delay = call PacketLink.getRetryDelay(currentMsg);
-
 				if( delay > 0 )
 				{
 					call DelayTimer.startOneShot(delay);
@@ -106,7 +105,6 @@ implementation
 		if( state == STATE_SENDING )
 		{
 			state = STATE_SENDDONE;
-
 			if( call SubSend.send(currentMsg) != SUCCESS )
 				post send();
 
@@ -116,7 +114,6 @@ implementation
 		if( state >= STATE_SIGNAL )
 		{
 			error_t error = state - STATE_SIGNAL;
-
 			// do not update the retries count for non packet link messages
 			if( retries > 0 )
 				call PacketLink.setRetries(currentMsg, totalRetries);
@@ -128,7 +125,7 @@ implementation
 
 	event void SubSend.sendDone(message_t* msg, error_t error)
 	{
-		RADIO_ASSERT( state == STATE_SENDDONE );
+		RADIO_ASSERT( state == STATE_SENDDONE || state == STATE_SIGNAL + ECANCEL);
 		RADIO_ASSERT( msg == currentMsg );
 
 		post send();
@@ -166,15 +163,13 @@ implementation
 		// if a send is in progress
 		if( state == STATE_SENDDONE )
 		{
-			error_t error = call SubSend.cancel(msg);
-
-			if( error != SUCCESS )
-				return error;
+			call SubSend.cancel(msg);
+		} else {
+			post send();
 		}
 
 		call DelayTimer.stop();
 		state = STATE_SIGNAL + ECANCEL;
-		post send();
 
 		return SUCCESS;
 	}
