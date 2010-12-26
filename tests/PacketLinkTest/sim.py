@@ -20,6 +20,8 @@ t.addChannel("RadioAlarm.error", sys.stdout);
 #t.addChannel("Driver.debug", sys.stdout);
 t.addChannel("Driver.error", sys.stdout);
 
+t.addChannel("PacketLink", sys.stdout);
+
 #t.addChannel("CC2420ActiveMessage", sys.stdout);
 #t.addChannel("CC2420Csma", sys.stdout);
 #t.addChannel("CC2420Transmit", sys.stdout);

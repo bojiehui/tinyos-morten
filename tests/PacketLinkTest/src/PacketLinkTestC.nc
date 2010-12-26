@@ -9,6 +9,7 @@ configuration PacketLinkTestC {
 		MainC,
 		ActiveMessageC,
 		new TimerMilliC() as Timer,
+		new TimerMilliC() as CancelTimer,
 		new AMSenderC(AM_TEST_MSG) as Sender,
 		new AMReceiverC(AM_TEST_MSG) as Receiver;
 
@@ -24,6 +25,7 @@ configuration PacketLinkTestC {
 
 	App.Boot -> MainC;
 	App.Timer -> Timer;
+	App.CancelTimer -> CancelTimer;
 
 	App.RadioControl -> ActiveMessageC;
 	App.Send -> Sender;

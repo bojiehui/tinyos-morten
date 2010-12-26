@@ -5,6 +5,7 @@ module PacketLinkTestP {
 	uses {
 		interface Boot;
 		interface Timer<TMilli> as Timer;
+		interface Timer<TMilli> as CancelTimer;
 
 		interface SplitControl as RadioControl;
 		interface AMSend as Send;
@@ -63,9 +64,17 @@ module PacketLinkTestP {
 		if(call Send.send(RECEIVER, &data, sizeof(test_msg_t))==SUCCESS) {
 			dataBusy = TRUE;
 		}
+
+        if(CANCEL_DELAY>0) {
+          call CancelTimer.startOneShot(CANCEL_DELAY);
+        }
 	}
 
-  event void Send.sendDone(message_t* msg, error_t error) {
+    event void CancelTimer.fired() {
+      call Send.cancel(&data);
+    }
+
+    event void Send.sendDone(message_t* msg, error_t error) {
 		dataBusy = FALSE;
 
 		if(error==SUCCESS
@@ -80,7 +89,7 @@ module PacketLinkTestP {
 
 	}
 
-  event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len) {
+    event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len) {
 		dbg("PacketLinkTest", "**** Received ****\n");
 		return msg;
 	}
