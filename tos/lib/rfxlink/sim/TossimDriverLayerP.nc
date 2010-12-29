@@ -257,7 +257,7 @@ call AckReceivedFlag.get(msg)
 #ifdef TOSSIM_HW_ADDRESS_RECOGNITION
 #warning "*** TOSSIM HARDWARE ADDRESS RECOGNITION ENABLED ***"
     tossim_header_t* header = getHeader(msg);
-    if (running && !transmitting && (header->dest==TOS_NODE_ID || header->dest==TOS_BCAST_ADDR)) {
+    if (running && !transmitting && (!call Ieee154PacketLayer.isDataFrame(msg) || header->dest==TOS_NODE_ID || header->dest==TOS_BCAST_ADDR)) {
 #else
     if (running && !transmitting) {
 #endif
@@ -282,8 +282,10 @@ call AckReceivedFlag.get(msg)
 
       if(!running) {
         dbg("Driver.debug", "Driver: discarding packet from %hu as radio is OFF\n", call Ieee154PacketLayer.getSrcAddr(msg));
-      } else {
+      } else if(transmitting) {
         dbg("Driver.debug", "Driver: discarding packet from %hu as we are TRANSMITTING\n", call Ieee154PacketLayer.getSrcAddr(msg));
+      } else {
+        dbg("Driver.debug", "Driver: discarding packet from %hu due to TOSSIM hardware addr recognition\n", call Ieee154PacketLayer.getSrcAddr(msg));
       }
     }
 
