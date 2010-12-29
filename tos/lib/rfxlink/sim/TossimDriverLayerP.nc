@@ -338,11 +338,11 @@ call AckReceivedFlag.get(msg)
   }
 
   async command uint8_t RadioPacket.payloadLength(message_t* msg) {
-    return getHeader(msg)->length - 1;
+    return getHeader(msg)->length;
   }
 
   async command void RadioPacket.setPayloadLength(message_t* msg, uint8_t length) {
-    getHeader(msg)->length = length + 1;
+    getHeader(msg)->length = length;
   }
   
   async command uint8_t RadioPacket.maxPayloadLength() {
