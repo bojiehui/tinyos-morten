@@ -331,7 +331,7 @@ implementation
 
 	command uint16_t LowPowerListeningConfig.getListenLength()
 	{
-		return 9;
+		return 5;
 	}
 
 	async command uint16_t RandomCollisionConfig.getMinimumBackoff()
