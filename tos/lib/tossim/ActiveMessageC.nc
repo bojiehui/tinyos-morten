@@ -53,23 +53,27 @@ configuration ActiveMessageC {
   }
 }
 implementation {
-  components new TossimActiveMessageC() as AM;
-  components TossimRadioC as Radio;
+  components TossimActiveMessageC as AM;
+  components TossimPacketModelC as Network;
+
+  components CpmModelC as Model;
 
   components ActiveMessageAddressC as Address;
-
-  SplitControl = Radio;
+  components MainC;
+  
+  MainC.SoftwareInit -> Network;
+  SplitControl = Network;
   
   AMSend       = AM;
   Receive      = AM.Receive;
   Snoop        = AM.Snoop;
-  Packet       = Radio;
+  Packet       = AM;
   AMPacket     = AM;
-  PacketAcknowledgements = Radio;
+  PacketAcknowledgements = Network;
 
-  AM.SubSend -> Radio;
-  AM.SubReceive -> Radio.Receive;
+  AM.Model -> Network.Packet;
   AM.amAddress -> Address;
-
+  
+  Network.GainRadioModel -> Model;
 }
 
