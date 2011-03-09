@@ -1,9 +1,13 @@
 #-*-Makefile-*- vim:syntax=make
 #$Id: sim.extra,v 1.14 2009-11-14 02:14:18 razvanm Exp $
 
+BLIP_DIR=$(TOSDIR)/lib/net/blip/
+TYPES_DIR=$(TOSDIR)/types
+LIB6LOWPAN_DIR=$(TOSROOT)/support/sdk/c/blip/lib6lowpan/
+
 export GCC=gcc
 GPP=g++
-OPTFLAGS = -g -O0 -fpack-struct
+OPTFLAGS = -g -O0
 LIBS = -lm -lstdc++ 
 PFLAGS += -tossim -fnesc-nido-tosnodes=1000 -fnesc-simulate -fnesc-nido-motenumber=sim_node\(\) -fnesc-gcc=$(GCC)
 WFLAGS = -Wno-nesc-data-race
@@ -21,9 +25,11 @@ IPMALLOCFILE    = $(TOSROOT)/support/sdk/c/blip/lib6lowpan/ip_malloc.c
 IPMALLOCOBJFILE = $(TOSROOT)/support/sdk/c/blip/lib6lowpan/ip_malloc.o
 
 LIB6LOWPAN_OBJFILE      = $(TOSROOT)/support/sdk/c/blip/lib6lowpan/lib6lowpan.o
-LIB6LOWPAN_IP_OBJFILE   = $(TOSROOT)/support/sdk/c/blip/lib6lowpan/lib6lowpanIP.o
+LIB6LOWPAN_4944_OBJFILE   = $(TOSROOT)/support/sdk/c/blip/lib6lowpan/lib6lowpan4944.o
 LIB6LOWPAN_FRAG_OBJFILE = $(TOSROOT)/support/sdk/c/blip/lib6lowpan/lib6lowpanFrag.o
-LIB6LOWPAN_PRINT_OBJFILE = $(TOSROOT)/support/sdk/c/blip/lib6lowpan/printpacket.o
+LIB6LOWPAN_UTILITY_OBJFILE = $(TOSROOT)/support/sdk/c/blip/lib6lowpan/utility.o
+
+PPPBASEFLAGS = -I$(TOSROOT)/apps/PppRouter/
 
 CXXFILE    = $(TOSDIR)/lib/tossim/tossim.c
 CXXOBJFILE = $(BUILDDIR)/tossim.o
@@ -78,16 +84,24 @@ BUILD_DEPS = sim-exe
 sim-exe: builddir $(BUILD_EXTRA_DEPS) FORCE
 	@echo "  placing object files in $(BUILDDIR)"
 	@echo "  writing XML schema to $(XML)"
+
+	$(GPP) -c $(PLATFORM_CC_FLAGS) $(PLATFORM_FLAGS) -o $(TABLEOBJFILE) $(OPTFLAGS) $(CFLAGS) $(TOSSIM_CFLAG) $(SIM_CFLAGS) -I$(PYDIR) -I$(SIMDIR) $(TABLEFILE)
+
+	$(GPP) -c $(PLATFORM_CC_FLAGS) $(PLATFORM_FLAGS) -o $(CKSUMOBJFILE) $(OPTFLAGS) $(CFLAGS) $(TOSSIM_CFLAG) $(SIM_CFLAGS) -I$(PYDIR) -I$(SIMDIR) -I$(TYPES_DIR) $(CKSUMFILE)
+
+	$(GPP) -c $(PLATFORM_CC_FLAGS) $(PLATFORM_FLAGS) -o $(IPMALLOCOBJFILE) $(OPTFLAGS) $(CFLAGS) $(TOSSIM_CFLAG) $(SIM_CFLAGS) -I$(PYDIR) -I$(SIMDIR) -I$(LIB6LOWPAN_DIR) $(IPMALLOCFILE)
+
 	@echo "  compiling $(COMPONENT) to object file sim.o"
-	$(NCC) -c $(PLATFORM_FLAGS) -o $(OBJFILE) $(OPTFLAGS) $(PFLAGS) $(CFLAGS) $(WFLAGS) $(COMPONENT).nc $(LDFLAGS)  $(DUMPTYPES) -fnesc-dumpfile=$(XML)
+	$(NCC) -c $(PLATFORM_FLAGS) -o $(OBJFILE) $(OPTFLAGS) $(PFLAGS) $(CFLAGS) $(WFLAGS) $(PPPBASEFLAGS) $(COMPONENT).nc $(LDFLAGS)  $(DUMPTYPES) -fnesc-dumpfile=$(XML)
 
 	@echo "  compiling Python support and C libraries into pytossim.o, tossim.o, and c-support.o"
 	$(GPP) -c $(PLATFORM_CC_FLAGS) $(PLATFORM_FLAGS) -o $(PYOBJFILE) $(OPTFLAGS) $(CFLAGS) $(PYFILE) -I$(PYDIR) -I$(SIMDIR) -DHAVE_CONFIG_H 
 	$(GPP) -c $(PLATFORM_CC_FLAGS) $(PLATFORM_FLAGS) -o $(CXXOBJFILE) $(OPTFLAGS) $(CFLAGS) $(CXXFILE) -I$(PYDIR) -I$(SIMDIR)
 	$(GPP) -c $(PLATFORM_CC_FLAGS) $(PLATFORM_FLAGS) -o $(HASHOBJFILE) $(OPTFLAGS) $(CFLAGS) $(HASHFILE) -I$(PYDIR) -I$(SIMDIR)
+
 	@echo "  linking into shared object ./$(SHARED_OBJECT)"
 
-	$(GPP) $(PLATFORM_BUILD_FLAGS) $(PLATFORM_CC_FLAGS) $(PYOBJFILE) $(OBJFILE) $(CXXOBJFILE) $(TABLEOBJFILE) $(CKSUMOBJFILE) $(IPMALLOCOBJFILE) $(HASHOBJFILE) $(LIB6LOWPAN_OBJFILE) $(LIB6LOWPAN_IP_OBJFILE) $(LIB6LOWPAN_FRAG_OBJFILE) $(LIB6LOWPAN_PRINT_OBJFILE) $(PLATFORM_LIB_FLAGS) $(LIBS) -o $(SHARED_OBJECT)
+	$(GPP) $(PLATFORM_BUILD_FLAGS) $(PLATFORM_CC_FLAGS) $(PYOBJFILE) $(OBJFILE) $(CXXOBJFILE) $(TABLEOBJFILE) $(CKSUMOBJFILE) $(IPMALLOCOBJFILE) $(HASHOBJFILE) $(LIB6LOWPAN_OBJFILE) $(LIB6LOWPAN_4944_OBJFILE) $(LIB6LOWPAN_FRAG_OBJFILE) $(LIB6LOWPAN_UTILITY_OBJFILE) $(PLATFORM_LIB_FLAGS) $(LIBS) -o $(SHARED_OBJECT)
 
 #$(GPP) $(PLATFORM_BUILD_FLAGS) $(PLATFORM_CC_FLAGS) $(PYOBJFILE) $(OBJFILE) $(CXXOBJFILE) $(TABLEOBJFILE) $(CKSUMOBJFILE) $(IPMALLOCOBJFILE) $(HASHOBJFILE) $(PLATFORM_LIB_FLAGS) -o $(SHARED_OBJECT)
 #$(GPP) $(PLATFORM_BUILD_FLAGS) $(PLATFORM_CC_FLAGS) $(PYOBJFILE) $(OBJFILE) $(CXXOBJFILE) $(HASHOBJFILE) $(PLATFORM_LIB_FLAGS) -o $(SHARED_OBJECT)
@@ -96,3 +110,4 @@ sim-exe: builddir $(BUILD_EXTRA_DEPS) FORCE
 	@cp $(TOSDIR)/lib/tossim/TOSSIM.py .
 	@echo " "
 	@echo "*** Successfully built $(PLATFORM) TOSSIM library. "
+
