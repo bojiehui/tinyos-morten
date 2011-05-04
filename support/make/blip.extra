@@ -15,8 +15,6 @@ ifndef LOWPAN_ROOT
 endif
 
 PFLAGS+=-I$(TOSROOT)/tos/lib/net/
-PFLAGS+=-I$(LOWPAN_ROOT)/support/sdk/c/blip/lib6lowpan/   # from old file
-PFLAGS+=-I$(LOWPAN_ROOT)/support/sdk/c/blip/libtcp/  # from old file
 PFLAGS+=-I$(LOWPAN_ROOT)/support/sdk/c/blip/
 PFLAGS+=-I$(LOWPAN_ROOT)/tos/lib/net/blip/
 PFLAGS+=-I$(LOWPAN_ROOT)/tos/lib/net/blip/interfaces/ 
@@ -30,9 +28,9 @@ PFLAGS+=-I$(LOWPAN_ROOT)/tos/lib/net/blip/dhcp/
 ifneq ($(filter sim,$(GOALS)),sim)
 ifneq ($(filter sim-rpl,$(GOALS)),sim-rpl)
 ifneq ($(filter sim-ipdriver,$(GOALS)),sim-rpl)
-PFLAGS+=$(LOWPAN_ROOT)/support/sdk/c/blip/lib6lowpan/lib6lowpan.c 
-PFLAGS+=$(LOWPAN_ROOT)/support/sdk/c/blip/lib6lowpan/lib6lowpan_4944.c 
-PFLAGS+=$(LOWPAN_ROOT)/support/sdk/c/blip/lib6lowpan/lib6lowpanFrag.c
+//PFLAGS+=$(LOWPAN_ROOT)/support/sdk/c/blip/lib6lowpan/lib6lowpan.c
+//PFLAGS+=$(LOWPAN_ROOT)/support/sdk/c/blip/lib6lowpan/lib6lowpan_4944.c
+//PFLAGS+=$(LOWPAN_ROOT)/support/sdk/c/blip/lib6lowpan/lib6lowpanFrag.c
 PFLAGS+=$(LOWPAN_ROOT)/support/sdk/c/blip/lib6lowpan/iovec.c
 PFLAGS+=$(LOWPAN_ROOT)/support/sdk/c/blip/lib6lowpan/in_cksum.c
 PFLAGS+=$(LOWPAN_ROOT)/support/sdk/c/blip/lib6lowpan/ip_malloc.c

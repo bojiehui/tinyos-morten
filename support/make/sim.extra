@@ -7,23 +7,10 @@ OPTFLAGS = -g -O0 -fpack-struct
 LIBS = -lm -lstdc++ 
 PFLAGS += -tossim -fnesc-nido-tosnodes=1000 -fnesc-simulate -fnesc-nido-motenumber=sim_node\(\) -fnesc-gcc=$(GCC)
 WFLAGS = -Wno-nesc-data-race
-PYTHON_VERSION ?= 2.5
+PYTHON_VERSION ?= 2.6
 BUILDDIR   = simbuild/$(PLATFORM)
 CFILE    = $(BUILDDIR)/sim.c
 OBJFILE    = $(BUILDDIR)/sim.o
-
-#Fix from old blip
-TABLEFILE       = $(BLIP_DIR)/table.c
-TABLEOBJFILE    = $(BUILDDIR)/table.o
-CKSUMFILE       = $(TOSROOT)/support/sdk/c/blip/lib6lowpan/in_cksum.c
-CKSUMOBJFILE    = $(TOSROOT)/support/sdk/c/blip/lib6lowpan/in_cksum.o
-IPMALLOCFILE    = $(TOSROOT)/support/sdk/c/blip/lib6lowpan/ip_malloc.c
-IPMALLOCOBJFILE = $(TOSROOT)/support/sdk/c/blip/lib6lowpan/ip_malloc.o
-
-LIB6LOWPAN_OBJFILE      = $(TOSROOT)/support/sdk/c/blip/lib6lowpan/lib6lowpan.o
-LIB6LOWPAN_IP_OBJFILE   = $(TOSROOT)/support/sdk/c/blip/lib6lowpan/lib6lowpanIP.o
-LIB6LOWPAN_FRAG_OBJFILE = $(TOSROOT)/support/sdk/c/blip/lib6lowpan/lib6lowpanFrag.o
-LIB6LOWPAN_PRINT_OBJFILE = $(TOSROOT)/support/sdk/c/blip/lib6lowpan/printpacket.o
 
 CXXFILE    = $(TOSDIR)/lib/tossim/tossim.c
 CXXOBJFILE = $(BUILDDIR)/tossim.o
@@ -86,11 +73,7 @@ sim-exe: builddir $(BUILD_EXTRA_DEPS) FORCE
 	$(GPP) -c $(PLATFORM_CC_FLAGS) $(PLATFORM_FLAGS) -o $(CXXOBJFILE) $(OPTFLAGS) $(CFLAGS) $(CXXFILE) -I$(PYDIR) -I$(SIMDIR)
 	$(GPP) -c $(PLATFORM_CC_FLAGS) $(PLATFORM_FLAGS) -o $(HASHOBJFILE) $(OPTFLAGS) $(CFLAGS) $(HASHFILE) -I$(PYDIR) -I$(SIMDIR)
 	@echo "  linking into shared object ./$(SHARED_OBJECT)"
-
-	$(GPP) $(PLATFORM_BUILD_FLAGS) $(PLATFORM_CC_FLAGS) $(PYOBJFILE) $(OBJFILE) $(CXXOBJFILE) $(TABLEOBJFILE) $(CKSUMOBJFILE) $(IPMALLOCOBJFILE) $(HASHOBJFILE) $(LIB6LOWPAN_OBJFILE) $(LIB6LOWPAN_IP_OBJFILE) $(LIB6LOWPAN_FRAG_OBJFILE) $(LIB6LOWPAN_PRINT_OBJFILE) $(PLATFORM_LIB_FLAGS) $(LIBS) -o $(SHARED_OBJECT)
-
-#$(GPP) $(PLATFORM_BUILD_FLAGS) $(PLATFORM_CC_FLAGS) $(PYOBJFILE) $(OBJFILE) $(CXXOBJFILE) $(TABLEOBJFILE) $(CKSUMOBJFILE) $(IPMALLOCOBJFILE) $(HASHOBJFILE) $(PLATFORM_LIB_FLAGS) -o $(SHARED_OBJECT)
-#$(GPP) $(PLATFORM_BUILD_FLAGS) $(PLATFORM_CC_FLAGS) $(PYOBJFILE) $(OBJFILE) $(CXXOBJFILE) $(HASHOBJFILE) $(PLATFORM_LIB_FLAGS) -o $(SHARED_OBJECT)
+	$(GPP) $(PLATFORM_BUILD_FLAGS) $(PLATFORM_CC_FLAGS) $(PYOBJFILE) $(OBJFILE) $(CXXOBJFILE) $(HASHOBJFILE) $(PLATFORM_LIB_FLAGS) -o $(SHARED_OBJECT)
 
 	@echo "  copying Python script interface TOSSIM.py from lib/tossim to local directory"
 	@cp $(TOSDIR)/lib/tossim/TOSSIM.py .
