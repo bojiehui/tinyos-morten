@@ -61,6 +61,7 @@ generic module TossimDriverLayerP() {
 #ifdef TOSSIM_HARDWARE_ACK
     interface PacketFlag as AckReceivedFlag;
 #endif
+		interface PacketFlag as TransmitPowerFlag;
     interface PacketFlag as RSSIFlag;
     interface PacketFlag as TimeSyncFlag;
 
@@ -93,6 +94,7 @@ generic module TossimDriverLayerP() {
 
   void dbg_message(message_t* msg) {
     uint8_t i;
+    
     dbg("Driver.trace", " - message (rssi: %hhu, ack: %hhu):", call RSSIFlag.get(msg), 
 #ifdef TOSSIM_HARDWARE_ACK
 call AckReceivedFlag.get(msg)
@@ -100,6 +102,7 @@ call AckReceivedFlag.get(msg)
 0
 #endif
 );
+   
     for(i=0; i<sizeof(message_t); i++) {
       dbg_clear("Driver.trace", " %hhu", *((uint8_t*)msg + i));
     }
@@ -361,15 +364,22 @@ call AckReceivedFlag.get(msg)
   /***************** PacketTransmitPower ****************/
 
   async command bool PacketTransmitPower.isSet(message_t* msg) {
-    return FALSE;
+    return call TransmitPowerFlag.get(msg);
+    //	return FALSE;
   }
   
   async command uint8_t PacketTransmitPower.get(message_t* msg) {
-    return 0;
+    return getMetadata(msg)->strength;
+	//return 0;
   }
 
-  async command void PacketTransmitPower.clear(message_t* msg) {}
-  async command void PacketTransmitPower.set(message_t* msg, uint8_t value) {}
+  async command void PacketTransmitPower.clear(message_t* msg) {
+    call TransmitPowerFlag.clear(msg);	
+}
+  async command void PacketTransmitPower.set(message_t* msg, uint8_t value) {
+    call TransmitPowerFlag.set(msg);
+    getMetadata(msg)->strength = value;
+}
 
 
   /***************** PacketRSSI ****************/

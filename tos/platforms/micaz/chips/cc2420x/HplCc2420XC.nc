@@ -19,7 +19,7 @@
  * PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  *
  * Author: Janos Sallai
- */ 
+ */
 
 configuration HplCC2420XC {
 	provides {
@@ -31,47 +31,47 @@ configuration HplCC2420XC {
 		interface GeneralIO as FIFOP;
 		interface GeneralIO as RSTN;
 		interface GeneralIO as SFD;
-		interface GeneralIO as VREN; 
-		interface GpioCapture as SfdCapture;	
+		interface GeneralIO as VREN;
+		interface GpioCapture as SfdCapture;
 		interface GpioInterrupt as FifopInterrupt;
 		interface LocalTime<TRadio> as LocalTimeRadio;
-		interface Init;		
+		interface Init;
 		interface Alarm<TRadio,uint16_t>;
 	}
 }
 implementation {
 
 	components Atm128SpiC, MotePlatformC, HplCC2420XSpiP, HplAtm128GeneralIOC as IO;
-	
-	Init = Atm128SpiC; 
+
+	Init = Atm128SpiC;
 
 	SpiResource = HplCC2420XSpiP.Resource;
 	HplCC2420XSpiP.SubResource -> Atm128SpiC.Resource[ unique("Atm128SpiC.Resource") ];
 	HplCC2420XSpiP.SS -> IO.PortB0;
-	FastSpiByte = Atm128SpiC; 
-	
+	FastSpiByte = Atm128SpiC;
+
 	CCA    = IO.PortD6;
 	CSN    = IO.PortB0;
 	FIFO   = IO.PortB7;
 	FIFOP  = IO.PortE6;
 	RSTN   = IO.PortA6;
 	SFD    = IO.PortD4;
-	VREN   = IO.PortA5;	 	
-	 	
+	VREN   = IO.PortA5;
+
 	components new Atm128GpioCaptureC() as SfdCaptureC;
 	components HplAtm128Timer1C as Timer1C;
 	SfdCapture = SfdCaptureC;
-	SfdCaptureC.Atm128Capture -> Timer1C.Capture; 
+	SfdCaptureC.Atm128Capture -> Timer1C.Capture;
 
 	components new Atm128GpioInterruptC() as FifopInterruptC;
   	components HplAtm128InterruptC as Interrupts;
   	FifopInterrupt= FifopInterruptC;
-  	FifopInterruptC.Atm128Interrupt -> Interrupts.Int6; 	
+  	FifopInterruptC.Atm128Interrupt -> Interrupts.Int6;
 
 	components LocalTimeMicroC;
-	LocalTimeRadio = LocalTimeMicroC.LocalTime; 			 	
+	LocalTimeRadio = LocalTimeMicroC.LocalTime; 			
 
-	components new AlarmThree16C() as AlarmC;
-	Alarm = AlarmC; 
-	
+	components new AlarmOne16C() as AlarmC;
+	Alarm = AlarmC;
+
 }

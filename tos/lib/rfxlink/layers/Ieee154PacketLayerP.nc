@@ -66,6 +66,9 @@ implementation
 			| (IEEE154_ADDR_SHORT << IEEE154_FCF_DEST_ADDR_MODE) 
 			| (IEEE154_ADDR_SHORT << IEEE154_FCF_SRC_ADDR_MODE),
 
+		IEEE154_DATA_FRAME_PRESERVE = (1 << IEEE154_FCF_ACK_REQ) 
+			| (1 << IEEE154_FCF_FRAME_PENDING),
+
 		IEEE154_ACK_FRAME_LENGTH = 3,	// includes the FCF, DSN
 		IEEE154_ACK_FRAME_MASK = (IEEE154_TYPE_MASK << IEEE154_FCF_FRAME_TYPE), 
 		IEEE154_ACK_FRAME_VALUE = (IEEE154_TYPE_ACK << IEEE154_FCF_FRAME_TYPE),
@@ -98,11 +101,16 @@ implementation
 
 	async command void Ieee154PacketLayer.createDataFrame(message_t* msg)
 	{
-		bool ackRequired = call Ieee154PacketLayer.getAckRequired(msg);
-		bool framePending = call Ieee154PacketLayer.getFramePending(msg); 
-		getHeader(msg)->fcf = IEEE154_DATA_FRAME_VALUE;
-		call Ieee154PacketLayer.setAckRequired(msg, ackRequired);
-		call Ieee154PacketLayer.setFramePending(msg, framePending);
+		// merge conflict: morten & trunk
+		//bool ackRequired = call Ieee154PacketLayer.getAckRequired(msg);
+		//bool framePending = call Ieee154PacketLayer.getFramePending(msg);
+
+		// keep the ack requested and frame pending bits
+		getHeader(msg)->fcf = (getHeader(msg)->fcf & IEEE154_DATA_FRAME_PRESERVE)
+			| IEEE154_DATA_FRAME_VALUE;
+
+		//call Ieee154PacketLayer.setAckRequired(msg, ackRequired);
+		//call Ieee154PacketLayer.setFramePending(msg, framePending);
 	}
 
 	async command bool Ieee154PacketLayer.isAckFrame(message_t* msg)
@@ -235,24 +243,49 @@ implementation
 
 /*----------------- Ieee154Packet -----------------*/
 
-	command error_t Ieee154Packet.destination(message_t* msg, ieee154_addr_t *addr)
+	command ieee154_saddr_t Ieee154Packet.address()
 	{
-		if( ! call Ieee154PacketLayer.isDataFrame(msg) )
-			return FAIL;
-
-		addr->ieee_mode = IEEE154_ADDR_SHORT;
-		addr->ieee_addr.saddr = call Ieee154PacketLayer.getDestAddr(msg);
-		return SUCCESS;
+		return call Ieee154PacketLayer.localAddr();
 	}
  
-	command error_t Ieee154Packet.source(message_t* msg, ieee154_addr_t *addr)
+	command ieee154_saddr_t Ieee154Packet.destination(message_t* msg)
 	{
-		if( ! call Ieee154PacketLayer.isDataFrame(msg) )
-			return FAIL;
+		return call Ieee154PacketLayer.getDestAddr(msg);
+	}
+ 
+	command ieee154_saddr_t Ieee154Packet.source(message_t* msg)
+	{
+		return call Ieee154PacketLayer.getSrcAddr(msg);
+	}
 
-		addr->ieee_mode = IEEE154_ADDR_SHORT;
-		addr->ieee_addr.saddr = call Ieee154PacketLayer.getSrcAddr(msg);
-		return SUCCESS;
+	command void Ieee154Packet.setDestination(message_t* msg, ieee154_saddr_t addr)
+	{
+		call Ieee154PacketLayer.setDestAddr(msg, addr);
+	}
+
+	command void Ieee154Packet.setSource(message_t* msg, ieee154_saddr_t addr)
+	{
+		call Ieee154PacketLayer.setSrcAddr(msg, addr);
+	}
+
+	command bool Ieee154Packet.isForMe(message_t* msg)
+	{
+		return call Ieee154PacketLayer.isForMe(msg);
+	}
+
+	command ieee154_panid_t Ieee154Packet.pan(message_t* msg)
+	{
+		return call Ieee154PacketLayer.getDestPan(msg);
+	}
+
+	command void Ieee154Packet.setPan(message_t* msg, ieee154_panid_t grp)
+	{
+		call Ieee154PacketLayer.setDestPan(msg, grp);
+	}
+
+	command ieee154_panid_t Ieee154Packet.localPan()
+	{
+		return call Ieee154PacketLayer.localPan();
 	}
 
 /*----------------- RadioPacket -----------------*/

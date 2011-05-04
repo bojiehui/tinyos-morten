@@ -167,7 +167,7 @@ implementation
       			call SfdCapture.captureRisingEdge();	
 		}
 		else
-			ASSERT(FALSE);
+			RADIO_ASSERT(FALSE);
 
 		// make sure the rest of the command processing is called
 		call Tasklet.schedule();
@@ -198,8 +198,8 @@ implementation
 	{
 		cc2420X_status_t status;
 		
-		ASSERT( call SpiResource.isOwner() );
-		ASSERT( reg == (reg & CC2420X_CMD_REGISTER_MASK) );
+		RADIO_ASSERT( call SpiResource.isOwner() );
+		RADIO_ASSERT( reg == (reg & CC2420X_CMD_REGISTER_MASK) );
 
 		call CSN.set();
 		call CSN.clr();
@@ -220,8 +220,8 @@ implementation
 	{
 		cc2420X_status_t status;
 		
-		ASSERT( call SpiResource.isOwner() );
-		ASSERT( reg == (reg & CC2420X_CMD_REGISTER_MASK) );
+		RADIO_ASSERT( call SpiResource.isOwner() );
+		RADIO_ASSERT( reg == (reg & CC2420X_CMD_REGISTER_MASK) );
 
 		call CSN.set();
 		call CSN.clr();
@@ -240,7 +240,7 @@ implementation
 		cc2420X_status_t status;
 		uint8_t idx;
 		
-		ASSERT( call SpiResource.isOwner() );
+		RADIO_ASSERT( call SpiResource.isOwner() );
 
 		call CSN.set();
 		call CSN.clr();
@@ -275,9 +275,8 @@ implementation
 	{
 		cc2420X_status_t status;
 
-		ASSERT( call SpiResource.isOwner() );
-		ASSERT( call CSN.get() == 1 );
-
+		RADIO_ASSERT( call SpiResource.isOwner() );
+		RADIO_ASSERT( call CSN.get() == 1 );
 
 		call CSN.set();	// set CSN, just in clase it's not set
 		call CSN.clr(); // clear CSN, starting a multi-byte SPI command
@@ -304,8 +303,7 @@ implementation
 		uint8_t idx;
 		
 		// readLengthFromRxFifo was called before, so CSN is cleared and spi is ours
-		ASSERT( call CSN.get() == 0 );
-
+		RADIO_ASSERT( call CSN.get() == 0 );
 
 		for(idx = 0; idx<length; idx++) {
 			data[idx] = call FastSpiByte.splitRead();
@@ -317,7 +315,7 @@ implementation
 	inline void readRssiFromRxFifo(uint8_t* rssiPtr)
 	{
 		// readLengthFromRxFifo was called before, so CSN is cleared and spi is ours
-		ASSERT( call CSN.get() == 0 );
+		RADIO_ASSERT( call CSN.get() == 0 );
 
 		*rssiPtr = call FastSpiByte.splitRead();
 		waitForRxFifo();
@@ -327,7 +325,7 @@ implementation
 	inline void readCrcOkAndLqiFromRxFifo(uint8_t* crcOkAndLqiPtr)
 	{
 		// readLengthFromRxFifo was called before, so CSN is cleared and spi is ours
-		ASSERT( call CSN.get() == 0 );
+		RADIO_ASSERT( call CSN.get() == 0 );
 		
 		*crcOkAndLqiPtr = call FastSpiByte.splitRead();	
 		
@@ -480,8 +478,8 @@ implementation
 
 	inline void changeChannel()
 	{
-		ASSERT( cmd == CMD_CHANNEL );
-		ASSERT( state == STATE_PD || state == STATE_IDLE || ( state == STATE_RX_ON && call RadioAlarm.isFree()));
+		RADIO_ASSERT( cmd == CMD_CHANNEL );
+		RADIO_ASSERT( state == STATE_PD || state == STATE_IDLE || ( state == STATE_RX_ON && call RadioAlarm.isFree()));
 
 		if( isSpiAcquired() )
 		{
@@ -785,7 +783,7 @@ implementation
 		// reset the radio, initialize registers to default values
 		resetRadio();
 		
-		ASSERT(state == STATE_PD);		
+		RADIO_ASSERT(state == STATE_PD);		
 		
 		// start oscillator
       		strobe(CC2420X_SXOSCON); 
@@ -797,12 +795,12 @@ implementation
 
 		// get status
 		status = getStatus();
-		ASSERT ( status.rssi_valid == 0);
-		ASSERT ( status.lock == 0);
-		ASSERT ( status.tx_active == 0);
-		ASSERT ( status.enc_busy == 0);
-		ASSERT ( status.tx_underflow == 0);
-		ASSERT ( status.xosc16m_stable == 1);
+		RADIO_ASSERT(status.rssi_valid == 0);
+		RADIO_ASSERT(status.lock == 0);
+		RADIO_ASSERT(status.tx_active == 0);
+		RADIO_ASSERT(status.enc_busy == 0);
+		RADIO_ASSERT(status.tx_underflow == 0);
+		RADIO_ASSERT(status.xosc16m_stable == 1);
 		
 		// we're idle now	
 		state = STATE_IDLE;		
@@ -845,8 +843,8 @@ implementation
 			// stop reading RXFIFO
 			call CSN.set();
 
-			ASSERT( call FIFOP.get() == 0 );
-			ASSERT( call FIFO.get() == 0 );
+			RADIO_ASSERT( call FIFOP.get() == 0 );
+			RADIO_ASSERT( call FIFO.get() == 0 );
 						
 			state = STATE_RX_ON;
 			cmd = CMD_NONE;
@@ -858,8 +856,8 @@ implementation
 			// skip payload and rssi
 			spi_atomic readCrcOkAndLqiFromRxFifo(&crc_ok_lqi);	
 
-			ASSERT( call FIFOP.get() == 0 );
-			ASSERT( call FIFO.get() == 0 );
+			RADIO_ASSERT( call FIFOP.get() == 0 );
+			RADIO_ASSERT( call FIFO.get() == 0 );
 			
 			state = STATE_RX_ON;
 			cmd = CMD_NONE;
@@ -874,8 +872,8 @@ implementation
 			  readCrcOkAndLqiFromRxFifo(&crc_ok_lqi);	
 			}
 			
-			ASSERT( call FIFOP.get() == 0 );
-			ASSERT( call FIFO.get() == 0 );
+			RADIO_ASSERT( call FIFOP.get() == 0 );
+			RADIO_ASSERT( call FIFO.get() == 0 );
 			
 			state = STATE_RX_ON;
 			cmd = CMD_NONE;
@@ -888,8 +886,8 @@ implementation
 			
 			recover();
 
-			ASSERT( call FIFOP.get() == 0 );
-			ASSERT( call FIFO.get() == 0 );
+			RADIO_ASSERT( call FIFOP.get() == 0 );
+			RADIO_ASSERT( call FIFO.get() == 0 );
 			
 			state = STATE_RX_ON;
 			cmd = CMD_NONE;
@@ -908,7 +906,7 @@ implementation
 			  readCrcOkAndLqiFromRxFifo(&crc_ok_lqi);	
 			}
 			
-			ASSERT( call FIFOP.get() == 0 );
+			RADIO_ASSERT( call FIFOP.get() == 0 );
 			
 			state = STATE_RX_ON;
 			cmd = CMD_NONE;
@@ -917,7 +915,7 @@ implementation
 		}
 
 		// if we're here, length must be correct
-		ASSERT(length >= 3 && length <= call RadioPacket.maxPayloadLength() + 2);
+		RADIO_ASSERT(length >= 3 && length <= call RadioPacket.maxPayloadLength() + 2);
 
 		getHeader(rxMsg)->length = length;
 
@@ -1017,8 +1015,8 @@ implementation
 #endif
 
 
-		ASSERT( ! radioIrq );
-		ASSERT( state == STATE_RX_ON || state == STATE_TX_ON || state == STATE_BUSY_TX_2_RX_ON);
+		RADIO_ASSERT( ! radioIrq );
+		RADIO_ASSERT(state == STATE_RX_ON || state == STATE_TX_ON || state == STATE_BUSY_TX_2_RX_ON);
 
 		atomic capturedTime = time;
 		
@@ -1087,7 +1085,7 @@ implementation
 			}
 			
 			else
-				ASSERT(FALSE);
+				RADIO_ASSERT(FALSE);
 		}
 	}
 
@@ -1102,6 +1100,11 @@ implementation
 	}
 
 /*----------------- TASKLET -----------------*/
+
+	task void releaseSpi()
+	{
+		call SpiResource.release();
+	}
 
 	tasklet_async event void Tasklet.run()
 	{
@@ -1150,7 +1153,7 @@ implementation
 			signal RadioSend.ready();
 
 		if( cmd == CMD_NONE )
-			call SpiResource.release();
+			post releaseSpi();
 			
 #ifdef RADIO_DEBUG_TASKLET
 		if( call DiagMsg.record() )
@@ -1189,8 +1192,8 @@ implementation
 
 	async command void RadioPacket.setPayloadLength(message_t* msg, uint8_t length)
 	{
-		ASSERT( 1 <= length && length <= 125 );
-		ASSERT( call RadioPacket.headerLength(msg) + length + call RadioPacket.metadataLength(msg) <= sizeof(message_t) );
+		RADIO_ASSERT( 1 <= length && length <= 125 );
+		RADIO_ASSERT( call RadioPacket.headerLength(msg) + length + call RadioPacket.metadataLength(msg) <= sizeof(message_t) );
 
 		// we add the length of the CRC, which is automatically generated
 		getHeader(msg)->length = length + 2;
@@ -1198,7 +1201,7 @@ implementation
 
 	async command uint8_t RadioPacket.maxPayloadLength()
 	{
-		ASSERT( call Config.maxPayloadLength() - sizeof(cc2420x_header_t) <= 125 );
+		RADIO_ASSERT( call Config.maxPayloadLength() - sizeof(cc2420x_header_t) <= 125 );
 
 		return call Config.maxPayloadLength() - sizeof(cc2420x_header_t);
 	}
@@ -1282,7 +1285,7 @@ implementation
 	async command void PacketTimeSyncOffset.set(message_t* msg, uint8_t value)
 	{
 		// we do not store the value, the time sync field is always the last 4 bytes
-		ASSERT( call PacketTimeSyncOffset.get(msg) == value );
+		RADIO_ASSERT( call PacketTimeSyncOffset.get(msg) == value );
 
 		call TimeSyncFlag.set(msg);
 	}

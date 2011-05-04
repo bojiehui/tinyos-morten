@@ -181,8 +181,10 @@ implementation
   {
     if (call RadioOff.isOff())
       continueScanRequest();
-    else 
-      ASSERT(call RadioOff.off() == SUCCESS);
+    else {
+      error_t e = call RadioOff.off();
+      ASSERT(e == SUCCESS);
+    }
     // will continue in continueScanRequest()
   }
 
@@ -259,7 +261,7 @@ implementation
           break;
         case ACTIVE_SCAN: // fall through
         case ORPHAN_SCAN:
-          radioStatus = call RadioTx.transmit(m_txFrame, NULL, 0);
+          radioStatus = call RadioTx.transmit(m_txFrame, 0, 0);
           break;
         case ENERGY_DETECTION_SCAN:
           radioStatus = call EnergyDetection.start(m_scanDuration);
@@ -334,14 +336,15 @@ implementation
 
   /* ----------------------- Active/Orphan scan ----------------------- */
   
-  async event void RadioTx.transmitDone(ieee154_txframe_t *frame, const ieee154_timestamp_t *timestamp, error_t result)
+  async event void RadioTx.transmitDone(ieee154_txframe_t *frame, error_t result)
   {
-    ASSERT(call RadioRx.enableRx(0, 0) == SUCCESS);
+    error_t e = call RadioRx.enableRx(0, 0);
+    ASSERT(e == SUCCESS);
   }
 
   /* -------- Receive events (for  Active/Passive/Orphan scan) -------- */
 
-  event message_t* RadioRx.received(message_t *frame, const ieee154_timestamp_t *timestamp)
+  event message_t* RadioRx.received(message_t *frame)
   {
     if (!m_busy)
       return frame;
@@ -362,6 +365,7 @@ implementation
           m_resultIndex++; 
           dbg_serial("ScanP", "Received coordinator realignment frame.\n");
           m_terminateScan = TRUE;
+          call ScanTimer.stop();
           call RadioOff.off();
         }
     } else if ((((ieee154_header_t*) frame->header)->mhr[0] & FC1_FRAMETYPE_MASK) == FC1_FRAMETYPE_BEACON) {
@@ -376,6 +380,7 @@ implementation
         return signal MLME_BEACON_NOTIFY.indication (frame);
       else if (m_resultIndex >= m_resultListNumEntries) {
         m_terminateScan = TRUE;
+        call ScanTimer.stop();
         call RadioOff.off();
       } else if (call BeaconFrame.parsePANDescriptor(
             frame, 
@@ -418,7 +423,8 @@ implementation
 
   event void ScanTimer.fired()
   {
-    call RadioOff.off();
+    if (call RadioToken.isOwner())
+      call RadioOff.off();
   }
 
   async event void RadioOff.offDone()

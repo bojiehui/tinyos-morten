@@ -41,6 +41,10 @@ generic module RadioAlarmP() {
     interface LocalTime<TRadio>;
   }
 
+	/*uses
+	{
+		interface Alarm<TRadio, tradio_size>;
+	}*/
 } implementation {
 
   enum {
@@ -68,6 +72,11 @@ generic module RadioAlarmP() {
   tasklet_async command bool RadioAlarm.isFree[uint8_t id]() {
     return client == NO_CLIENT;
   }
+
+	/*async event void Alarm.fired()
+	{
+#warning "check Alarm.fired()"
+	}*/
 
   void alarm_fired(sim_event_t* evt) {
     if(!evt->cancelled) {
@@ -144,5 +153,4 @@ generic module RadioAlarmP() {
   /***************** Defaults ****************/  
 
   default tasklet_async event void RadioAlarm.fired[uint8_t id]() {}
-
 }

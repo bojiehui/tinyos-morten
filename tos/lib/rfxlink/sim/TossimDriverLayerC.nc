@@ -58,6 +58,10 @@ configuration TossimDriverLayerC {
   uses {
     interface Ieee154PacketLayer;
     interface PacketTimeStamp<TRadio, uint32_t>;
+
+		interface PacketFlag as TransmitPowerFlag;
+		interface PacketFlag as RSSIFlag;
+		interface PacketFlag as TimeSyncFlag;
   }  
   
 } implementation {
@@ -65,14 +69,18 @@ configuration TossimDriverLayerC {
   components
     MainC,
     new TossimDriverLayerP() as Driver,
+/*
     new MetadataFlagC() as RSSIFlagC,
     new MetadataFlagC() as TimeSyncFlagC,
-    RadioAlarmC,
+*/
+    new RadioAlarmC(),
     CpmModelC as Model;
 
   MainC.SoftwareInit -> Driver;
+/*
   Driver.RSSIFlag -> RSSIFlagC;
   Driver.TimeSyncFlag -> TimeSyncFlagC;
+*/
   Driver.Ieee154PacketLayer = Ieee154PacketLayer;
   Driver.PacketTimeStamp = PacketTimeStamp;
   Driver.LocalTime -> RadioAlarmC;
@@ -92,12 +100,12 @@ configuration TossimDriverLayerC {
   RadioPacket = Driver;
 
   PacketTransmitPower = Driver.PacketTransmitPower;
+	TransmitPowerFlag = Driver.TransmitPowerFlag;
   PacketRSSI = Driver.PacketRSSI;
+	RSSIFlag = Driver.RSSIFlag;
   PacketTimeSyncOffset = Driver.PacketTimeSyncOffset;
+	TimeSyncFlag = Driver.TimeSyncFlag;
   PacketLinkQuality = Driver.PacketLinkQuality;
 
   LocalTimeRadio = RadioAlarmC;
-
-
-
 }

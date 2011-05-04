@@ -32,7 +32,7 @@
  * Author: Miklos Maroti
  */
 
-configuration RandomCollisionLayerC
+generic configuration RandomCollisionLayerC()
 {
 	provides
 	{
@@ -43,20 +43,22 @@ configuration RandomCollisionLayerC
 	{
 		interface RadioSend as SubSend;
 		interface RadioReceive as SubReceive;
+		interface RadioAlarm;
+
 		interface RandomCollisionConfig as Config;
 	}
 }
 
 implementation
 {
-	components new RandomCollisionLayerP(), RadioAlarmC, RandomC;
+	components new RandomCollisionLayerP(), RandomC;
 
 	RadioSend = RandomCollisionLayerP;
 	SubSend = RandomCollisionLayerP;
 	Config = RandomCollisionLayerP;
 	RadioReceive = RandomCollisionLayerP;
 	SubReceive = RandomCollisionLayerP;
+	RadioAlarm = RandomCollisionLayerP;
 
-	RandomCollisionLayerP.RadioAlarm -> RadioAlarmC.RadioAlarm[unique("RadioAlarm")];
 	RandomCollisionLayerP.Random -> RandomC;
 }

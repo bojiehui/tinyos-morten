@@ -32,22 +32,24 @@
  * Author: Miklos Maroti
  */
 
-configuration RadioAlarmC
+#include "RadioConfig.h"
+
+generic configuration RadioAlarmC()
 {
 	provides
 	{
-		interface RadioAlarm[uint8_t id]; // use unique("RadioAlarm")
+		interface RadioAlarm[uint8_t id]; // use unique
 	}
 
 	uses
 	{
-		interface Alarm<TRadio, uint16_t> @exactlyonce();
+		interface Alarm<TRadio, tradio_size> @exactlyonce();
 	}
 }
 
 implementation
 {
-	components RadioAlarmP, TaskletC;
+	components new RadioAlarmP(), TaskletC;
 
 	RadioAlarm = RadioAlarmP;
 	Alarm = RadioAlarmP;

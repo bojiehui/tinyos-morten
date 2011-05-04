@@ -88,6 +88,7 @@ inline uint16_t RF230_CRCBYTE_COMMAND(uint16_t crc, uint8_t data)
  * This is the timer type of the radio alarm interface
  */
 typedef TOne TRadio;
+typedef uint16_t tradio_size;
 
 /**
  * The number of radio alarm ticks per one microsecond (0.9216). 
@@ -101,12 +102,5 @@ typedef TOne TRadio;
  * The base two logarithm of the number of radio alarm ticks per one millisecond
  */
 #define RADIO_ALARM_MILLI_EXP	(5 + MICA_DIVIDE_ONE_FOR_32KHZ_LOG2)
-
-/**
- * Make PACKET_LINK automaticaly enabled for Ieee154MessageC
- */
-#if !defined(TFRAMES_ENABLED) && !defined(PACKET_LINK)
-#define PACKET_LINK
-#endif
 
 #endif//__RADIOCONFIG_H__

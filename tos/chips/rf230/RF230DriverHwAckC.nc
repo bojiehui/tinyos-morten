@@ -51,6 +51,7 @@ configuration RF230DriverHwAckC
 		interface PacketField<uint8_t> as PacketLinkQuality;
 
 		interface LocalTime<TRadio> as LocalTimeRadio;
+		interface Alarm<TRadio, tradio_size>;
 
 		interface PacketAcknowledgements;
 	}
@@ -60,12 +61,18 @@ configuration RF230DriverHwAckC
 		interface RF230DriverConfig as Config;
 		interface PacketTimeStamp<TRadio, uint32_t>;
 		interface Ieee154PacketLayer;
+
+		interface PacketFlag as TransmitPowerFlag;
+		interface PacketFlag as RSSIFlag;
+		interface PacketFlag as TimeSyncFlag;
+		interface PacketFlag as AckReceivedFlag;
+		interface RadioAlarm;
 	}
 }
 
 implementation
 {
-	components RF230DriverHwAckP, HplRF230C, BusyWaitMicroC, TaskletC, MainC, RadioAlarmC;
+	components RF230DriverHwAckP, HplRF230C, BusyWaitMicroC, TaskletC, MainC, ActiveMessageAddressC;
 
 	RadioState = RF230DriverHwAckP;
 	RadioSend = RF230DriverHwAckP;
@@ -78,24 +85,21 @@ implementation
 	Config = RF230DriverHwAckP;
 
 	PacketTransmitPower = RF230DriverHwAckP.PacketTransmitPower;
-	components new MetadataFlagC() as TransmitPowerFlagC;
-	RF230DriverHwAckP.TransmitPowerFlag -> TransmitPowerFlagC;
+	TransmitPowerFlag = RF230DriverHwAckP.TransmitPowerFlag;
 
 	PacketRSSI = RF230DriverHwAckP.PacketRSSI;
-	components new MetadataFlagC() as RSSIFlagC;
-	RF230DriverHwAckP.RSSIFlag -> RSSIFlagC;
+	RSSIFlag = RF230DriverHwAckP.RSSIFlag;
 
 	PacketTimeSyncOffset = RF230DriverHwAckP.PacketTimeSyncOffset;
-	components new MetadataFlagC() as TimeSyncFlagC;
-	RF230DriverHwAckP.TimeSyncFlag -> TimeSyncFlagC;
+	TimeSyncFlag = RF230DriverHwAckP.TimeSyncFlag;
 
 	PacketLinkQuality = RF230DriverHwAckP.PacketLinkQuality;
 	PacketTimeStamp = RF230DriverHwAckP.PacketTimeStamp;
 
 	RF230DriverHwAckP.LocalTime -> HplRF230C;
 
-	RF230DriverHwAckP.RadioAlarm -> RadioAlarmC.RadioAlarm[unique("RadioAlarm")];
-	RadioAlarmC.Alarm -> HplRF230C.Alarm;
+	Alarm = HplRF230C.Alarm;
+	RadioAlarm = RF230DriverHwAckP.RadioAlarm;
 
 	RF230DriverHwAckP.SELN -> HplRF230C.SELN;
 	RF230DriverHwAckP.SpiResource -> HplRF230C.SpiResource;
@@ -118,8 +122,7 @@ implementation
 	components RealMainP;
 	RealMainP.PlatformInit -> RF230DriverHwAckP.PlatformInit;
 
-	components new MetadataFlagC(), ActiveMessageAddressC;
-	RF230DriverHwAckP.AckReceivedFlag -> MetadataFlagC;
+	AckReceivedFlag = RF230DriverHwAckP.AckReceivedFlag;
 	RF230DriverHwAckP.ActiveMessageAddress -> ActiveMessageAddressC;
 	PacketAcknowledgements = RF230DriverHwAckP;
 	Ieee154PacketLayer = RF230DriverHwAckP;

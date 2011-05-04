@@ -34,7 +34,7 @@
  * @date   November 20 2010
  */
 
-configuration RadioAlarmC {
+generic configuration RadioAlarmC() {
 
   provides {
     interface RadioAlarm[uint8_t id];
@@ -46,5 +46,4 @@ configuration RadioAlarmC {
   components new RadioAlarmP();
   RadioAlarm = RadioAlarmP;
   LocalTime = RadioAlarmP;
-
 }

@@ -84,21 +84,28 @@ configuration TossimRadioC
 
 implementation
 {
-	components new TossimRadioP(), RadioAlarmC;
+	#define UQ_METADATA_FLAGS	"UQ_TOSSIM_METADATA_FLAGS"
+	#define UQ_RADIO_ALARM		"UQ_TOSSIM_RADIO_ALARM"
+
+	components TossimRadioP;
 
 #ifdef RADIO_DEBUG
 	components AssertC;
 #endif
 
 	TossimRadioP.Ieee154PacketLayer -> Ieee154PacketLayerC;
-	TossimRadioP.RadioAlarm -> RadioAlarmC.RadioAlarm[unique("RadioAlarm")];
+	TossimRadioP.RadioAlarm -> RadioAlarmC.RadioAlarm[unique(UQ_RADIO_ALARM)];
 	TossimRadioP.PacketTimeStamp -> TimeStampingLayerC;
 	//TossimRadioP.RF230Packet -> RF230DriverLayerC;
+
+// -------- RadioAlarm
+	components new RadioAlarmC();
+	//RadioAlarmC.Alarm -> TossimDriverLayerC;
 
 // -------- Active Message
 
 #ifndef IEEE154FRAMES_ENABLED
-	components ActiveMessageLayerC;
+	components new ActiveMessageLayerC();
 	ActiveMessageLayerC.Config -> TossimRadioP;
 	ActiveMessageLayerC.SubSend -> AutoResourceAcquireLayerC;
 	ActiveMessageLayerC.SubReceive -> TinyosNetworkLayerC.TinyosReceive;
@@ -121,7 +128,7 @@ implementation
 #else
 	components new DummyLayerC() as AutoResourceAcquireLayerC;
 #endif
-	AutoResourceAcquireLayerC.SubSend -> TinyosNetworkLayerC.TinyosSend;
+	AutoResourceAcquireLayerC -> TinyosNetworkLayerC.TinyosSend;
 #endif
 
 // -------- RadioSend Resource
@@ -132,7 +139,7 @@ implementation
 
 // -------- Ieee154 Message
 
-	components Ieee154MessageLayerC;
+	components new Ieee154MessageLayerC();
 	Ieee154MessageLayerC.Ieee154PacketLayer -> Ieee154PacketLayerC;
 	Ieee154MessageLayerC.SubSend -> TinyosNetworkLayerC.Ieee154Send;
 	Ieee154MessageLayerC.SubReceive -> TinyosNetworkLayerC.Ieee154Receive;
@@ -147,7 +154,7 @@ implementation
 
 // -------- Tinyos Network
 
-	components TinyosNetworkLayerC;
+	components new TinyosNetworkLayerC();
 
 	TinyosNetworkLayerC.SubSend -> UniqueLayerC;
 	TinyosNetworkLayerC.SubReceive -> LowPowerListeningLayerC;
@@ -155,12 +162,12 @@ implementation
 
 // -------- IEEE 802.15.4 Packet
 
-	components Ieee154PacketLayerC;
+	components new Ieee154PacketLayerC();
 	Ieee154PacketLayerC.SubPacket -> LowPowerListeningLayerC;
 
 // -------- UniqueLayer Send part (wired twice)
 
-	components UniqueLayerC;
+	components new UniqueLayerC();
 	UniqueLayerC.Config -> TossimRadioP;
 	UniqueLayerC.SubSend -> LowPowerListeningLayerC;
 
@@ -168,7 +175,7 @@ implementation
 
 #ifdef LOW_POWER_LISTENING
 	#warning "*** USING LOW POWER LISTENING LAYER"
-	components LowPowerListeningLayerC;
+	components new LowPowerListeningLayerC();
 	LowPowerListeningLayerC.Config -> TossimRadioP;
 #ifdef TOSSIM_HARDWARE_ACK
 	LowPowerListeningLayerC.PacketAcknowledgements -> TossimDriverLayerC;
@@ -176,7 +183,7 @@ implementation
 	LowPowerListeningLayerC.PacketAcknowledgements -> SoftwareAckLayerC;
 #endif
 #else	
-	components LowPowerListeningDummyC as LowPowerListeningLayerC;
+	components new LowPowerListeningDummyC() as LowPowerListeningLayerC;
 #endif
 	LowPowerListeningLayerC.SubControl -> MessageBufferLayerC;
 	LowPowerListeningLayerC.SubSend -> PacketLinkLayerC;
@@ -188,7 +195,7 @@ implementation
 // -------- Packet Link
 
 #ifdef PACKET_LINK
-	components PacketLinkLayerC;
+	components new PacketLinkLayerC();
 	PacketLink = PacketLinkLayerC;
 #ifdef TOSSIM_HARDWARE_ACK
 	PacketLinkLayerC.PacketAcknowledgements -> TossimDriverLayerC;
@@ -198,12 +205,13 @@ implementation
 #else
 	components new DummyLayerC() as PacketLinkLayerC;
 #endif
-	PacketLinkLayerC.SubSend -> MessageBufferLayerC;
-	PacketLinkLayerC.SubPacket -> TimeStampingLayerC;
+	PacketLinkLayerC -> MessageBufferLayerC.Send;
+	PacketLinkLayerC -> MessageBufferLayerC.Receive;
+	PacketLinkLayerC -> TimeStampingLayerC.RadioPacket;
 
 // -------- MessageBuffer
 
-	components MessageBufferLayerC;
+	components new MessageBufferLayerC();
 	MessageBufferLayerC.RadioSend -> TrafficMonitorLayerC;
 	MessageBufferLayerC.RadioReceive -> UniqueLayerC;
 	MessageBufferLayerC.RadioState -> TrafficMonitorLayerC;
@@ -216,7 +224,7 @@ implementation
 // -------- Traffic Monitor
 
 #ifdef TRAFFIC_MONITOR
-	components TrafficMonitorLayerC;
+	components new TrafficMonitorLayerC();
 #else
 	components new DummyLayerC() as TrafficMonitorLayerC;
 #endif
@@ -228,9 +236,9 @@ implementation
 // -------- CollisionAvoidance
 
 #ifdef SLOTTED_MAC
-	components SlottedCollisionLayerC as CollisionAvoidanceLayerC;
+	components new SlottedCollisionLayerC() as CollisionAvoidanceLayerC;
 #else
-	components RandomCollisionLayerC as CollisionAvoidanceLayerC;
+	components new RandomCollisionLayerC() as CollisionAvoidanceLayerC;
 #endif
 	CollisionAvoidanceLayerC.Config -> TossimRadioP;
 #ifdef TOSSIM_HARDWARE_ACK
@@ -240,35 +248,39 @@ implementation
 	CollisionAvoidanceLayerC.SubSend -> SoftwareAckLayerC;
 	CollisionAvoidanceLayerC.SubReceive -> SoftwareAckLayerC;
 #endif
+    CollisionAvoidanceLayerC.RadioAlarm -> RadioAlarmC.RadioAlarm[unique(UQ_RADIO_ALARM)];
 
 // -------- SoftwareAcknowledgement
 
 #ifndef TOSSIM_HARDWARE_ACK
-	components SoftwareAckLayerC;
+	components new SoftwareAckLayerC();
+	SoftwareAckLayerC.AckReceivedFlag -> MetadataFlagsLayerC.PacketFlag[unique(UQ_METADATA_FLAGS)];
+	SoftwareAckLayerC.RadioAlarm -> RadioAlarmC.RadioAlarm[unique(UQ_RADIO_ALARM)];
+	PacketAcknowledgements = SoftwareAckLayerC;
 	SoftwareAckLayerC.Config -> TossimRadioP;
 	SoftwareAckLayerC.SubSend -> CsmaLayerC;
 	SoftwareAckLayerC.SubReceive -> TossimDriverLayerC;
-	PacketAcknowledgements = SoftwareAckLayerC;
 #endif
 
 // -------- Carrier Sense
 
-	components CsmaLayerC;
+	components new CsmaLayerC();
 	CsmaLayerC.Config -> TossimRadioP;
 	CsmaLayerC -> TossimDriverLayerC.RadioSend;
 	CsmaLayerC -> TossimDriverLayerC.RadioCCA;
 
 // -------- TimeStamping
 
-	components TimeStampingLayerC;
+	components new TimeStampingLayerC();
 	TimeStampingLayerC.LocalTimeRadio -> TossimDriverLayerC;
 	TimeStampingLayerC.SubPacket -> MetadataFlagsLayerC;
 	PacketTimeStampRadio = TimeStampingLayerC;
 	PacketTimeStampMilli = TimeStampingLayerC;
+	TimeStampingLayerC.TimeStampFlag -> MetadataFlagsLayerC.PacketFlag[unique(UQ_METADATA_FLAGS)];
 
 // -------- MetadataFlags
 
-	components MetadataFlagsLayerC;
+	components new MetadataFlagsLayerC();
 	MetadataFlagsLayerC.SubPacket -> TossimDriverLayerC;
 
 // -------- TOSSIM Driver
@@ -285,4 +297,9 @@ implementation
 	PacketRSSI = TossimDriverLayerC.PacketRSSI;
 	PacketTimeSyncOffset = TossimDriverLayerC.PacketTimeSyncOffset;
 	LocalTimeRadio = TossimDriverLayerC;
+
+	TossimDriverLayerC.TransmitPowerFlag -> MetadataFlagsLayerC.PacketFlag[unique(UQ_METADATA_FLAGS)];
+	TossimDriverLayerC.RSSIFlag -> MetadataFlagsLayerC.PacketFlag[unique(UQ_METADATA_FLAGS)];
+	TossimDriverLayerC.TimeSyncFlag -> MetadataFlagsLayerC.PacketFlag[unique(UQ_METADATA_FLAGS)];
+	//TossimDriverLayerC.RadioAlarm -> RadioAlarmC.RadioAlarm[unique(UQ_RADIO_ALARM)];
 }

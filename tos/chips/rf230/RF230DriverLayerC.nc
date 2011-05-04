@@ -51,18 +51,24 @@ configuration RF230DriverLayerC
 		interface PacketField<uint8_t> as PacketLinkQuality;
 
 		interface LocalTime<TRadio> as LocalTimeRadio;
+		interface Alarm<TRadio, tradio_size>;
 	}
 
 	uses
 	{
 		interface RF230DriverConfig as Config;
 		interface PacketTimeStamp<TRadio, uint32_t>;
+
+		interface PacketFlag as TransmitPowerFlag;
+		interface PacketFlag as RSSIFlag;
+		interface PacketFlag as TimeSyncFlag;
+		interface RadioAlarm;
 	}
 }
 
 implementation
 {
-	components RF230DriverLayerP, HplRF230C, BusyWaitMicroC, TaskletC, MainC, RadioAlarmC;
+	components RF230DriverLayerP, HplRF230C, BusyWaitMicroC, TaskletC, MainC;
 
 	RadioState = RF230DriverLayerP;
 	RadioSend = RF230DriverLayerP;
@@ -75,24 +81,21 @@ implementation
 	Config = RF230DriverLayerP;
 
 	PacketTransmitPower = RF230DriverLayerP.PacketTransmitPower;
-	components new MetadataFlagC() as TransmitPowerFlagC;
-	RF230DriverLayerP.TransmitPowerFlag -> TransmitPowerFlagC;
+	TransmitPowerFlag = RF230DriverLayerP.TransmitPowerFlag;
 
 	PacketRSSI = RF230DriverLayerP.PacketRSSI;
-	components new MetadataFlagC() as RSSIFlagC;
-	RF230DriverLayerP.RSSIFlag -> RSSIFlagC;
+	RSSIFlag = RF230DriverLayerP.RSSIFlag;
 
 	PacketTimeSyncOffset = RF230DriverLayerP.PacketTimeSyncOffset;
-	components new MetadataFlagC() as TimeSyncFlagC;
-	RF230DriverLayerP.TimeSyncFlag -> TimeSyncFlagC;
+	TimeSyncFlag = RF230DriverLayerP.TimeSyncFlag;
 
 	PacketLinkQuality = RF230DriverLayerP.PacketLinkQuality;
 	PacketTimeStamp = RF230DriverLayerP.PacketTimeStamp;
 
 	RF230DriverLayerP.LocalTime -> HplRF230C;
 
-	RF230DriverLayerP.RadioAlarm -> RadioAlarmC.RadioAlarm[unique("RadioAlarm")];
-	RadioAlarmC.Alarm -> HplRF230C.Alarm;
+	Alarm = HplRF230C.Alarm;
+	RadioAlarm = RF230DriverLayerP.RadioAlarm;
 
 	RF230DriverLayerP.SELN -> HplRF230C.SELN;
 	RF230DriverLayerP.SpiResource -> HplRF230C.SpiResource;

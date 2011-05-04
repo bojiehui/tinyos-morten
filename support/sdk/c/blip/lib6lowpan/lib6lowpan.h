@@ -36,12 +36,11 @@
 #ifndef PC
 #define memclr(ptr, len) memset((ptr), 0, (len))
 #define memcpy(dst, src, len) ip_memcpy((uint8_t *)dst, (uint8_t *)src, len)
-#define memmove(dst, src, len) ip_memcpy(dst, src, len)
+// #define memmove(dst, src, len) ip_memcpy(dst, src, len)
 uint8_t *ip_memcpy(uint8_t *dst0, const uint8_t *src0, uint16_t len) ;
 #endif
 
 uint16_t ieee154_hashaddr(ieee154_addr_t *addr);
-
 
 /*
  * Fragmentation routines.
@@ -60,6 +59,8 @@ struct lowpan_reconstruct {
   uint16_t r_bytes_rcvd;     /* how many bytes from the packet we have
                               received so far */
   uint8_t  r_timeout;
+  uint16_t *r_app_len;
+  uint8_t  *r_transport_header;
   struct ip6_metadata       r_meta;
 };
 
@@ -76,6 +77,7 @@ enum {
   LOWMSG_FRAGN_HDR = (1 << 3),
   LOWMSG_NALP      = (1 << 4),
   LOWMSG_IPNH_HDR  = (1 << 5),
+  LOWMSG_IPV6      = (1 << 6),
 };
 
 uint16_t getHeaderBitmap(struct packed_lowmsg *lowmsg);
@@ -135,9 +137,6 @@ int lowpan_extern_match_context(struct in6_addr *addr, UNUSED uint8_t *ctx_id);
 int lowpan_extern_read_context(struct in6_addr *addr, int context);
 
 
-uint8_t *pack_ieee154_header(uint8_t *buf, size_t cnt, struct ieee154_frame_addr *frame) ;
-uint8_t *unpack_ieee154_hdr(uint8_t *buf, struct ieee154_frame_addr *frame);
-
 int pack_nhc_chain(uint8_t **dest, size_t cnt, struct ip6_packet *packet);
 /*
  * Pack the header fields of msg into buffer 'buf'.
@@ -157,7 +156,8 @@ uint8_t *lowpan_pack_headers(struct ip6_packet *packet,
                              struct ieee154_frame_addr *frame,
                              uint8_t *buf, size_t cnt);
 
-uint8_t *lowpan_unpack_headers(uint8_t *dest, size_t dst_cnt,
+
+uint8_t *lowpan_unpack_headers(struct lowpan_reconstruct *recon,
                                struct ieee154_frame_addr *frame,
                                uint8_t *buf, size_t cnt);
 

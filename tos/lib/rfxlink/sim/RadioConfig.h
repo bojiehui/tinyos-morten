@@ -8,6 +8,7 @@
 #include <Timer.h>
 
 typedef TMicro TRadio;
+typedef uint16_t tradio_size;
 
 #define RADIO_ALARM_MICROSEC (1024ULL*1024ULL) / (1000ULL*1000ULL)
 

@@ -46,6 +46,10 @@ configuration RF230RadioC
 		interface Receive as Snoop[am_id_t id];
 		interface SendNotifier[am_id_t id];
 
+		// for TOSThreads
+		interface Receive as ReceiveDefault[am_id_t id];
+		interface Receive as SnoopDefault[am_id_t id];
+
 		interface AMPacket;
 		interface Packet as PacketForActiveMessage;
 #endif
@@ -82,21 +86,31 @@ configuration RF230RadioC
 
 implementation
 {
-	components RF230RadioP, RadioAlarmC;
+	#define UQ_METADATA_FLAGS	"UQ_RF230_METADATA_FLAGS"
+	#define UQ_RADIO_ALARM		"UQ_RF230_RADIO_ALARM"
+
+// -------- RF230 RadioP
+
+	components RF230RadioP;
 
 #ifdef RADIO_DEBUG
 	components AssertC;
 #endif
 
 	RF230RadioP.Ieee154PacketLayer -> Ieee154PacketLayerC;
-	RF230RadioP.RadioAlarm -> RadioAlarmC.RadioAlarm[unique("RadioAlarm")];
+	RF230RadioP.RadioAlarm -> RadioAlarmC.RadioAlarm[unique(UQ_RADIO_ALARM)];
 	RF230RadioP.PacketTimeStamp -> TimeStampingLayerC;
 	RF230RadioP.RF230Packet -> RF230DriverLayerC;
+
+// -------- RadioAlarm
+
+	components new RadioAlarmC();
+	RadioAlarmC.Alarm -> RF230DriverLayerC;
 
 // -------- Active Message
 
 #ifndef IEEE154FRAMES_ENABLED
-	components ActiveMessageLayerC;
+	components new ActiveMessageLayerC();
 	ActiveMessageLayerC.Config -> RF230RadioP;
 	ActiveMessageLayerC.SubSend -> AutoResourceAcquireLayerC;
 	ActiveMessageLayerC.SubReceive -> TinyosNetworkLayerC.TinyosReceive;
@@ -108,6 +122,9 @@ implementation
 	SendNotifier = ActiveMessageLayerC;
 	AMPacket = ActiveMessageLayerC;
 	PacketForActiveMessage = ActiveMessageLayerC;
+
+	ReceiveDefault = ActiveMessageLayerC.ReceiveDefault;
+	SnoopDefault = ActiveMessageLayerC.SnoopDefault;
 #endif
 
 // -------- Automatic RadioSend Resource
@@ -119,7 +136,7 @@ implementation
 #else
 	components new DummyLayerC() as AutoResourceAcquireLayerC;
 #endif
-	AutoResourceAcquireLayerC.SubSend -> TinyosNetworkLayerC.TinyosSend;
+	AutoResourceAcquireLayerC -> TinyosNetworkLayerC.TinyosSend;
 #endif
 
 // -------- RadioSend Resource
@@ -130,7 +147,7 @@ implementation
 
 // -------- Ieee154 Message
 
-	components Ieee154MessageLayerC;
+	components new Ieee154MessageLayerC();
 	Ieee154MessageLayerC.Ieee154PacketLayer -> Ieee154PacketLayerC;
 	Ieee154MessageLayerC.SubSend -> TinyosNetworkLayerC.Ieee154Send;
 	Ieee154MessageLayerC.SubReceive -> TinyosNetworkLayerC.Ieee154Receive;
@@ -145,7 +162,7 @@ implementation
 
 // -------- Tinyos Network
 
-	components TinyosNetworkLayerC;
+	components new TinyosNetworkLayerC();
 
 	TinyosNetworkLayerC.SubSend -> UniqueLayerC;
 	TinyosNetworkLayerC.SubReceive -> LowPowerListeningLayerC;
@@ -153,12 +170,12 @@ implementation
 
 // -------- IEEE 802.15.4 Packet
 
-	components Ieee154PacketLayerC;
+	components new Ieee154PacketLayerC();
 	Ieee154PacketLayerC.SubPacket -> LowPowerListeningLayerC;
 
 // -------- UniqueLayer Send part (wired twice)
 
-	components UniqueLayerC;
+	components new UniqueLayerC();
 	UniqueLayerC.Config -> RF230RadioP;
 	UniqueLayerC.SubSend -> LowPowerListeningLayerC;
 
@@ -166,7 +183,7 @@ implementation
 
 #ifdef LOW_POWER_LISTENING
 	#warning "*** USING LOW POWER LISTENING LAYER"
-	components LowPowerListeningLayerC;
+	components new LowPowerListeningLayerC();
 	LowPowerListeningLayerC.Config -> RF230RadioP;
 #ifdef RF230_HARDWARE_ACK
 	LowPowerListeningLayerC.PacketAcknowledgements -> RF230DriverLayerC;
@@ -174,11 +191,11 @@ implementation
 	LowPowerListeningLayerC.PacketAcknowledgements -> SoftwareAckLayerC;
 #endif
 #else	
-	components LowPowerListeningDummyC as LowPowerListeningLayerC;
+	components new LowPowerListeningDummyC() as LowPowerListeningLayerC;
 #endif
 	LowPowerListeningLayerC.SubControl -> MessageBufferLayerC;
 	LowPowerListeningLayerC.SubSend -> PacketLinkLayerC;
-	LowPowerListeningLayerC.SubReceive -> MessageBufferLayerC;
+	LowPowerListeningLayerC.SubReceive -> PacketLinkLayerC;
 	LowPowerListeningLayerC.SubPacket -> PacketLinkLayerC;
 	SplitControl = LowPowerListeningLayerC;
 	LowPowerListening = LowPowerListeningLayerC;
@@ -186,7 +203,7 @@ implementation
 // -------- Packet Link
 
 #ifdef PACKET_LINK
-	components PacketLinkLayerC;
+	components new PacketLinkLayerC();
 	PacketLink = PacketLinkLayerC;
 #ifdef RF230_HARDWARE_ACK
 	PacketLinkLayerC.PacketAcknowledgements -> RF230DriverLayerC;
@@ -196,12 +213,13 @@ implementation
 #else
 	components new DummyLayerC() as PacketLinkLayerC;
 #endif
-	PacketLinkLayerC.SubSend -> MessageBufferLayerC;
-	PacketLinkLayerC.SubPacket -> TimeStampingLayerC;
+	PacketLinkLayerC -> MessageBufferLayerC.Send;
+	PacketLinkLayerC -> MessageBufferLayerC.Receive;
+	PacketLinkLayerC -> TimeStampingLayerC.RadioPacket;
 
 // -------- MessageBuffer
 
-	components MessageBufferLayerC;
+	components new MessageBufferLayerC();
 	MessageBufferLayerC.RadioSend -> TrafficMonitorLayerC;
 	MessageBufferLayerC.RadioReceive -> UniqueLayerC;
 	MessageBufferLayerC.RadioState -> TrafficMonitorLayerC;
@@ -214,7 +232,7 @@ implementation
 // -------- Traffic Monitor
 
 #ifdef TRAFFIC_MONITOR
-	components TrafficMonitorLayerC;
+	components new TrafficMonitorLayerC();
 #else
 	components new DummyLayerC() as TrafficMonitorLayerC;
 #endif
@@ -226,47 +244,49 @@ implementation
 // -------- CollisionAvoidance
 
 #ifdef SLOTTED_MAC
-	components SlottedCollisionLayerC as CollisionAvoidanceLayerC;
+	components new SlottedCollisionLayerC() as CollisionAvoidanceLayerC;
 #else
-	components RandomCollisionLayerC as CollisionAvoidanceLayerC;
+	components new RandomCollisionLayerC() as CollisionAvoidanceLayerC;
 #endif
 	CollisionAvoidanceLayerC.Config -> RF230RadioP;
-#ifdef RF230_HARDWARE_ACK
-	CollisionAvoidanceLayerC.SubSend -> CsmaLayerC;
-	CollisionAvoidanceLayerC.SubReceive -> RF230DriverLayerC;
-#else
 	CollisionAvoidanceLayerC.SubSend -> SoftwareAckLayerC;
 	CollisionAvoidanceLayerC.SubReceive -> SoftwareAckLayerC;
-#endif
+	CollisionAvoidanceLayerC.RadioAlarm -> RadioAlarmC.RadioAlarm[unique(UQ_RADIO_ALARM)];
 
 // -------- SoftwareAcknowledgement
 
 #ifndef RF230_HARDWARE_ACK
-	components SoftwareAckLayerC;
+	components new SoftwareAckLayerC();
+	SoftwareAckLayerC.AckReceivedFlag -> MetadataFlagsLayerC.PacketFlag[unique(UQ_METADATA_FLAGS)];
+	SoftwareAckLayerC.RadioAlarm -> RadioAlarmC.RadioAlarm[unique(UQ_RADIO_ALARM)];
+	PacketAcknowledgements = SoftwareAckLayerC;
+#else
+	components new DummyLayerC() as SoftwareAckLayerC;
+#endif
 	SoftwareAckLayerC.Config -> RF230RadioP;
 	SoftwareAckLayerC.SubSend -> CsmaLayerC;
-	SoftwareAckLayerC.SubReceive -> RF230DriverLayerC;
-	PacketAcknowledgements = SoftwareAckLayerC;
-#endif
+	SoftwareAckLayerC.SubReceive -> CsmaLayerC;
 
 // -------- Carrier Sense
 
 	components new DummyLayerC() as CsmaLayerC;
 	CsmaLayerC.Config -> RF230RadioP;
 	CsmaLayerC -> RF230DriverLayerC.RadioSend;
+	CsmaLayerC -> RF230DriverLayerC.RadioReceive;
 	CsmaLayerC -> RF230DriverLayerC.RadioCCA;
 
 // -------- TimeStamping
 
-	components TimeStampingLayerC;
+	components new TimeStampingLayerC();
 	TimeStampingLayerC.LocalTimeRadio -> RF230DriverLayerC;
 	TimeStampingLayerC.SubPacket -> MetadataFlagsLayerC;
 	PacketTimeStampRadio = TimeStampingLayerC;
 	PacketTimeStampMilli = TimeStampingLayerC;
+	TimeStampingLayerC.TimeStampFlag -> MetadataFlagsLayerC.PacketFlag[unique(UQ_METADATA_FLAGS)];
 
 // -------- MetadataFlags
 
-	components MetadataFlagsLayerC;
+	components new MetadataFlagsLayerC();
 	MetadataFlagsLayerC.SubPacket -> RF230DriverLayerC;
 
 // -------- RF230 Driver
@@ -275,6 +295,7 @@ implementation
 	components RF230DriverHwAckC as RF230DriverLayerC;
 	PacketAcknowledgements = RF230DriverLayerC;
 	RF230DriverLayerC.Ieee154PacketLayer -> Ieee154PacketLayerC;
+	RF230DriverLayerC.AckReceivedFlag -> MetadataFlagsLayerC.PacketFlag[unique(UQ_METADATA_FLAGS)];
 #else
 	components RF230DriverLayerC;
 #endif
@@ -284,4 +305,9 @@ implementation
 	PacketLinkQuality = RF230DriverLayerC.PacketLinkQuality;
 	PacketRSSI = RF230DriverLayerC.PacketRSSI;
 	LocalTimeRadio = RF230DriverLayerC;
+
+	RF230DriverLayerC.TransmitPowerFlag -> MetadataFlagsLayerC.PacketFlag[unique(UQ_METADATA_FLAGS)];
+	RF230DriverLayerC.RSSIFlag -> MetadataFlagsLayerC.PacketFlag[unique(UQ_METADATA_FLAGS)];
+	RF230DriverLayerC.TimeSyncFlag -> MetadataFlagsLayerC.PacketFlag[unique(UQ_METADATA_FLAGS)];
+	RF230DriverLayerC.RadioAlarm -> RadioAlarmC.RadioAlarm[unique(UQ_RADIO_ALARM)];
 }

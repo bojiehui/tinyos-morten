@@ -72,29 +72,50 @@
 #ifndef RPL_H
 #define RPL_H
 
-#define ETX_THRESHOLD 200
-#define MAX_ETX 200
-#define MAX_PARENT 3
-#define MAX_HOPCOUNT 30
-#define DWT_SIZE 30
-#define QUEUE_SIZE 5
+#include <iprouting.h>
+
+#ifndef RPL_OF_MRHOF
+
+#define ETX_THRESHOLD 200 //25600
 #define minHopRankIncrease 1
-#define INIT_ETX 20
+#define divideRank 10 //128
+#define INIT_ETX 35 //448
+
+#else
+
+#define ETX_THRESHOLD 25600
+#define minHopRankIncrease 128
+#define divideRank 128
+#define INIT_ETX 448
+
+#endif // MRHOF
+
+#define MAX_PARENT 20
+#define MAX_HOPCOUNT 30
+#define RPL_QUEUE_SIZE 5
+#define RPL_MAX_SOURCEROUTE 10
 
 enum {
   RPL_DODAG_METRIC_CONTAINER_TYPE = 2,
   RPL_DST_PREFIX_TYPE = 3,
   RPL_DODAG_CONFIG_TYPE = 4,
+  RPL_TARGET_TYPE = 5,
+  RPL_TRANSIT_INFORMATION_TYPE = 6,
   RPL_MOP_No_Downward = 0,
   RPL_MOP_No_Storing = 1,
   RPL_MOP_Storing_No_Multicast = 2,
   RPL_MOP_Storing_With_Multicast = 3,
 };
 
+enum {
+  RPL_IFACE = ROUTE_IFACE_154,
+  RPL_HBH_RANK_TYPE = 243,
+};
+
 struct icmpv6_header_t {
   uint8_t	type;
   uint8_t	code;
-  uint16_t	checksum;
+  nx_uint16_t	checksum;
 };
 
 struct dis_base_t {
@@ -102,10 +123,12 @@ struct dis_base_t {
   uint16_t reserved;
 };
 
-
 struct rpl_instance_id {
+  /* Global RPLInstance ID
   uint8_t reserved  : 1;
   uint8_t id        : 7;
+  */
+  uint8_t id;
 };
 
 struct transit_info_option_t {
@@ -135,28 +158,24 @@ struct dao_base_t {
   struct in6_addr dodagID;
   struct target_option_t target_option;
   struct transit_info_option_t transit_info_option;
-  /*
-  uint16_t DAOrank;
-  uint8_t routeTag;
-  uint8_t prefixLength;
-  uint8_t RRCount;
-  uint32_t DAOlifetime;
-  struct in6_addr destPrefix;
-  struct in6_addr RRStack;
-  //uint8_t* RRStack;
-  uint8_t* data;
-  */
 };
 
 struct dio_base_t {
   struct icmpv6_header_t icmpv6;
   struct rpl_instance_id instance_id; // used to be instanceID
-  uint8_t version; //used to be sequence
-  uint16_t dagRank;
-  uint8_t grounded        :1;
-  uint8_t reserved        :1;
-  uint8_t mop             :3; // mode of operation // flag changes
-  uint8_t dag_preference  :3;
+  nx_uint8_t version; //used to be sequence
+  nx_uint16_t dagRank;
+  union{
+    /*
+    struct flags_t {
+      uint8_t grounded        :1;
+      uint8_t reserved        :1;
+      uint8_t mop             :3; // mode of operation // flag changes
+      uint8_t dag_preference  :3;
+    } __attribute__((packed)) flags_element;
+    */
+    uint8_t flags_chunk;
+  } flags;
   uint8_t dtsn;
   uint16_t reserved2;
   struct in6_addr dodagID; // was dagID
@@ -164,22 +183,25 @@ struct dio_base_t {
 
 struct dio_body_t{ // type 2 ; contains metrics
   uint8_t type;
-  //uint8_t PAD1;
-  uint16_t container_len;
-  uint8_t *metric_data;
+  uint8_t container_len;
+  //uint8_t *metric_data;
 };
 
 struct dio_dodag_config_t{ // type 4 ; contains DODAG configuration
-  uint8_t type;
-  //uint8_t PAD1;
-  uint16_t length;
-  uint8_t DIOIntDoubl;
-  uint8_t DIOIntMin;
-  uint8_t DIORedun;
-  uint8_t MaxRankInc;
-  uint8_t MinHopRankInc;
-  //uint8_t PAD2;
-  uint8_t *data; // connect with any additional information
+  nx_uint8_t type;
+  nx_uint8_t length;
+  uint8_t flags : 4;
+  uint8_t A     : 1;
+  uint8_t PCS   : 3;
+  nx_uint8_t DIOIntDoubl;
+  nx_uint8_t DIOIntMin;
+  nx_uint8_t DIORedun;
+  nx_uint16_t MaxRankInc;
+  nx_uint16_t MinHopRankInc;
+  nx_uint16_t ocp;
+  nx_uint8_t reserved;
+  nx_uint8_t default_lifetime;
+  nx_uint16_t lifetime_unit;
 };
 
 struct dio_metric_header_t{ 
@@ -190,28 +212,24 @@ struct dio_metric_header_t{
   uint8_t A_flag      :  2;
   uint8_t O_flag      :  1;
   uint8_t C_flag      :  1;
-  uint16_t object_len;
-  uint8_t *metric_body;
+  nx_uint16_t object_len;
 };
 
 struct dio_etx_t{
-  uint16_t etx;
-  //uint8_t PAD1;
-  uint8_t *data;
+  nx_uint16_t etx;
 };
 
 struct dio_latency_t{
   float latency;
-  uint8_t *data;
 };
 
 struct dio_prefix_t{
   uint8_t type;
-  uint16_t suboption_len;
+  nx_uint16_t suboption_len;
   uint8_t reserved : 3;
   uint8_t preference : 2;
   uint8_t reserved2 : 3;
-  uint32_t lifetime;
+  nx_uint32_t lifetime;
   uint8_t prefix_len;
   struct in6_addr prefix;
 };
@@ -225,12 +243,12 @@ struct rpl_route {
   uint8_t pad   : 4;
   uint8_t reserved;
   uint16_t reserved1;
-  struct in6_addr addr[10];
+  struct in6_addr addr[RPL_MAX_SOURCEROUTE];
 };
 
 /* Necessary constants for RPL*/
+uint16_t ROOT_RANK = 1;
 enum {
-  ROOT_RANK = 1,
   BASE_RANK = 0,
   INFINITE_RANK = 0xFFFF,
   RPL_DEFAULT_INSTANCE = 0,
@@ -245,9 +263,9 @@ enum {
 };
 
 enum {
-  ICMPV6_CODE_DIS = 0x01,
-  ICMPV6_CODE_DIO = 0x02,
-  ICMPV6_CODE_DAO = 0x03,
+  ICMPV6_CODE_DIS = 0x00,
+  ICMPV6_CODE_DIO = 0x01,
+  ICMPV6_CODE_DAO = 0x02,
 };
 
 enum {
@@ -307,22 +325,32 @@ typedef struct {
 } parentTableEntryDAO;
 
 typedef struct {
-  struct in6_addr prefix;
-  uint8_t route_length;
+  route_key_t key;
   uint32_t lifetime;
-  //struct in6_addr route;
-  struct in6_addr route[1];
 } downwards_table_t;
 
+
+/* draft-ietf-6man-rpl-option-01 */
 typedef struct {
+  struct ip6_ext ip6_ext_outer;
+  struct ip6_ext ip6_ext_inner;
+  /*
   uint8_t o_bit  : 1;
-  //uint8_t s_flag  : 1;
   uint8_t r_bit  : 1;
   uint8_t f_bit  : 1;
   uint8_t reserved : 5;
+  */
+  uint8_t bitflag;
   struct rpl_instance_id instance_id; // used to be instanceID 
-  uint16_t senderRank;
-} ip_first_hdr_t;
+  nx_uint16_t senderRank;
+} __attribute__((packed)) rpl_data_hdr_t ;
+
+#define RPL_DATA_O_BIT_MASK 0x80
+#define RPL_DATA_O_BIT_SHIFT 7
+#define RPL_DATA_R_BIT_MASK 0x40
+#define RPL_DATA_R_BIT_SHIFT 6
+#define RPL_DATA_F_BIT_MASK 0x20
+#define RPL_DATA_F_BIT_SHIFT 5
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -353,5 +381,13 @@ struct padN_t{
 };
 */
 
+//parent_t parentSet[MAX_PARENT];
+//uint16_t desiredParent = MAX_PARENT;
+
+#define DIO_GROUNDED_MASK 0x80
+#define DIO_MOP_MASK 0x3c
+#define DIO_MOP_SHIFT 3
+#define DIO_PREF_MASK 0x07
+#define DIO_PREF_SHIFT 0
 
 #endif

@@ -20,38 +20,46 @@
  *
  */
 
-#include <6lowpan.h>
-
-// defined in lib6lowpan
-extern struct in6_addr __my_address;
-extern uint8_t globalPrefix;
+#include <lib6lowpan/lib6lowpan.h>
+#include <lib6lowpan/6lowpan.h>
 
 module IPAddressP {
-  provides interface IPAddress;
+  provides {
+    interface IPAddress;
+  }
   uses {
-    interface CC2420Config;
-    interface LocalIeeeEui64;
+    interface Ieee154Address;
   }
 } implementation {
+  bool m_valid_addr = FALSE, m_short_addr = FALSE;
+  struct in6_addr m_addr;
 
   command bool IPAddress.getLLAddr(struct in6_addr *addr) {
-    // ieee_eui64_t eui = call LocalIeeeEui64.getId();
-    // memcpy(&addr->s6_addr[8], eui.data, 8);
-    ieee154_panid_t panid = call CC2420Config.getPanAddr();
-    ieee154_saddr_t saddr = call CC2420Config.getShortAddr();
+    ieee154_panid_t panid = letohs(call Ieee154Address.getPanId());
+    ieee154_saddr_t saddr = letohs(call Ieee154Address.getShortAddr());
+    ieee154_laddr_t laddr = call Ieee154Address.getExtAddr();
 
     memclr(addr->s6_addr, 16);
     addr->s6_addr16[0] = htons(0xfe80);
-    addr->s6_addr16[4] = htons(panid);
-    addr->s6_addr16[5] = ntohs(0x00FF);
-    addr->s6_addr16[6] = ntohs(0xFE00);
-    addr->s6_addr16[7] = htons(saddr);
+    if (m_short_addr) {
+      addr->s6_addr16[4] = htons(panid);
+      addr->s6_addr16[5] = htons(0x00FF);
+      addr->s6_addr16[6] = htons(0xFE00);
+      addr->s6_addr16[7] = htons(saddr);
+      addr->s6_addr[8] &= ~0x2;  /* unset U bit  */
+    } else {
+      int i;
+      for (i = 0; i < 8; i++)
+        addr->s6_addr[8+i] = laddr.data[7-i];
+      addr->s6_addr[8] ^= 0x2;  /* toggle U/L bit */
+    }
 
     return TRUE;
   }
 
   command bool IPAddress.getGlobalAddr(struct in6_addr *addr) {
-    return FALSE;
+    *addr = m_addr;
+    return m_valid_addr;
   }
 
   command bool IPAddress.setSource(struct ip6_hdr *hdr) {
@@ -69,70 +77,92 @@ module IPAddressP {
       }
     }
 
-    return call IPAddress.getLLAddr(&hdr->ip6_src);
-  }
-
-  command error_t IPAddress.resolveAddress(struct in6_addr *addr, ieee154_addr_t *link_addr) {
-    ieee154_panid_t panid = call CC2420Config.getPanAddr();
-
-    if (addr->s6_addr16[0] == htons(0xfe80)) {
-      if (addr->s6_addr16[5] == htons(0x00FF) &&
-          addr->s6_addr16[6] == htons(0xFE00)) {
-        if (ntohs(addr->s6_addr16[4]) == panid) {
-          link_addr->ieee_mode = IEEE154_ADDR_SHORT;
-          link_addr->i_saddr = htole16(ntohs(addr->s6_addr16[7]));
-        } else {
-          return FAIL;
-        }
-      } else {
-        link_addr->ieee_mode = IEEE154_ADDR_EXT;
-        memcpy(link_addr->i_laddr.data, &addr->s6_addr[8], 8);
-      }
-      return SUCCESS;
-    } else if (addr->s6_addr[0] == 0xff) {
-      /* LL - multicast */
-      if ((addr->s6_addr[1] & 0x0f) == 0x02) {
-        link_addr->ieee_mode = IEEE154_ADDR_SHORT;
-        link_addr->i_saddr   = IEEE154_BROADCAST_ADDR;
-        return TRUE;
-      }
+    if (type == LOCAL) {
+      return call IPAddress.getLLAddr(&hdr->ip6_src);
+    } else {
+      return call IPAddress.getGlobalAddr(&hdr->ip6_src);
     }
-    /* only resolve Link-Local addresses */
-    return FAIL;
   }
 
   command bool IPAddress.isLocalAddress(struct in6_addr *addr) {
-    ieee_eui64_t eui = call LocalIeeeEui64.getId();
-    ieee154_panid_t panid = call CC2420Config.getPanAddr();
-    ieee154_saddr_t saddr = call CC2420Config.getShortAddr();
+    ieee154_panid_t panid = letohs(call Ieee154Address.getPanId());
+    ieee154_saddr_t saddr = letohs(call Ieee154Address.getShortAddr());
+    ieee154_laddr_t eui = call Ieee154Address.getExtAddr();
 
     if (addr->s6_addr16[0] == htons(0xfe80)) {
       // link-local
-      if (addr->s6_addr16[5] == ntohs(0x00FF) &&
-          addr->s6_addr16[6] == ntohs(0xFE00)) {
-        if (ntohs(addr->s6_addr16[4]) == panid && 
+      if (m_short_addr && 
+          addr->s6_addr16[5] == htons(0x00FF) &&
+          addr->s6_addr16[6] == htons(0xFE00)) {
+        if (ntohs(addr->s6_addr16[4]) == (panid & ~0x200) && 
             ntohs(addr->s6_addr16[7]) == saddr) {
           return TRUE;
         } else {
           return FALSE;
         }
-      } else {
-        if (memcmp(&addr->s6_addr[8], eui.data, 8) == 0) {
-          return TRUE;
-        }
-      }
+      } 
+
+      return (addr->s6_addr[8] == (eui.data[7] ^ 0x2) && /* invert U/L bit */
+              addr->s6_addr[9] == eui.data[6] &&
+              addr->s6_addr[10] == eui.data[5] &&
+              addr->s6_addr[11] == eui.data[4] &&
+              addr->s6_addr[12] == eui.data[3] &&
+              addr->s6_addr[13] == eui.data[2] &&
+              addr->s6_addr[14] == eui.data[1] &&
+              addr->s6_addr[15] == eui.data[0]);
+
     } else if (addr->s6_addr[0] == 0xff) {
       // multicast
       if ((addr->s6_addr[1] & 0x0f) <= 2) {
         // accept all LL multicast messages
         return TRUE;
       }
+    } else if (memcmp(addr->s6_addr, m_addr.s6_addr, 16) == 0) {
+      return TRUE;
     }
     return FALSE;
   }
 
-  event void CC2420Config.syncDone( error_t err ) {
-
+  /* Check if the address needs routing or of it's link local in scope
+   */
+  command bool IPAddress.isLLAddress(struct in6_addr *addr) {
+    if (addr->s6_addr16[0] == htons(0xfe80) ||
+        (addr->s6_addr[0] == 0xff &&
+         (addr->s6_addr[1] & 0x0f) <= 2))
+      return TRUE;
+    return FALSE;
   }
+
+  command error_t IPAddress.setAddress(struct in6_addr *addr) {
+    m_addr = *addr;
+#ifdef BLIP_DERIVE_SHORTADDRS
+    if (m_addr.s6_addr[8] == 0 &&
+        m_addr.s6_addr[9] == 0 &&
+        m_addr.s6_addr[10] == 0 &&
+        m_addr.s6_addr[11] == 0 &&
+        m_addr.s6_addr[12] == 0 &&
+        m_addr.s6_addr[13] == 0) {
+      call Ieee154Address.setShortAddr(ntohs(m_addr.s6_addr16[7]));
+      m_short_addr = TRUE;
+    } else {
+      call Ieee154Address.setShortAddr(0);
+      m_short_addr = FALSE;
+    }
+#endif
+
+    m_valid_addr = TRUE;
+    signal IPAddress.changed(TRUE);
+    return SUCCESS;
+  }
+
+  command error_t IPAddress.removeAddress() {
+    m_valid_addr = FALSE;
+    m_short_addr = FALSE;
+    call Ieee154Address.setShortAddr(0);
+    signal IPAddress.changed(FALSE);
+    return SUCCESS;
+  }
+
+  event void Ieee154Address.changed() {}
 
 }

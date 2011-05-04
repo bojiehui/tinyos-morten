@@ -49,15 +49,19 @@ implementation{
   components MainC, RandomC;
   components new TimerMilliC() as TrickleTimer;
   components new TimerMilliC() as InitDISTimer;
-  components IPDispatchC, IPAddressC;
+  components new TimerMilliC() as VersionTimer;
+  components IPAddressC;
   components LedsC, NoLedsC;
   components RPLRankC as RankC;
+  components RPLDAORoutingEngineC;
+  components new ICMPCodeDispatchC(155) as ICMP_RS;
 
   RootControl = Routing;
   StdControl = Routing;
   RPLRoutingEngine = Routing;
 
-  Routing.IPLower -> RankC; // This should be connected to RankC;
+  Routing.IP_DIO -> RankC.IP_DIO_Filter; // This should be connected to RankC;
+  Routing.IP_DIS -> ICMP_RS.IP[ICMPV6_CODE_DIS];
   Routing.TrickleTimer -> TrickleTimer;
   Routing.InitDISTimer -> InitDISTimer;
   Routing.Random -> RandomC;
@@ -65,4 +69,6 @@ implementation{
   Routing.IPAddress -> IPAddressC;
   Routing.Leds -> LedsC;
   Routing.RankControl -> RankC;
+  Routing.RPLDAORoutingEngine -> RPLDAORoutingEngineC;
+  Routing.IncreaseVersionTimer -> VersionTimer;
 }

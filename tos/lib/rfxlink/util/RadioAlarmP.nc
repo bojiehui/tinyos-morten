@@ -34,8 +34,9 @@
 
 #include <Tasklet.h>
 #include <RadioAssert.h>
+#include "RadioConfig.h"
 
-module RadioAlarmP
+generic module RadioAlarmP()
 {
 	provides
 	{
@@ -44,7 +45,7 @@ module RadioAlarmP
 
 	uses
 	{
-		interface Alarm<TRadio, uint16_t>;
+		interface Alarm<TRadio, tradio_size>;
 		interface Tasklet;
 	}
 }
@@ -72,7 +73,7 @@ implementation
 		call Tasklet.schedule();
 	}
 
-	inline async command uint16_t RadioAlarm.getNow[uint8_t id]()
+	inline async command tradio_size RadioAlarm.getNow[uint8_t id]()
 	{
 		return call Alarm.getNow();
 	}
@@ -95,9 +96,9 @@ implementation
 		return state == STATE_READY;
 	}
 
-	tasklet_async command void RadioAlarm.wait[uint8_t id](uint16_t timeout)
+	tasklet_async command void RadioAlarm.wait[uint8_t id](tradio_size timeout)
 	{
-		ASSERT( state == STATE_READY );
+		RADIO_ASSERT( state == STATE_READY );
 
 		alarm = id;
 		state = STATE_WAIT;
@@ -106,8 +107,8 @@ implementation
 
 	tasklet_async command void RadioAlarm.cancel[uint8_t id]()
 	{
-		ASSERT( alarm == id );
-		ASSERT( state != STATE_READY );
+		RADIO_ASSERT( alarm == id );
+		RADIO_ASSERT( state != STATE_READY );
 
 		call Alarm.stop();
 		state = STATE_READY;
