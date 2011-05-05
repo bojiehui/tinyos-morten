@@ -104,7 +104,7 @@ generic module RPLDAORoutingEngineP(){
 
     // for now the next hop for the DAO is ONLY the desired parent on
     // the path to the DODAG root
-    struct in6_addr next_hop; 
+    //struct in6_addr next_hop;
     struct dao_base_t* dao;
 
     if(call RPLRouteInfo.getRank() == ROOT_RANK){
@@ -125,7 +125,8 @@ generic module RPLDAORoutingEngineP(){
       /* in non-storing mode we must use global addresses */
       call IPAddress.getGlobalAddr(&dao_msg->s_pkt.ip6_hdr.ip6_src);
       /* and unicast to the DODAG root */
-      call RPLRouteInfo.getDodagId(&dao_msg->s_pkt.ip6_hdr.ip6_dst);
+      //call RPLRouteInfo.getDodagId(&dao_msg->s_pkt.ip6_hdr.ip6_dst);
+      call RPLRouteInfo.getDodagId();
 #endif
       dao = (struct dao_base_t *) dao_msg->s_pkt.ip6_data->iov_base;
 
