@@ -12,6 +12,6 @@ configuration Ieee154AddressC {
   Ieee154AddressP.LocalIeeeEui64 -> LocalIeeeEui64C;
 
   // workaround until the radio stack uses this interface
-  components CC2420ControlC;
-  Ieee154AddressP.CC2420Config -> CC2420ControlC;
+  //components CC2420ControlC;
+  //Ieee154AddressP.CC2420Config -> CC2420ControlC;
 }

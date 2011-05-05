@@ -25,8 +25,8 @@ IPMALLOCFILE    = $(TOSROOT)/support/sdk/c/blip/lib6lowpan/ip_malloc.c
 IPMALLOCOBJFILE = $(TOSROOT)/support/sdk/c/blip/lib6lowpan/ip_malloc.o
 
 LIB6LOWPAN_OBJFILE      = $(TOSROOT)/support/sdk/c/blip/lib6lowpan/lib6lowpan.o
-LIB6LOWPAN_4944_OBJFILE   = $(TOSROOT)/support/sdk/c/blip/lib6lowpan/lib6lowpan4944.o
-LIB6LOWPAN_FRAG_OBJFILE = $(TOSROOT)/support/sdk/c/blip/lib6lowpan/lib6lowpanFrag.o
+LIB6LOWPAN_4944_OBJFILE   = $(TOSROOT)/support/sdk/c/blip/lib6lowpan/lib6lowpan_4944.o
+LIB6LOWPAN_FRAG_OBJFILE = $(TOSROOT)/support/sdk/c/blip/lib6lowpan/lib6lowpan_frag.o
 LIB6LOWPAN_UTILITY_OBJFILE = $(TOSROOT)/support/sdk/c/blip/lib6lowpan/utility.o
 
 PPPBASEFLAGS = -I$(TOSROOT)/apps/PppRouter/

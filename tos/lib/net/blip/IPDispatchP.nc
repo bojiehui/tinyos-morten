@@ -55,7 +55,8 @@ module IPDispatchP {
     interface SplitControl as RadioControl;
 
     interface Packet as BarePacket;
-    interface Send as Ieee154Send;
+    //interface Send as Ieee154Send;
+    interface Ieee154Send;
     interface Receive as Ieee154Receive;
 
     /* context lookup */
@@ -403,7 +404,7 @@ void SENDINFO_DECR(struct send_info *si) {
       if (recon.r_size == recon.r_bytes_rcvd) {
         deliver(&recon);
       } else {
-        // printfUART("free(%p)\n", recon.r_buf); 
+        // printfUART("free(%p)\n", recon.r_buf);
         free(recon.r_buf);
       }
     }
@@ -438,7 +439,9 @@ void SENDINFO_DECR(struct send_info *si) {
       goto fail;
     }
 
-    if ((call Ieee154Send.send(s_entry->msg,
+#warning "taking 15.4 short address"
+    if ((call Ieee154Send.send(s_entry->frame_addr->ieee_dst.i_saddr,
+			       s_entry->msg,
                                call BarePacket.payloadLength(s_entry->msg))) != SUCCESS) {
       dbg("Drops", "drops: sendTask: send failed\n");
       goto fail;
@@ -548,6 +551,7 @@ void SENDINFO_DECR(struct send_info *si) {
       s_info->link_fragments++;
       s_entry->msg = outgoing;
       s_entry->info = s_info;
+      s_entry->frame_addr = frame_addr;
 
       /* configure the L2 */
       if (frame_addr->ieee_dst.ieee_mode == IEEE154_ADDR_SHORT &&
@@ -559,7 +563,7 @@ void SENDINFO_DECR(struct send_info *si) {
       call PacketLink.setRetryDelay(s_entry->msg, BLIP_L2_DELAY);
 
       SENDINFO_INCR(s_info);}
-       
+
     // printfUART("got %i frags\n", s_info->link_fragments);
   done:
     BLIP_STATS_INCR(stats.sent);

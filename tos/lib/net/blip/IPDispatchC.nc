@@ -21,7 +21,7 @@
  */
 
 /**
- * 
+ *
  *
  */
 #include "IPDispatch.h"
@@ -34,14 +34,16 @@ configuration IPDispatchC {
     interface BlipStatistics<ip_statistics_t>;
   }
 } implementation {
-  
+
   components MainC;
   components NoLedsC as LedsC;
 
   /* IPDispatchP wiring -- fragment rassembly and lib6lowpan bindings */
   components IPDispatchP;
-  components CC2420RadioC as MessageC;
-  components ReadLqiC;
+
+  components Ieee154MessageC as MessageC;
+
+  //components ReadLqiC;
   components new TimerMilliC();
 
   SplitControl = IPDispatchP.SplitControl;
@@ -57,16 +59,18 @@ configuration IPDispatchC {
 /* #endif */
   IPDispatchP.RadioControl -> MessageC;
 
-  IPDispatchP.BarePacket -> MessageC.BarePacket;
-  IPDispatchP.Ieee154Send -> MessageC.BareSend;
-  IPDispatchP.Ieee154Receive -> MessageC.BareReceive;
+  IPDispatchP.BarePacket -> MessageC.Packet;
+  IPDispatchP.Ieee154Send -> MessageC.Ieee154Send;
+  IPDispatchP.Ieee154Receive -> MessageC.Ieee154Receive;
 
 #ifdef LOW_POWER_LISTENING
    IPDispatchP.LowPowerListening -> MessageC;
 #endif
 
   IPDispatchP.PacketLink -> MessageC;
-  IPDispatchP.ReadLqi -> ReadLqiC;
+  //IPDispatchP.ReadLqi -> ReadLqiC;
+  //IPDispatchP.LinkQuality -> ReadLqiC;
+#warning "ReadLqi is not implemented yet"
   IPDispatchP.Leds -> LedsC;
   IPDispatchP.ExpireTimer -> TimerMilliC;
 
@@ -74,7 +78,7 @@ configuration IPDispatchC {
   components new PoolC(struct send_entry, N_FRAGMENTS) as SendEntryPool;
   components new QueueC(struct send_entry *, N_FRAGMENTS);
   components new PoolC(struct send_info, N_CONCURRENT_SENDS) as SendInfoPool;
-  
+
   IPDispatchP.FragPool -> FragPool;
   IPDispatchP.SendEntryPool -> SendEntryPool;
   IPDispatchP.SendInfoPool  -> SendInfoPool;
@@ -88,7 +92,7 @@ configuration IPDispatchC {
 /*   components MulticastP; */
 /*   components new TrickleTimerMilliC(2, 30, 2, 1); */
 /*   IP = MulticastP.IP; */
-  
+
 /*   MainC.SoftwareInit -> MulticastP.Init; */
 /*   MulticastP.MulticastRx -> IPDispatchP.Multicast; */
 /*   MulticastP.HopHeader -> IPExtensionP.HopByHopExt[0]; */

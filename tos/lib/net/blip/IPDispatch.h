@@ -23,6 +23,7 @@
 #define _IPDISPATCH_H_
 
 #include <message.h>
+#include <Ieee154.h>
 
 enum {
   N_RECONSTRUCTIONS = 3,        /* number of concurrent reconstructions */
@@ -40,6 +41,7 @@ struct send_info {
 
 struct send_entry {
   struct send_info *info;
+  struct ieee154_frame_addr* frame_addr;
   message_t  *msg;
 };
 

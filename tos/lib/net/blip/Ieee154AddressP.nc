@@ -6,7 +6,7 @@ module Ieee154AddressP {
   }
   uses {
     interface LocalIeeeEui64;
-    interface CC2420Config;
+    //interface CC2420Config;
   }
 } implementation {
   ieee154_saddr_t m_saddr;
@@ -40,11 +40,12 @@ module Ieee154AddressP {
 
   command error_t Ieee154Address.setShortAddr(ieee154_saddr_t addr) {
     m_saddr = addr;
-    call CC2420Config.setShortAddr(addr);
-    call CC2420Config.sync();
+    //call CC2420Config.setShortAddr(addr);
+    //call CC2420Config.sync();
     signal Ieee154Address.changed();
     return SUCCESS;
   }
 
-  event void CC2420Config.syncDone(error_t err) {}
+#warning "FIXME: is short addr getting set in rfx stack?"
+  //event void CC2420Config.syncDone(error_t err) {}
 }
