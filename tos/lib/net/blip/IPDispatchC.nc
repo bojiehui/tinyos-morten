@@ -43,7 +43,6 @@ configuration IPDispatchC {
 
   components Ieee154MessageC as MessageC;
 
-  //components ReadLqiC;
   components new TimerMilliC();
 
   SplitControl = IPDispatchP.SplitControl;
@@ -68,9 +67,6 @@ configuration IPDispatchC {
 #endif
 
   IPDispatchP.PacketLink -> MessageC;
-  //IPDispatchP.ReadLqi -> ReadLqiC;
-  //IPDispatchP.LinkQuality -> ReadLqiC;
-#warning "ReadLqi is not implemented yet"
   IPDispatchP.Leds -> LedsC;
   IPDispatchP.ExpireTimer -> TimerMilliC;
 

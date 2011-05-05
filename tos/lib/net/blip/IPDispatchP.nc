@@ -62,7 +62,6 @@ module IPDispatchP {
     /* context lookup */
     interface NeighborDiscovery;
 
-    interface ReadLqi;
     interface PacketLink;
     interface LowPowerListening;
 
@@ -439,7 +438,7 @@ void SENDINFO_DECR(struct send_info *si) {
       goto fail;
     }
 
-#warning "taking 15.4 short address"
+#warning "CHECK: Taking 15.4 short address for destination in Ieee154Send.send()"
     if ((call Ieee154Send.send(s_entry->frame_addr->ieee_dst.i_saddr,
 			       s_entry->msg,
                                call BarePacket.payloadLength(s_entry->msg))) != SUCCESS) {
