@@ -67,8 +67,8 @@ typedef struct node {
 void down_heap(heap_t* heap, int findex);
 void up_heap(heap_t* heap, int findex);
 void swap(node_t* first, node_t* second);
-node_t* prev(node_t* node);
-node_t* next(node_t* next);
+node_t* prev_node(node_t* node);
+node_t* next_node(node_t* next);
 
 void init_node(node_t* node) {
   node->data = NULL;
