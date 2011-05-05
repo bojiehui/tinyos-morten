@@ -40,12 +40,12 @@ module Ieee154AddressP {
 
   command error_t Ieee154Address.setShortAddr(ieee154_saddr_t addr) {
     m_saddr = addr;
+#warning "FIXME: is short addr getting set in rfx stack?"
     //call CC2420Config.setShortAddr(addr);
     //call CC2420Config.sync();
     signal Ieee154Address.changed();
     return SUCCESS;
   }
 
-#warning "FIXME: is short addr getting set in rfx stack?"
   //event void CC2420Config.syncDone(error_t err) {}
 }
