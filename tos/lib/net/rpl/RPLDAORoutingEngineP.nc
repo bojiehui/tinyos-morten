@@ -104,7 +104,9 @@ generic module RPLDAORoutingEngineP(){
 
     // for now the next hop for the DAO is ONLY the desired parent on
     // the path to the DODAG root
-    //struct in6_addr next_hop;
+#if RPL_STORING_MODE
+    struct in6_addr next_hop;
+#endif
     struct dao_base_t* dao;
 
     if(call RPLRouteInfo.getRank() == ROOT_RANK){
