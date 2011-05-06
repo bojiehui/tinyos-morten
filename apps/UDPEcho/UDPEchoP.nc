@@ -46,6 +46,12 @@ module UDPEchoP {
     interface Boot;
     interface SplitControl as RadioControl;
 
+#ifdef TOSSIM
+#ifdef RPL_ROUTING
+    interface RootControl;
+#endif
+#endif
+
     interface UDP as Echo;
     interface UDP as Status;
 
@@ -76,6 +82,14 @@ module UDPEchoP {
     route_dest.sin6_port = htons(7000);
     inet_pton6(REPORT_DEST, &route_dest.sin6_addr);
     call StatusTimer.startOneShot(call Random.rand16() % (1024 * REPORT_PERIOD));
+#endif
+
+#ifdef TOSSIM
+#ifdef RPL_ROUTING
+    if (TOS_NODE_ID == BASESTATION_ID) {
+      call RootControl.setRoot();
+    }
+#endif
 #endif
 
     dbg("Boot", "booted: %i\n", TOS_NODE_ID);
