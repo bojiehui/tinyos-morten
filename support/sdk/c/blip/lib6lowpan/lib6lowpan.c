@@ -24,7 +24,9 @@
 
 #include "lib6lowpan-includes.h"
 #include "lib6lowpan.h"
+#if !defined(NWBYTE_SIM)
 #include "ip.h"
+#endif
 #include "Ieee154.h"
 #include "ieee154_header.h"
 #include "internal.h"

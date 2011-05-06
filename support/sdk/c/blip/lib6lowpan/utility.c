@@ -100,7 +100,7 @@ uint16_t ieee154_hashaddr(ieee154_addr_t *addr) {
   }
 }
 
-#ifndef PC
+#if !defined(PC)
 
 uint32_t ntohl(uint32_t i) {
   uint16_t lo = (uint16_t)i;

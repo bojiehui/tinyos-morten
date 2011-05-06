@@ -12,6 +12,7 @@
 // use library versions if on linux
 #include <stdlib.h>
 #else
+
 #if __BYTE_ORDER == __LITTLE_ENDIAN
 // otherwise have to provide our own 
 
@@ -21,8 +22,12 @@
 
 /* this is much more efficient since gcc can insert swpb now.  */
 /* moved to utility.c */
+#if !defined(NWBYTE_SIM)
 uint32_t ntohl(uint32_t i);
 #define htonl(X) ntohl(X)
+#else
+
+#endif
 #else 
 #include <arpa/inet.h>
 #endif
