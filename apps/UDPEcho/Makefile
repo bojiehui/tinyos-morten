@@ -23,6 +23,9 @@ PFLAGS += -DRPL_ROUTING -DRPL_STORING_MODE -I$(LOWPAN_ROOT)/tos/lib/net/rpl
 # CFLAGS += -DREPORT_DEST=\"fe80::22:ff:fe00:1\"
 # CFLAGS += -DREPORT_DEST=\"fec0::1\"
 
+#For simulation
+CFLAGS += -DBASESTATION_ID=0
+
 # if you're using DHCP, set this to try and derive a 16-bit address
 # from the IA received from the server.  This will work if the server
 # gives out addresses from a /112 prefix.  If this is not set, blip
@@ -31,7 +34,7 @@ PFLAGS += -DRPL_ROUTING -DRPL_STORING_MODE -I$(LOWPAN_ROOT)/tos/lib/net/rpl
 
 # this disables dhcp and statically chooses a prefix.  the motes form
 # their ipv6 address by combining this with TOS_NODE_ID
-# PFLAGS += -DIN6_PREFIX=\"fec0::\"
+PFLAGS += -DIN6_PREFIX=\"fec0::\"
 
 # printf debugs.  works only on telosb/tmote sky
 # PFLAGS += -DPRINTFUART_ENABLED

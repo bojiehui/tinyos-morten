@@ -27,7 +27,7 @@ PFLAGS+=-I$(LOWPAN_ROOT)/tos/lib/net/blip/dhcp/
 
 ifneq ($(filter sim,$(GOALS)),sim)
 ifneq ($(filter sim-rpl,$(GOALS)),sim-rpl)
-ifneq ($(filter sim-ipdriver,$(GOALS)),sim-rpl)
+ifneq ($(filter sim-ipdriver,$(GOALS)),sim-ipdriver)
 //PFLAGS+=$(LOWPAN_ROOT)/support/sdk/c/blip/lib6lowpan/lib6lowpan.c
 //PFLAGS+=$(LOWPAN_ROOT)/support/sdk/c/blip/lib6lowpan/lib6lowpan_4944.c
 //PFLAGS+=$(LOWPAN_ROOT)/support/sdk/c/blip/lib6lowpan/lib6lowpanFrag.c
