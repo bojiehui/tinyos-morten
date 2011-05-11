@@ -45,7 +45,7 @@ nodes = loadLinkModel(t, "topo.txt")
 loadNoiseModel(t, "meyer.txt", nodes)
 
 
-initializaNodes(t, nodes)
+initializeNodes(t, nodes)
 
 print "Simulation Running..."
 
