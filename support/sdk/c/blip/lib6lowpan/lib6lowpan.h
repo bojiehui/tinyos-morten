@@ -39,7 +39,6 @@ extern "C" {
 /* POSIX versions of these might not preserve alignments when casting
    though a void* */
 #ifndef PC
-#warning "ifndef PC <>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><"
 #define memclr(ptr, len) memset((ptr), 0, (len))
 #define memcpy(dst, src, len) ip_memcpy((uint8_t *)dst, (uint8_t *)src, len)
 // #define memmove(dst, src, len) ip_memcpy(dst, src, len)
