@@ -4,6 +4,10 @@
 #include <stdint.h>
 #include <stddef.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct ip_iovec {
   uint8_t         *iov_base;
   size_t           iov_len;
@@ -14,5 +18,9 @@ int iov_read(struct ip_iovec *iov, int offset, int len, uint8_t *buf);
 int iov_len(struct ip_iovec *iov);
 void iov_prefix(struct ip_iovec *iov, struct ip_iovec *new_iov, uint8_t *buf, size_t len);
 void iov_print(struct ip_iovec *iov);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

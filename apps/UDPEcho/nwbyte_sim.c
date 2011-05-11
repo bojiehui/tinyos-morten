@@ -1,6 +1,6 @@
-typedef unsigned int uint32_t;
-typedef unsigned int uint16_t;
-typedef unsigned int uint8_t;
+#include <stdint.h>
+
+#include "nwbyte_sim.h"
 
 uint32_t ntohl(uint32_t i) {
   uint16_t lo = (uint16_t)i;
@@ -14,9 +14,9 @@ uint8_t *ip_memcpy(uint8_t *dst0, const uint8_t *src0, uint16_t len) {
   uint8_t *dst = (uint8_t *) dst0;
   uint8_t *src = (uint8_t *) src0;
   uint8_t *ret = dst0;
-  
+
   for (; len > 0; len--)
     *dst++ = *src++;
-  
+
   return ret;
 }

@@ -7,6 +7,10 @@
 #include "lib6lowpan-includes.h"
 #include "ip.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define TO_CHAR(X) (((X) < 10) ? ('0' + (X)) : ('a' + ((X) - 10)))
 #define CHAR_VAL(X)  (((X) >= '0' && (X) <= '9') ? ((X) - '0') : \
                       (((X) >= 'A' && (X) <= 'F') ? ((X) - 'A' + 10) : ((X) - 'a' + 10)))
@@ -225,4 +229,8 @@ void iov_print(struct ip_iovec *iov) {
   }
 }
 
+#endif
+
+#ifdef __cplusplus
+}
 #endif

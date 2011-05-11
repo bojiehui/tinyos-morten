@@ -25,6 +25,10 @@
 
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // align on this number of byte boundarie#s
 #define IP_MALLOC_ALIGN   2
 #define IP_MALLOC_LEN     0x0fff
@@ -45,6 +49,10 @@ uint16_t ip_malloc_freespace();
 #define free(X)   ip_free(X)
 #else
 void ip_print_heap();
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif

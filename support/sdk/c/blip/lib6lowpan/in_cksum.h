@@ -32,9 +32,17 @@
 #include "iovec.h"
 #include "ip.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int in_cksum(const struct ip_iovec *vec);
 uint16_t msg_cksum(const struct ip6_hdr *iph, 
                    struct ip_iovec *data,
                    uint8_t nxt_hdr);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

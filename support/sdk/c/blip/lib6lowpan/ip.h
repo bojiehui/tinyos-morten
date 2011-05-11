@@ -26,6 +26,10 @@
 
 #include "lib6lowpan-includes.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
  * define message structures for internet communication
  *
@@ -248,6 +252,10 @@ int  inet_ntop6(struct in6_addr *addr, char *buf, int cnt);
 
 #define POINTER_DIFF(AP, BP) (((char *)AP) - ((char *)BP))
 #define POINTER_SUM(AP, B) (((char *)AP) + (B))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 
