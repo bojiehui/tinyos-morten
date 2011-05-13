@@ -91,13 +91,16 @@ implementation
 		call AMPacket.setDestination(msg, addr);
 
 		signal SendNotifier.aboutToSend[id](addr, msg);
+		dbg("Bo-AM","AM:Send.\n");		  
 
 		return call SubSend.send(msg);
 	}
 
 	inline event void SubSend.sendDone(message_t* msg, error_t error)
 	{
+		dbg("Bo-AM","AM:Send Done.\n");
 		signal AMSend.sendDone[call AMPacket.type(msg)](msg, error);
+		     
 	}
 
 	inline command error_t AMSend.cancel[am_id_t id](message_t* msg)
@@ -107,6 +110,7 @@ implementation
 
 	default event void AMSend.sendDone[am_id_t id](message_t* msg, error_t error)
 	{
+	dbg("Bo-AM","AM:default Send Done.\n");
 	}
 
 	inline command uint8_t AMSend.maxPayloadLength[am_id_t id]()
@@ -135,16 +139,19 @@ implementation
 			? signal Receive.receive[id](msg, payload, len)
 			: signal Snoop.receive[id](msg, payload, len);
 
+		dbg("Bo-AM","AM:Receive.\n");	
 		return msg;
 	}
 
 	default event message_t* Receive.receive[am_id_t id](message_t* msg, void* payload, uint8_t len)
 	{
-		return signal ReceiveDefault.receive[id](msg, payload, len);;
+		return signal ReceiveDefault.receive[id](msg, payload, len);
+		dbg("Bo-AM","AM:Receive.\n");	
 	}
 
 	default event message_t* ReceiveDefault.receive[am_id_t id](message_t* msg, void* payload, uint8_t len)
 	{
+		dbg("Bo-AM","AM:Receive.\n");	
 		return msg;
 	}
 

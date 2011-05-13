@@ -28,21 +28,32 @@ print "-"*10, "[[[[ Setting up TOSSIM ]]]]", "-"*10
 
 t = Tossim([])
 
-#sf = SerialForwarder(9090)
+channels = ["Boot","UDPEchoP"
+            #,"CpmModelC"
+            ,"Bo-RoutingEngineP"
+            ,"Driver.debug"
+            ,"Bo-Csma"
+            ,"Bo-SoftwareAck"
+            ,"Bo-Collision"
+            ,"Bo-MessageBuffer"
+            ,"Bo-Unique"
+            ,"Bo-LPL"
+            ,"Bo-PLink"
+            ,"Bo-Network"
+            ,"Bo-AM"
+            ,"Bo-154Message"
+            ,"Bo-AutoResource"
+            ]
 
-#channels = ["ICMPResponder", "mab",
-#            "ICMPPing", "base",
-#            "CpmModelC",
-#            "CpmModelC,SNRLoss"]
-
-#for chan in channels:
-#     print "Channel", chan, "enabled"
-#     t.addChannel(chan, f)
+for chan in channels:
+      print "Channel", chan, "enabled"
+      t.addChannel(chan, sys.stdout)
 
 print "Setting up TOSSIM topology..."
 
 nodes = loadLinkModel(t, "topo.txt")
 loadNoiseModel(t, "meyer.txt", nodes)
+
 
 
 initializeNodes(t, nodes)
@@ -57,8 +68,6 @@ sleepDelta = 0.00001
 clockStartTime = datetime.now()
 simStartTime   = t.time()
 
-print "-"*10, "[[[[ Starting simulation of blip ]]]]", "-"*10
-
 try:
      while True:
 
@@ -72,12 +81,6 @@ try:
           while sleepTime > 0:
                time.sleep(sleepDelta)
                sleepTime -= sleepDelta
-               #print ">>> SleepTime--", sleepTime
-               #if eventCtr % 4 == 0 or not eventPresent:
-               #print ">>> SF process", eventCtr, eventPresent, datetime.now()
-               if sf.process() == 1:
-                    #print ">>> Something to process"
-                    break
           eventPresent = t.runNextEvent()
           eventCtr = eventCtr + 1
 
@@ -86,9 +89,9 @@ try:
 except KeyboardInterrupt:
      print ">>> Ctrl-C"
 
-#except:
-#     traceback.print_exc()
-#     print ">>> Exception while simulating."
+except:
+     traceback.print_exc()
+     print ">>> Exception while simulating."
 
 finally:
      #throttle.finalize()

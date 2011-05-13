@@ -87,6 +87,7 @@ module UDPEchoP {
 #ifdef TOSSIM
 #ifdef RPL_ROUTING
     if (TOS_NODE_ID == BASESTATION_ID) {
+      dbg ("UDPEchoP", "Basestation ID = %d.\n", TOS_NODE_ID);
       call RootControl.setRoot();
     }
 #endif

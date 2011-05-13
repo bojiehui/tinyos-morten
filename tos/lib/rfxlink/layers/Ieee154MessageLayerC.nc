@@ -106,7 +106,7 @@ implementation
 	}
 
 	command error_t Ieee154Send.send(ieee154_saddr_t addr, message_t* msg, uint8_t len)
-	{
+	{    
 		if( len > call Packet.maxPayloadLength() )
 			return EINVAL;
 
@@ -120,17 +120,19 @@ implementation
 	    	call Ieee154PacketLayer.setDestPan(msg, call Ieee154PacketLayer.localPan());
 		
     		signal SendNotifier.aboutToSend(addr, msg);
-    	
+		dbg("Bo-154Message","154Message:Send.\n");
     		return call SubSend.send(msg);
 	}
 
 	event void SubSend.sendDone(message_t* msg, error_t error)
 	{
 		signal Ieee154Send.sendDone(msg, error);
+		dbg("Bo-154Message","154Message:Send Done.\n");
 	}
 
 	default event void Ieee154Send.sendDone(message_t* msg, error_t error)
 	{
+	  dbg("Bo-154Message","154Message:Send Done.\n");
 	}
 
 	default event void SendNotifier.aboutToSend(am_addr_t addr, message_t* msg)
@@ -140,7 +142,8 @@ implementation
 /*----------------- Receive -----------------*/
 
 	event message_t* SubReceive.receive(message_t* msg)
-	{
+	{ 	
+	        dbg("Bo-154Message","154Message:Receive.\n");
 		if( call Ieee154PacketLayer.isForMe(msg) )
 			return signal Ieee154Receive.receive(msg,
 				getPayload(msg), call Packet.payloadLength(msg));
@@ -150,6 +153,7 @@ implementation
 
 	default event message_t* Ieee154Receive.receive(message_t* msg, void* payload, uint8_t len)
 	{
-		return msg;
+	  dbg("Bo-154Message","154Message:receive.\n");
+	  return msg;
 	}
 }

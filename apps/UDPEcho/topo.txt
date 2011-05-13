@@ -1,2 +1,2 @@
-gain 0 1 -14
-gain 1 0 -14
+gain 1 2 -14
+gain 2 1 -14

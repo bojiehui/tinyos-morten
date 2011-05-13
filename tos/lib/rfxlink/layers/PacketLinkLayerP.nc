@@ -132,6 +132,7 @@ implementation
 		RADIO_ASSERT( msg == currentMsg );
 
 		post send();
+		dbg("Bo-PLink","PLink:Send Done.\n");
 	}
 
 	event void DelayTimer.fired()

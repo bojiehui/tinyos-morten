@@ -79,7 +79,8 @@ implementation
 #ifndef TFRAMES_ENABLED
 
 	command error_t Ieee154Send.send(message_t* msg)
-	{
+	{  		
+		dbg("Bo-Network","Network:Send.\n");
 		return call SubSend.send(msg);
 	}
 
@@ -134,6 +135,7 @@ implementation
 #ifndef TFRAMES_ENABLED
 		getHeader(msg)->network = TINYOS_6LOWPAN_NETWORK_ID;
 #endif
+		dbg("Bo-Network","Network:Send.\n");
 		return call SubSend.send(msg);
 	}
 
@@ -194,6 +196,7 @@ implementation
 
 	event message_t* SubReceive.receive(message_t* msg)
 	{
+		dbg("Bo-Network","Network:Receive.\n");
 		return signal TinyosReceive.receive(msg);
 	}
 
@@ -217,10 +220,12 @@ implementation
 			signal TinyosSend.sendDone(msg, result);
 		else
 			signal Ieee154Send.sendDone(msg, result);
+		dbg("Bo-Network","Network:Send Done.\n");
 	}
 
 	event message_t* SubReceive.receive(message_t* msg)
-	{
+	{	
+	        dbg("Bo-Network","Network:receive.\n");
 		if( getHeader(msg)->network == TINYOS_6LOWPAN_NETWORK_ID )
 			return signal TinyosReceive.receive(msg);
 		else

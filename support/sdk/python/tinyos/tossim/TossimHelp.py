@@ -37,7 +37,7 @@
 """
 
 def loadLinkModel(t, file):
-    #print "Loading link model from " + file + "... "
+    print "Loading link model from " + file + "... "
     r = t.radio()
     f = open(file, "r")
     nodes = []
@@ -55,7 +55,7 @@ def loadLinkModel(t, file):
     return nodes
 
 def loadNoiseModel(t, file, nodes):
-    #print "Loading noise model from " + file + "... "
+    print "Loading noise model from " + file + "... "
     noise = open(file, "r")
     lines = noise.readlines()
     for line in lines:
@@ -66,11 +66,11 @@ def loadNoiseModel(t, file, nodes):
                 t.getNode(i).addNoiseTraceReading(val)
 
     for i in nodes:
-      #print "Creating noise model for ",i;
+      print "Creating noise model for ",i;
       t.getNode(i).createNoiseModel()
 
 def initializeNodes(t, nodes):
-    #print "Initializing nodes..."
+    print "Initializing nodes..."
     for i in nodes:
       t.getNode(i).bootAtTime((31 + t.ticksPerSecond() / 10) + 1);
       

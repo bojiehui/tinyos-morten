@@ -57,7 +57,7 @@ implementation
 			error_t result = call SubSend.send(msg);
 			if( result != SUCCESS )
 				call Resource.release();
-
+			dbg("Bo-AutoResource","AutoResource:Send.\n");
 			return result;
 		}
 
@@ -73,12 +73,14 @@ implementation
 			call Resource.release();
 			signal BareSend.sendDone(pending, result);
 		}
+		dbg("Bo-AutoResource","AutoResource:Send.\n");
 	}
 
 	event void SubSend.sendDone(message_t* msg, error_t result)
 	{
 		call Resource.release();
 		signal BareSend.sendDone(msg, result);
+		dbg("Bo-AutoResource","AutoResource:Send Done.\n");
 	}
 
 	command error_t BareSend.cancel(message_t* msg)
