@@ -35,7 +35,6 @@
  * @date   October 12 2008
  */
 """
-
 def loadLinkModel(t, file):
     print "Loading link model from " + file + "... "
     r = t.radio()
@@ -43,7 +42,7 @@ def loadLinkModel(t, file):
     nodes = []
     lines = f.readlines()
     for line in lines:
-        s = line.split("\t")
+        s = line.split(" ")
         if (len(s) > 0):
             if s[0] =="gain":
                 #print " ", s[1], " ", s[2], " ", s[3];
@@ -51,7 +50,8 @@ def loadLinkModel(t, file):
             if s[0]=="noise":
                 #print " ", s[1], " ", s[2], " ", s[3];
                 r.setNoise(int(s[1]), float(s[2]), float(s[3]))
-                nodes.append(int(s[1]))
+            nodes.append(int(s[1]))
+                
     return nodes
 
 def loadNoiseModel(t, file, nodes):

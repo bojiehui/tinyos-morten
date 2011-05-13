@@ -3,8 +3,8 @@ COMPONENT=UDPEchoC
 # BOOTLOADER=tosboot
 
 # radio options
-# CFLAGS += -DCC2420_DEF_CHANNEL=26
-# CFLAGS += -DRF230_DEF_CHANNEL=26
+#CFLAGS += -DCC2420_DEF_CHANNEL=26
+#CFLAGS += -DRF230_DEF_CHANNEL=26
 # CFLAGS += -DCC2420_DEF_RFPOWER=4 -DENABLE_SPI0_DMA
 
 # enable dma on the radio
@@ -24,7 +24,7 @@ PFLAGS += -DRPL_ROUTING -DRPL_STORING_MODE -I$(LOWPAN_ROOT)/tos/lib/net/rpl
 # CFLAGS += -DREPORT_DEST=\"fec0::1\"
 
 #For simulation
-CFLAGS += -DBASESTATION_ID=0
+CFLAGS += -DBASESTATION_ID=1
 
 # if you're using DHCP, set this to try and derive a 16-bit address
 # from the IA received from the server.  This will work if the server
