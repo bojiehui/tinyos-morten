@@ -103,7 +103,7 @@ implementation
 		txMsg = msg;
 		state = STATE_TX_PENDING_FIRST;
 		call RadioAlarm.wait(getBackoff(call Config.getInitialBackoff(msg)));
-		dbg("Bo-Collision","Collision:Send.\n");
+		dbg("Bo-Collision","Collision:Send @ %s.\n",sim_time_string());
 
 		return SUCCESS;
 	}
@@ -159,7 +159,7 @@ implementation
 
 		state = STATE_READY;
 		signal RadioSend.sendDone(error);
-		dbg("Bo-Collision","Collision:Send Done.\n");
+		dbg("Bo-Collision","Collision:Send Done @ %s.\n",sim_time_string());
 	}
 
 	tasklet_async event bool SubReceive.header(message_t* msg)
@@ -173,7 +173,7 @@ implementation
 
 		txBarrier = call Config.getTransmitBarrier(msg);
 		delay = txBarrier - call RadioAlarm.getNow();
-
+		dbg("Bo-Collision","Collision:Receive @ %s.\n",sim_time_string());
 		if( delay > 0 )
 		{
 			if( state == STATE_READY )
@@ -188,8 +188,6 @@ implementation
 			else
 				state |= STATE_BARRIER;
 		}
-
 		return signal RadioReceive.receive(msg);
-		dbg("Bo-Collision","Collision:Receive.\n");
 	}
 }

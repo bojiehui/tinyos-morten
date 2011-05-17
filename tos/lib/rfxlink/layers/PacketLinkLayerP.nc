@@ -132,7 +132,7 @@ implementation
 		RADIO_ASSERT( msg == currentMsg );
 
 		post send();
-		dbg("Bo-PLink","PLink:Send Done.\n");
+		dbg("Bo-PLink","PLink:Send Done @ %s.\n",sim_time_string());
 	}
 
 	event void DelayTimer.fired()
@@ -155,7 +155,7 @@ implementation
 		totalRetries = 0;
 		state = STATE_SENDING;
 		post send();
-
+		dbg("Bo-PLink","PLink:Send @ %s.\n",sim_time_string());
 		return SUCCESS;
 	}
 

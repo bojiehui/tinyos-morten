@@ -78,7 +78,7 @@ implementation
 	tasklet_async command error_t RadioSend.send(message_t* msg)
 	{
 		error_t error;
-
+		dbg("Bo-SoftwareAck","SoftwareAck:Send @ %s.\n",sim_time_string());
 		if( state == STATE_READY )
 		{
 			if( (error = call SubSend.send(msg)) == SUCCESS )
@@ -96,29 +96,31 @@ implementation
 
 	tasklet_async event void SubSend.sendDone(error_t error)
 	{
+	
 		if( state == STATE_ACK_SEND )
 		{
 			// TODO: what if error != SUCCESS
 			RADIO_ASSERT( error == SUCCESS );
 
 			state = STATE_READY;
-		}
+			dbg("Bo-SoftwareAck","SoftwareAck:Send Done @ %s.\n",sim_time_string());	
+	}
 		else
 		{
 			RADIO_ASSERT( state == STATE_DATA_SEND );
 			RADIO_ASSERT( call RadioAlarm.isFree() );
-
+			dbg("Bo-SoftwareAck","SoftwareAck:Send Done @ %s.\n",sim_time_string());
 			if( error == SUCCESS && call Config.requiresAckWait(txMsg) && call RadioAlarm.isFree() )
 			{
 				call RadioAlarm.wait(call Config.getAckTimeout());
 				state = STATE_ACK_WAIT;
+				dbg("Bo-SoftwareAck","SoftwareAck:Send Done @ %s.\n",sim_time_string());
 			}
 			else
 			{
 				state = STATE_READY;
 				signal RadioSend.sendDone(error);
-				dbg("Bo-SoftwareAck","SoftwareAck:Send Done.\n");
-
+				dbg("Bo-SoftwareAck","SoftwareAck:Send Done @ %s.\n",sim_time_string());
 			}
 		}
 	}
@@ -144,7 +146,7 @@ implementation
 	tasklet_async event message_t* SubReceive.receive(message_t* msg)
 	{
 		bool ack = call Config.isAckPacket(msg);
-
+		dbg("Bo-SoftwareAck","SoftwareAck:Receive @ %s.\n",sim_time_string());
 		RADIO_ASSERT( state == STATE_ACK_WAIT || state == STATE_READY );
 
 		if( state == STATE_ACK_WAIT )
@@ -173,7 +175,6 @@ implementation
 		}
 
 		return signal RadioReceive.receive(msg);
-		dbg("Bo-SoftwareAck","SoftwareAck:Receive");
 	}
 
 /*----------------- PacketAcknowledgements -----------------*/

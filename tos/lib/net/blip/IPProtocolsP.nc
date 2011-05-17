@@ -11,7 +11,7 @@ module IPProtocolsP {
     interface IP as SubIP;
   }
 } implementation {
-
+#define printfUART(X, args...) dbg("IPProtocolsP", X, ## args)
   event void SubIP.recv(struct ip6_hdr *iph, 
                         void *payload, 
                         size_t len, 
@@ -26,6 +26,7 @@ module IPProtocolsP {
     }
 
     len -= POINTER_DIFF(cur, payload);
+    printfUART("IP protocol receive @ %s\n",sim_time_string());
     signal IP.recv[nxt](iph, cur, len, meta);
   }
 

@@ -212,7 +212,7 @@ implementation
 
 		if( done )
 			signal Send.sendDone(txMsg, txError);
-		        dbg("Bo-MessageBuffer","MessageBuffer:Send Done.\n");
+		        dbg("Bo-MessageBuffer","MessageBuffer:Send Done @ %s.\n",sim_time_string());
 	}
 
 	tasklet_async event void RadioSend.sendDone(error_t error)
@@ -245,10 +245,11 @@ implementation
 			result = SUCCESS;
 		}
 
+		dbg("Bo-MessageBuffer","MessageBuffer:Send @ %s.\n",sim_time_string());
 		call Tasklet.resume();
 
 		return result;
-		dbg("Bo-MessageBuffer","MessageBuffer:Send.\n");
+	
 	}
 
 	tasklet_async event void RadioSend.ready()
@@ -335,9 +336,9 @@ implementation
 
 				msg = receiveQueue[receiveQueueHead];
 			}
-
+			dbg("Bo-MessageBuffer","MessageBuffer:Receive @ %s.\n",sim_time_string());
 			msg = signal Receive.receive(msg);
-			dbg("Bo-MessageBuffer","MessageBuffer:Receive.\n");
+		
 
 			atomic
 			{

@@ -83,6 +83,7 @@ module IPDispatchP {
 /* #undef printfUART_buf */
 /* #define printfUART(FMT, args ...) */
 /* #define printfUART_buf(buf, len) */
+#define printfUART(X, args...) dbg("IPDispatch", X, ## args)
 
 #ifndef BLIP_L2_RETRIES
 #define BLIP_L2_RETRIES 3
@@ -217,7 +218,7 @@ void SENDINFO_DECR(struct send_info *si) {
   void deliver(struct lowpan_reconstruct *recon) {
     struct ip6_hdr *iph = (struct ip6_hdr *)recon->r_buf;
 
-    printfUART("deliver [%i]: ", recon->r_bytes_rcvd);
+    printfUART("IPDispatchP: deliver [%i]: \n", recon->r_bytes_rcvd);
     printfUART_buf(recon->r_buf, recon->r_bytes_rcvd);
 
     /* the payload length field is always compressed, have to put it back here */
@@ -255,7 +256,7 @@ void SENDINFO_DECR(struct send_info *si) {
   void reconstruct_age(void *elt) {
     struct lowpan_reconstruct *recon = (struct lowpan_reconstruct *)elt;
     if (recon->r_timeout != T_UNUSED) 
-      printfUART("recon src: 0x%x tag: 0x%x buf: %p recvd: %i/%i\n", 
+      printfUART("IPDispatchP: recon src: 0x%x tag: 0x%x buf: %p recvd: %i/%i\n", 
                  recon->r_source_key, recon->r_tag, recon->r_buf, 
                  recon->r_bytes_rcvd, recon->r_size);
     switch (recon->r_timeout) {
@@ -266,9 +267,9 @@ void SENDINFO_DECR(struct send_info *si) {
     case T_ZOMBIE:
     case T_FAILED2:
       // deallocate the space for reconstruction
-      printfUART("timing out buffer: src: %i tag: %i\n", recon->r_source_key, recon->r_tag);
+      printfUART("IPDispatchP: timing out buffer: src: %i tag: %i\n", recon->r_source_key, recon->r_tag);
       if (recon->r_buf != NULL) {
-        printfUART("free(%p)\n", recon->r_buf); 
+        printfUART("IPDispatchP: free(%p)\n", recon->r_buf); 
         free(recon->r_buf);
       }
       recon->r_timeout = T_UNUSED;
@@ -291,11 +292,12 @@ void SENDINFO_DECR(struct send_info *si) {
   event void ExpireTimer.fired() {
     table_map(&recon_cache, reconstruct_age);
 
-    
-    printfUART("Frag pool size: %i\n", call FragPool.size());
-    printfUART("SendInfo pool size: %i\n", call SendInfoPool.size());
-    printfUART("SendEntry pool size: %i\n", call SendEntryPool.size());
-    printfUART("Forward queue length: %i\n", call SendQueue.size());
+    /*   
+    printfUART("IPDispatchP: Frag pool size: %i\n", call FragPool.size());
+    printfUART("IPDispatchP: SendInfo pool size: %i\n", call SendInfoPool.size());
+    printfUART("IPDispatchP: SendEntry pool size: %i\n", call SendEntryPool.size());
+    printfUART("IPDispatchP: Forward queue length: %i\n", call SendQueue.size());
+    */
     ip_print_heap();
   }
 
@@ -340,7 +342,7 @@ void SENDINFO_DECR(struct send_info *si) {
     struct ieee154_frame_addr frame_address;
     uint8_t *buf = msg_payload;
 
-    printfUART(" -- RECEIVE -- len : %i\n", len);
+    printfUART("IPDispatchP: -- RECEIVE -- @ %s len : %i\n", sim_time_string(), len);
 
     BLIP_STATS_INCR(stats.rx_total);
 
@@ -421,7 +423,7 @@ void SENDINFO_DECR(struct send_info *si) {
   task void sendTask() {
     struct send_entry *s_entry;
 
-    // printfUART("sendTask() - sending\n");
+    printfUART("IPDispatchP: sendTask() - sending @ %s\n",sim_time_string());
 
     if (radioBusy || state != S_RUNNING) return;
     if (call SendQueue.empty()) return;
@@ -531,7 +533,7 @@ void SENDINFO_DECR(struct send_info *si) {
         printfUART(" get frag error: %i\n", frag_len);
       }
 
-      printfUART("fragment length: %i offset: %i\n", frag_len, ctx.offset);
+      //      printfUART("IPDispatchP: fragment length: %i offset: %i\n", frag_len, ctx.offset);
       call BarePacket.setPayloadLength(outgoing, frag_len);
 
       if (frag_len <= 0) {
@@ -577,7 +579,7 @@ void SENDINFO_DECR(struct send_info *si) {
 
     radioBusy = FALSE;
 
-    // printfUART("sendDone: %p %i\n", msg, error);
+    printfUART("IPDispatchP: sendDone @ %s: %p %i\n",sim_time_string(), msg, error);
 
     if (state == S_STOPPING) {
       call RadioControl.stop();
@@ -589,8 +591,7 @@ void SENDINFO_DECR(struct send_info *si) {
     signal IPLower.sendDone(s_entry->info);
 
     if (!call PacketLink.wasDelivered(msg)) {
-      printfUART("sendDone: was not delivered! (%i tries)\n", 
-                 call PacketLink.getRetries(msg));
+      printfUART("IPDispatchP: sendDone: was not delivered! @ %s (%i tries)\n",sim_time_string(),call PacketLink.getRetries(msg));
       s_entry->info->failed = TRUE;
 /*       if (s_entry->info->policy.dest[0] != 0xffff) */
 /*         dbg("Drops", "drops: sendDone: frag was not delivered\n"); */

@@ -72,7 +72,7 @@ implementation
 	tasklet_async command error_t RadioSend.send(message_t* msg)
 	{
 		error_t error;
-		dbg("Bo-Csma","Csma:Send.\n");
+		dbg("Bo-Csma","Csma:Send @ %s.\n",sim_time_string());
 
 		if( state == STATE_READY )
 		{
@@ -111,7 +111,7 @@ implementation
 
 		state = STATE_READY;
 		signal RadioSend.sendDone(error);
-		dbg("Bo-Csma","Csma:SendDone.\n");
+		dbg("Bo-Csma","Csma:SendDone @ %s.\n",sim_time_string());
 
 	}
 }

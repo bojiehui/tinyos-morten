@@ -187,7 +187,7 @@ implementation
 			
 			if( txError == SUCCESS )
 				state = SEND_SUBSEND_DONE;
-			dbg("Bo-LPL","LPL:Send Done.\n");
+			dbg("Bo-LPL","LPL:Send Done @ %s.\n",sim_time_string());
 			else
 			{
 				state = SEND_DONE;
@@ -201,7 +201,7 @@ implementation
 				call Timer.startOneShot(call SystemLowPowerListening.getDelayAfterReceive());
 
 			signal Send.sendDone(txMsg, txError);
-			dbg("Bo-LPL","LPL:Send Done.\n");
+			dbg("Bo-LPL","LPL:Send Done with error @ %s.\n",sim_time_string());
 		}
 	}
 
@@ -287,18 +287,20 @@ implementation
 	event message_t* SubReceive.receive(message_t* msg)
 	{
 		call Leds.led0Toggle();
+		dbg("Bo-LPL","LPL:Receive @ %s.\n",sim_time_string());
 
 		if( state == SLEEP_SUBSTOP )
 			state = LISTEN;
 
 		if( state == LISTEN && sleepInterval > 0 )
 			call Timer.startOneShot(call SystemLowPowerListening.getDelayAfterReceive());
-		dbg("Bo-LPL","LPL:Receive.\n");
+		dbg("Bo-LPL","LPL:Receive @ %s.\n",sim_time_string());
 		return signal Receive.receive(msg);
 	}
 
 	command error_t Send.send(message_t* msg)
 	{	
+	  	dbg("Bo-LPL","LPL:Send with error @ %s.\n",sim_time_string());
 		if( state == LISTEN || state == SLEEP_WAIT )
 		{
 			call Timer.stop();
@@ -321,7 +323,6 @@ implementation
 
 		txMsg = msg;
 		txError = FAIL;
-		dbg("Bo-LPL","LPL:Send.\n");
 		return SUCCESS;
 	}
 
@@ -370,7 +371,7 @@ implementation
 
 		if( error == SUCCESS )
 			call Leds.led1Toggle();
-		dbg("Bo-LPL","LPL:Send Done.\n");
+		dbg("Bo-LPL","LPL:Send Done @ %s.\n",sim_time_string());
 	}
 
 /*----------------- LowPowerListening -----------------*/

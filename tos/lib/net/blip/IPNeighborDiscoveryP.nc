@@ -27,13 +27,14 @@ module IPNeighborDiscoveryP {
   }
 } implementation {
 
-#undef printfUART
+  //#undef printfUART
 #undef printfUART_buf
 #undef printfUART_in6addr
-#define printfUART(FMT, args ...)
+  //#define printfUART(FMT, args ...)
 #define printfUART_buf(buf, len)
 #define printfUART_in6addr(X)
 
+#define printfUART(X, args...) dbg("IPND", X, ## args)
 
   command int NeighborDiscovery.matchContext(struct in6_addr *addr, 
                                              uint8_t *ctx) {
@@ -104,11 +105,11 @@ module IPNeighborDiscoveryP {
     fr_addr.ieee_dstpan = call Ieee154Address.getPanId();
     call IPAddress.getLLAddr(&local_addr);
 
-    printfUART("IPNeighborDiscovery - send - next: ");
+    printfUART("IPND: IPNeighborDiscovery - send @ %s - next: \n",sim_time_string());
     printfUART_in6addr(next);
-    printfUART(" - ll source: ");
+    /*  printfUART("IPNeighborDiscoveryP: - ll source:");
     printfUART_in6addr(&local_addr);
-    printfUART("\n");
+    printfUART("\n");*/
     // iov_print(msg->ip6_data);
 
     if (call NeighborDiscovery.resolveAddress(&local_addr, &fr_addr.ieee_src) != SUCCESS) {
@@ -120,18 +121,20 @@ module IPNeighborDiscoveryP {
       printfUART("IPND - next-hop address resolution failed\n");
       return FAIL;
     }
-    printfUART("l2 source: "); printfUART_buf(fr_addr.ieee_src.i_laddr.data, 8);
-    printfUART("l2 dest: "); printfUART_buf(fr_addr.ieee_dst.i_laddr.data, 8);
-    printfUART("\n");
+    /* printfUART("IPND: l2 source: "); printfUART_buf(fr_addr.ieee_src.i_laddr.data, 8);
+    printfUART("IPND: l2 dest: "); printfUART_buf(fr_addr.ieee_dst.i_laddr.data, 8);
+    printfUART("\n");*/
 
     return call IPLower.send(&fr_addr, msg, ptr);
   }
 
   event void IPLower.recv(struct ip6_hdr *iph, void *payload, struct ip6_metadata *meta) {
+    printfUART("IPND: Receive @ %s\n", sim_time_string());
     signal IPForward.recv(iph, payload, meta);
   }
 
   event void IPLower.sendDone(struct send_info *status) {
+    printfUART("IPND: Send Done @ %s\n", sim_time_string());
     signal IPForward.sendDone(status);
   }
 

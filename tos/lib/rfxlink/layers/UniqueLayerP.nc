@@ -70,7 +70,7 @@ implementation
 	{
 		call UniqueConfig.setSequenceNumber(msg, ++sequenceNumber);
 		return call SubSend.send(msg);
-		dbg("Bo-Unique","Unique:Send.\n");
+		dbg("Bo-Unique","Unique:Send @ %s.\n",sim_time_string());
 	}
 
 	command error_t Send.cancel(message_t* msg)
@@ -81,7 +81,7 @@ implementation
 	event void SubSend.sendDone(message_t* msg, error_t error)
 	{
 		signal Send.sendDone(msg, error);
-		dbg("Bo-Unique","Unique:Send Done.\n");
+		dbg("Bo-Unique","Unique:Send Done @ %s.\n",sim_time_string());
 	}
 
 	tasklet_async event bool SubReceive.header(message_t* msg)
@@ -111,7 +111,7 @@ implementation
 			call NeighborhoodFlag.set(idx);
 
 		receivedNumbers[idx] = dsn;
-		dbg("Bo-Unique","Unique:Receive.\n");
+		dbg("Bo-Unique","Unique:Receive @ %s.\n",sim_time_string());
 		return signal RadioReceive.receive(msg);
 	}
 

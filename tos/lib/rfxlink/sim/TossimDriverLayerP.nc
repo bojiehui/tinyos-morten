@@ -169,7 +169,7 @@ call AckReceivedFlag.get(msg)
   void transmit_done(sim_event_t* evt) {
     sending = NULL;
     transmitting = FALSE;
-    dbg("Driver.debug", "Driver: Transmission DONE\n");
+    dbg("Driver.debug", "Driver: Transmission DONE @ %s\n",sim_time_string());
     signal RadioSend.sendDone(running ? SUCCESS : EOFF);
   }
 
@@ -191,7 +191,7 @@ call AckReceivedFlag.get(msg)
     if(call Ieee154PacketLayer.isDataFrame(sending)) {
       dbg("Driver.debug", "Driver: Transmitting packet to %hu with ACK? %hhu\n", call Ieee154PacketLayer.getDestAddr(sending), call Ieee154PacketLayer.getAckRequired(sending));
     } else {
-      dbg("Driver.debug", "Driver: Transmitting ACK to %hu\n", call Ieee154PacketLayer.getDestAddr(sending));
+      dbg("Driver.debug", "Driver: Transmitting ACK to %hu @ %s\n", call Ieee154PacketLayer.getDestAddr(sending),sim_time_string());
     }
 
     if(call PacketTimeSyncOffset.isSet(sending)) {
@@ -271,9 +271,9 @@ call AckReceivedFlag.get(msg)
       call PacketTimeStamp.set(bufferPointer, call LocalTime.get());
 
       if(call Ieee154PacketLayer.isDataFrame(bufferPointer)) {
-        dbg("Driver.debug", "Driver: receiving packet from %hu\n", call Ieee154PacketLayer.getSrcAddr(bufferPointer));
+        dbg("Driver.debug", "Driver: receiving packet from %hu @ %s\n", call Ieee154PacketLayer.getSrcAddr(bufferPointer),sim_time_string());
       } else {
-        dbg("Driver.debug", "Driver: receiving ACK\n");
+        dbg("Driver.debug", "Driver: receiving ACK @ %s\n",sim_time_string());
       }
       dbg_message(bufferPointer);
 
@@ -298,7 +298,7 @@ call AckReceivedFlag.get(msg)
 
 #ifdef TOSSIM_HARDWARE_ACK
     if (running) {
-      dbg("Driver.debug", "Driver: ACK received from %hu\n", call Ieee154PacketLayer.getDestAddr(msg));
+      dbg("Driver.debug", "Driver: ACK received from %hu @ %s\n", call Ieee154PacketLayer.getDestAddr(msg),sim_time_string());
       call AckReceivedFlag.set(msg);
     } else {
       dbg("Driver.debug", "Driver: discarding ACK from from %hu as radio is OFF\n", call Ieee154PacketLayer.getDestAddr(msg));

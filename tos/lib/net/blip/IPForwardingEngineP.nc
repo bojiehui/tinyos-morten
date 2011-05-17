@@ -38,6 +38,8 @@ module IPForwardingEngineP {
 #define printfUART_buf(buf, len)
 #define printfUART_in6addr(X)
 */
+#define printfUART(X, args...) dbg("IPForwardingEngineP", X, ## args)
+
 #define min(X,Y) (((X) < (Y)) ? (X) : (Y))
 
   /* simple routing table for now */
@@ -165,7 +167,7 @@ module IPForwardingEngineP {
 
     if (call IPAddress.isLocalAddress(&pkt->ip6_hdr.ip6_dst) && 
         pkt->ip6_hdr.ip6_dst.s6_addr[0] != 0xff) {
-      printfUART("Forwarding -- send with local unicast address!\n");
+      printfUART("IPForwardingEngineP: Forwarding -- send with local unicast address! @ %s\n",sim_time_string());
       return FAIL;
     } else if (call IPAddress.isLLAddress(&pkt->ip6_hdr.ip6_dst) &&
                (!next_hop_entry || next_hop_entry->prefixlen < 128)) {
@@ -180,12 +182,12 @@ module IPForwardingEngineP {
          addressed don't work on other links...  we should probably do
          ND in this case, or at least keep a cache so we can reply to
          messages on the right interface. */
-      printfUART("Forwarding -- send to LL address\n");
+      printfUART("IPForwardingEngineP: Forwarding -- send to LL address @ %s\n",sim_time_string());
       pkt->ip6_hdr.ip6_hlim = 1;
       return call IPForward.send[ROUTE_IFACE_154](&pkt->ip6_hdr.ip6_dst, pkt, 
                                                   (void *)ROUTE_INVAL_KEY);
     } else if (next_hop_entry) {
-      printfUART("Forwarding -- got from routing table\n");
+      printfUART("IPForwardingEngineP: Forwarding -- got from routing table @ %s\n",sim_time_string());
 
       /* control messages do not need routing headers */
       if (!(signal ForwardingEvents.initiate[next_hop_entry->ifindex](pkt,
@@ -216,7 +218,7 @@ module IPForwardingEngineP {
 
     if (call IPAddress.isLocalAddress(&iph->ip6_dst)) {
       /* local delivery */
-      printfUART("Local delivery\n");
+      printfUART("IPForwardingEngineP: Local delivery @ %s\n",sim_time_string());
       signal IP.recv(iph, payload, len, meta);
     } else {
       /* forwarding */
@@ -262,7 +264,7 @@ module IPForwardingEngineP {
       if (!(signal ForwardingEvents.approve[next_hop_ifindex](iph, 
                    (struct ip6_route*) payload, next_hop)))
         return;
-      printfUART("Recv: Forward Packet\n");
+      printfUART("IPForwardingEngineP: Recv: Forward Packet @ %s\n",sim_time_string());
       call IPForward.send[next_hop_ifindex](next_hop, &pkt, (void *)next_hop_key);
     }
   }
@@ -270,7 +272,7 @@ module IPForwardingEngineP {
   event void IPForward.sendDone[uint8_t ifindex](struct send_info *status) {
     struct route_entry *entry;
     int key = (int)status->upper_data;
-    printfUART("sendDone: iface: %i key: %i\n", ifindex, key);
+    printfUART("IPForwardingEngineP: sendDone @ %s: iface: %i key: %i\n",sim_time_string(), ifindex, key);
     if (key != ROUTE_INVAL_KEY) {
       entry = call ForwardingTable.lookupRouteKey(key);
       if (entry) {
