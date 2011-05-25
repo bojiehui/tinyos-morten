@@ -211,8 +211,9 @@ implementation
 		call Tasklet.resume();
 
 		if( done )
-			signal Send.sendDone(txMsg, txError);
 		        dbg("Bo-MessageBuffer","MessageBuffer:Send Done @ %s.\n",sim_time_string());
+			signal Send.sendDone(txMsg, txError);
+
 	}
 
 	tasklet_async event void RadioSend.sendDone(error_t error)

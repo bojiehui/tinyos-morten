@@ -68,7 +68,8 @@ implementation{
 #define RPL_GLOBALADDR
 
   //#undef printfUART
-  //#define printfUART(X, args ...) ;
+  //#define printfUART(X, args ...) 
+#define printfUART(X, args ...) dbg("Bo-RoutingEngine", X,## args)
 
   /* Declare Global Variables */
   uint32_t tricklePeriod;
@@ -128,10 +129,8 @@ implementation{
   task void init(){
 #ifdef RPL_STORING_MODE
     MOP = RPL_MOP_Storing_No_Multicast;
-    dbg("Bo-RoutingEngineP","RPL:Storing mode\n");
 #else
     MOP = RPL_MOP_No_Storing;
-    dbg("Bo-RoutingEngineP","RPL:Non storing mode\n");
 #endif
 
 #ifdef RPL_GLOBALADDR
@@ -190,8 +189,7 @@ implementation{
 /*       return; */
 
     if ((!running)  || (!hasDODAG) /* || ((redunCounter < DIORedun) && (DIORedun != 0xFF))*/ ){
-      //printfUART("NoTxDIO %d %d %d\n", redunCounter, DIORedun, hasDODAG);
-      dbg("Bo-RoutingEngineP","RPL:NoTxDIO %d %d %d\n", redunCounter, DIORedun, hasDODAG);
+      printfUART("NoTxDIO %d %d %d\n", redunCounter, DIORedun, hasDODAG);
       return; 
     }
 
@@ -298,17 +296,13 @@ implementation{
                ntohs(DODAGID.s6_addr16[7]), msg.dagRank, tricklePeriod);
     */
     printfUART("TXDIO %d %lu \n", TOS_NODE_ID, ++countdio);
-    dbg("Bo-RoutingEngineP","RPL:TXDIO %d %lu \n", TOS_NODE_ID, ++countdio);
  
     //printfUART("RANK %d %d %d\n", call RPLRankInfo.getRank(&ADDR_MY_IP), call RPLRankInfo.getEtx(), call RPLRankInfo.hasParent());
-    dbg("Bo-RoutingEngineP","RPL:RANK %d, Number of Parent %d\n", call RPLRankInfo.getRank(&ADDR_MY_IP), call RPLRankInfo.hasParent());
 
     if (UNICAST_DIO) {
-      dbg("Bo-RoutingEngineP","RPL:Unicast DIO.\n");
       UNICAST_DIO = FALSE;
       memcpy(&pkt.ip6_hdr.ip6_dst, &UNICAST_DIO_ADDR, 16);
     } else {
-      dbg("Bo-RoutingEngineP","RPL:Multicast DIO.\n");
       memcpy(&pkt.ip6_hdr.ip6_dst, &MULTICAST_ADDR, 16);
     }
     call IPAddress.getLLAddr(&pkt.ip6_hdr.ip6_src);
@@ -316,7 +310,6 @@ implementation{
     // memcpy(&pkt.ip6_hdr.ip6_src, &ADDR_MY_IP, 16);
 
     call IP_DIO.send(&pkt);
-    dbg("Bo-RoutingEngineP","RPL:Send DIO.\n");
   }
 
   task void sendDISTask(){
@@ -347,8 +340,7 @@ implementation{
     //call IPAddress.getGlobalAddr(&pkt.ip6_hdr.ip6_src);
 
     //printfUART("\n >>>>>> TxDIS\n");
-    //printfUART(">> sendDIS %d %lu \n", TOS_NODE_ID, ++countdis);
-    dbg("Bo-RoutingEngineP","RPL>> sendDIS %d %lu \n", TOS_NODE_ID, ++countdis);
+    printfUART("RPL>> sendDIS %d %lu \n", TOS_NODE_ID, ++countdis);
     call IP_DIS.send(&pkt);
   }
 
@@ -495,7 +487,6 @@ implementation{
   /********************* StdControl *********************/
   command error_t StdControl.start() {
     //printfUART("RPL STARTING\n");
-    dbg("Bo-RoutingEngineP","RPL:RPL STARTING\n");
 
     if(!running){
       post init();
@@ -551,9 +542,8 @@ implementation{
    */
   event void IP_DIS.recv(struct ip6_hdr *iph, void *payload, 
                          size_t len, struct ip6_metadata *meta) {
-    //printfUART("Receiving DIS %d\n", TOS_NODE_ID);
-    dbg("Bo-RoutingEngineP","RPL:Receiving DIS %d\n", TOS_NODE_ID);
-
+    printfUART("Receiving DIS %d\n", TOS_NODE_ID);
+    
     if (!running) return;
     // I received a DIS
     if (I_AM_LEAF) {

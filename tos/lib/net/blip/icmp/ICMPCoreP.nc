@@ -66,7 +66,7 @@ module ICMPCoreP {
 
     switch (req->type) {
     case ICMP_TYPE_ECHO_REQUEST:
-      dbg("ICMPCoreP","This case??\n");
+      dbg("ICMPCore","This case??\n");
       req->type = ICMP_TYPE_ECHO_REPLY;
       req->cksum = 0;
 
@@ -90,8 +90,7 @@ module ICMPCoreP {
       break;
 
     default:
-      dbg("ICMPCoreP","Or default case\n");
-      dbg("ICMPCoreP","ICMPCore:Receive @ %s\n",sim_time_string());
+      dbg("ICMPCore","ICMPCore:Receive @ %s\n",sim_time_string());
       signal ICMP_IP.recv[req->type](iph, packet, len, meta);
     }
   }
@@ -103,7 +102,7 @@ module ICMPCoreP {
       req->cksum = 0;
       req->cksum = htons(msg_cksum(&pkt->ip6_hdr, pkt->ip6_data, IANA_ICMP));
     }
-    dbg("ICMPCoreP","ICMPCore:Send @ %s\n",sim_time_string());
+    dbg("ICMPCore","ICMPCore:Send @ %s\n",sim_time_string());
     return call IP.send(pkt);
   }
 

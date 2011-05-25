@@ -38,7 +38,9 @@ module IPForwardingEngineP {
 #define printfUART_buf(buf, len)
 #define printfUART_in6addr(X)
 */
-#define printfUART(X, args...) dbg("IPForwardingEngineP", X, ## args)
+#define printfUART_in6addr(X) static char print_buf[64];inet_ntop6(X, print_buf, 64);dbg_clear("IPForwardingEngine",print_buf)
+
+#define printfUART(X, args...) dbg("IPForwardingEngine", X,## args)
 
 #define min(X,Y) (((X) < (Y)) ? (X) : (Y))
 
@@ -284,13 +286,19 @@ module IPForwardingEngineP {
 
   event void PrintTimer.fired() {
     int i;
-    printfUART("\ndestination                 gateway            interface\n");
+    static char print_buff[64];
+    //printfUART("destination                 gateway            interface\n");
+    dbg_clear("IPForwardingEngine","destination                 gateway            interface\n");
     for (i = 0; i < ROUTE_TABLE_SZ; i++) {
       if (routing_table[i].valid) {
-        printfUART_in6addr(&routing_table[i].prefix);
-        printfUART("/%i\t\t", routing_table[i].prefixlen);
-        printfUART_in6addr(&routing_table[i].next_hop);
-        printfUART("\t\t%i\n", routing_table[i].ifindex);
+	printfUART_in6addr(&routing_table[i].prefix);
+	dbg_clear("IPForwardingEngine","/%i\t\t", routing_table[i].prefixlen);
+	//printfUART("/%i\t\t", routing_table[i].prefixlen);
+	inet_ntop6(&routing_table[i].next_hop, print_buff, 64);
+	dbg_clear("IPForwardingEngine",print_buff);
+        //printfUART_in6addr(&routing_table[i].next_hop);
+        //printfUART("\t\t%i\n", routing_table[i].ifindex);
+       	dbg_clear("IPForwardingEngine","\t\t\t%i",routing_table[i].ifindex);
       }
     }
     printfUART("\n");

@@ -11,7 +11,7 @@ module IPProtocolsP {
     interface IP as SubIP;
   }
 } implementation {
-#define printfUART(X, args...) dbg("IPProtocolsP", X, ## args)
+#define printfUART(X, args...) dbg("IPProtocols", X, ## args)
   event void SubIP.recv(struct ip6_hdr *iph, 
                         void *payload, 
                         size_t len, 

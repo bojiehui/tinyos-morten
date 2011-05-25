@@ -63,7 +63,7 @@ generic module RPLDAORoutingEngineP(){
 #define RPL_GLOBALADDR
   //#undef printfUART
   //#define printfUART(X, args ...) ;
-
+#define printfUART(X, args ...) dbg("RPLDAORoutingEngine",X,## args)
 #define INIT_DAO 1024;
 
   uint8_t dao_double_count = 0;
@@ -121,6 +121,7 @@ generic module RPLDAORoutingEngineP(){
       /* in storing mode we unicast using LL addresses (9.2) */
       call IPAddress.getLLAddr(&dao_msg->s_pkt.ip6_hdr.ip6_src);
       if (call RPLRouteInfo.getDefaultRoute(&next_hop) != SUCCESS)
+	//printfUART("RPLDAORouting:GetDefaultRoute Success!\n");
         return;
       memcpy(&dao_msg->s_pkt.ip6_hdr.ip6_dst, &next_hop, sizeof(struct in6_addr));
 #else 
@@ -132,7 +133,7 @@ generic module RPLDAORoutingEngineP(){
 #endif
       dao = (struct dao_base_t *) dao_msg->s_pkt.ip6_data->iov_base;
 
-      //printfUART(">> sendDAO %d %lu \n", TOS_NODE_ID, ++count);
+      printfUART("RPLDAORouting:>> sendDAO %d %lu \n", TOS_NODE_ID, ++count);
       call IP_DAO.send(&dao_msg->s_pkt);
       call SendPool.put(dao_msg);
 
@@ -288,7 +289,7 @@ generic module RPLDAORoutingEngineP(){
     struct route_entry *entry;
     route_key_t new_key = ROUTE_INVAL_KEY;
 
-    //printfUART("receive DAO: %i\n", call RPLDAORouteInfo.getStoreState());
+    printfUART("RPLDAORouting:receive DAO: %i\n", call RPLDAORouteInfo.getStoreState());
     if (!m_running) return;
 
 #ifndef RPL_STORING_MODE
@@ -318,10 +319,10 @@ generic module RPLDAORoutingEngineP(){
     }else {
       /* new prefix */
       if (downwards_table_count == ROUTE_TABLE_SZ) {
-        //printfUART("Downward table full -- not adding route\n");
+        printfUART("RPLDAORouting:Downward table full -- not adding route\n");
         return;
       }
-      //printfUART("Add new route\n");
+      printfUART("RPLDAORouting: Add new route\n");
       if(dao->target_option.prefix_length > 0){
 	new_key = call ForwardingTable.addRoute(dao->target_option.target_prefix.s6_addr,
 						dao->target_option.prefix_length,
