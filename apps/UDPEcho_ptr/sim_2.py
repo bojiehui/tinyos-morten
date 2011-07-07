@@ -27,30 +27,34 @@ if tosroot == "":
 print "-"*10, "[[[[ Setting up TOSSIM ]]]]", "-"*10
 
 t = Tossim([])
+# r = t.radio()
 
 channels = ["Boot","UDPEchoP"
-            #,"CpmModelC"
-            ,"Bo-RoutingEngine"
-            ,"Driver.debug"
-            ,"Bo-Csma"
-            ,"Bo-SoftwareAck"
-            ,"Bo-Collision"
-            ,"Bo-MessageBuffer"
-            ,"Bo-Unique"
-            ,"Bo-LPL"
-            ,"Bo-PLink"
-            ,"Bo-Network"
-          #  ,"Bo-AM"
+            # ,"CpmModelC"
+             ,"Bo-RoutingEngine"
+            # ,"Driver.debug"
+            # ,"Bo-Csma"
+            # # ,"Bo-SoftwareAck"
+            # ,"Bo-Collision"
+            # ,"Bo-MessageBuffer"
+            # ,"Bo-Unique"
+            # # ,"Bo-LPL"
+            # ,"Bo-PLink"
+            # ,"Bo-Network"
+            # # ,"Bo-AM"
 
-#            ,"Bo-154Message"
-          #  ,"Bo-AutoResource"
-            ,"IPDispatch"
-            ,"IPND"
-            ,"IPForwardingEngine"
-            ,"IPProtocols"
-            ,"ICMPCore"
-            ,"RPLDAORoutingEngine"
+            # ,"Bo-154Message"
+            # ,"Bo-AutoResource"
+            # ,"PTr-IPDispatch"
+            # ,"IPND"
+            ,"ECHO"
+             ,"IPForwardingEngine"
+            # ,"PTr-IPForwardingEngine"
+             ,"IPProtocols"
+            # ,"ICMPCore"
+             ,"RPLDAORoutingEngine"
             ]
+nodes = 3
 
 for chan in channels:
       print "Channel", chan, "enabled"
@@ -58,10 +62,10 @@ for chan in channels:
 
 print "Setting up TOSSIM topology..."
 
-nodes = 3
-
 loadLinkModel(t, "topo.txt")
 loadNoiseModel(t, "meyer.txt", nodes)
+
+
 
 initializeNodes(t, nodes)
 
@@ -90,6 +94,7 @@ try:
                sleepTime -= sleepDelta
           eventPresent = t.runNextEvent()
           eventCtr = eventCtr + 1
+          
 
 
 

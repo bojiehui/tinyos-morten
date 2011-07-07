@@ -137,11 +137,11 @@ module UdpP {
     size_t len = iov_len(iov);
 
     // fill in all the packet fields
-    memclr((uint8_t *)&pkt.ip6_hdr, sizeof(pkt));
+    //memclr((uint8_t *)&pkt.ip6_hdr, sizeof(pkt));//PTR stack smashing
+    memclr((uint8_t *)&pkt.ip6_hdr, sizeof(pkt.ip6_hdr));//PTR
     memclr((uint8_t *)&udp, sizeof(udp));
     memcpy(&pkt.ip6_hdr.ip6_dst, dest->sin6_addr.s6_addr, 16);
-    call IPAddress.setSource(&pkt.ip6_hdr);
-    
+    call IPAddress.setSource(&pkt.ip6_hdr);   
     if (local_ports[clnt] == 0 && 
         (local_ports[clnt] = alloc_lport(clnt)) == 0) {
       return FAIL;
@@ -184,10 +184,10 @@ module UdpP {
 #endif
   }
 
-  default event void UDP.recvfrom[uint8_t clnt](struct sockaddr_in6 *from, void *payload,
+ default event void UDP.recvfrom[uint8_t clnt](struct sockaddr_in6 *from, void *payload,
                                                uint16_t len, struct ip6_metadata *meta) {
 
  }
 
-  event void IPAddress.changed(bool global_valid) {}
-}
+ event void IPAddress.changed(bool global_valid) {}
+  }

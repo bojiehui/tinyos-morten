@@ -62,15 +62,15 @@ def loadNoiseModel(t, file, nodes):
         str = line.strip()
         if (str != ""):
             val = int(str)
-            for i in nodes:
+            for i in range(1, nodes+1):
                 t.getNode(i).addNoiseTraceReading(val)
 
-    for i in nodes:
+    for i in range(1, nodes+1):
       print "Creating noise model for ",i;
       t.getNode(i).createNoiseModel()
 
 def initializeNodes(t, nodes):
     print "Initializing nodes..."
-    for i in nodes:
+    for i in range(1, nodes+1):
       t.getNode(i).bootAtTime((31 + t.ticksPerSecond() / 10) + 1);
       

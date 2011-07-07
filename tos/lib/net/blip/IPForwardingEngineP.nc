@@ -298,10 +298,10 @@ module IPForwardingEngineP {
 	dbg_clear("IPForwardingEngine",print_buff);
         //printfUART_in6addr(&routing_table[i].next_hop);
         //printfUART("\t\t%i\n", routing_table[i].ifindex);
-       	dbg_clear("IPForwardingEngine","\t\t\t%i",routing_table[i].ifindex);
+       	dbg_clear("IPForwardingEngine","\t\t\t%i\n",routing_table[i].ifindex);
       }
     }
-    printfUART("\n");
+    // printfUART("\n");
   }
 
   default event bool ForwardingEvents.approve[uint8_t idx](struct ip6_hdr *iph,

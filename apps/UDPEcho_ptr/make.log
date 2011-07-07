@@ -1,0 +1,327 @@
+/usr/bin/nescc -fnesc-include=tos -topdir=/home/bo/tinyos-morten -fnesc-scheduler=TinySchedulerC,TinySchedulerC.TaskBasic,TaskBasic,TaskBasic,runTask,postTask -DPLATFORM_MICAZ -DBOARD_MICASB -v -c -shared -fPIC -o simbuild/micaz/sim.o -g -O0 -DENABLE_SPI0_DMA -DRPL_ROUTING -DRPL_STORING_MODE -DIN6_PREFIX="fec0::" -DCC2420_HW_ACKNOWLEDGEMENTS -DCC2420_HW_ADDRESS_RECOGNITION -DPACKET_LINK -DBLIP_L2_RETRIES=3 -DTOSH_DATA_LENGTH=90 -fnesc-nido-tosnodes=1000 -fnesc-simulate -fnesc-nido-motenumber=sim_node() -fnesc-gcc=gcc -fnesc-separator=__ -Wall -Wshadow -Wnesc-all -fnesc-cfile=simbuild/micaz/app.c -DDEFINED_TOS_AM_GROUP=0x22 --param max-inline-insns-single=100000 -DBASESTATION_ID=0 -DIDENT_APPNAME="UDPEchoC" -DIDENT_USERNAME="bo" -DIDENT_HOSTNAME="bo-laptop" -DIDENT_USERHASH=0xc9ec0e1cL -DIDENT_TIMESTAMP=0x4dc3cf73L -DIDENT_UIDHASH=0x0b7d03bbL -Wno-nesc-data-race -DNWBYTE_SIM_NCC UDPEchoC.nc -fnesc-dump=components -fnesc-dump=variables -fnesc-dump=constants -fnesc-dump=typedefs -fnesc-dump=interfacedefs -fnesc-dump=tags -fnesc-dumpfile=app.xml -DTOSSIM -fnesc-no-debug -fnesc-scheduler=TinySchedulerC,TinySchedulerC.TaskBasic,TaskBasic,TaskBasic,runTask,postTask -gcc=gcc -I/home/bo/tinyos-morten/tos/lib/net/rpl/sim -I/home/bo/tinyos-morten/tos/lib/net//sim -I/home/bo/tinyos-morten/support/sdk/c/blip//sim -I/home/bo/tinyos-morten/tos/lib/net/blip//sim -I/home/bo/tinyos-morten/tos/lib/net/blip/interfaces//sim -I/home/bo/tinyos-morten/tos/lib/net/blip/nwprog//sim -I/home/bo/tinyos-morten/tos/lib/net/blip/shell//sim -I/home/bo/tinyos-morten/tos/lib/net/blip/serial//sim -I/home/bo/tinyos-morten/tos/lib/net/blip/platform//sim -I/home/bo/tinyos-morten/tos/lib/net/blip/icmp//sim -I/home/bo/tinyos-morten/tos/lib/net/blip/dhcp//sim -Isimbuild/micaz/sim -I/home/bo/tinyos-morten/apps/PppRouter//sim -I/home/bo/tinyos-morten/tos/sensorboards/micasb/sim -I/home/bo/tinyos-morten/tos/platforms/micaz/sim/sim -I/home/bo/tinyos-morten/tos/platforms/micaz/sim -I/home/bo/tinyos-morten/tos/platforms/mica/sim -I/home/bo/tinyos-morten/tos/platforms/micaz/chips/cc2420/sim -I/home/bo/tinyos-morten/tos/chips/cc2420/sim -I/home/bo/tinyos-morten/tos/lib/rfxlink/sim -I/home/bo/tinyos-morten/tos/lib/rfxlink/layers/sim -I/home/bo/tinyos-morten/tos/lib/rfxlink/util/sim -I/home/bo/tinyos-morten/tos/chips/atm128/sim -I/home/bo/tinyos-morten/tos/chips/atm128/adc/sim -I/home/bo/tinyos-morten/tos/chips/atm128/pins/sim -I/home/bo/tinyos-morten/tos/chips/atm128/spi/sim -I/home/bo/tinyos-morten/tos/chips/atm128/timer/sim -I/home/bo/tinyos-morten/tos/lib/power/sim -I/home/bo/tinyos-morten/tos/lib/timer/sim -I/home/bo/tinyos-morten/tos/lib/serial/sim -I/home/bo/tinyos-morten/tos/interfaces/sim -I/home/bo/tinyos-morten/tos/types/sim -I/home/bo/tinyos-morten/tos/system/sim -I/home/bo/tinyos-morten/tos/lib/tossim -I/home/bo/tinyos-morten/tos/lib/net/rpl -I/home/bo/tinyos-morten/tos/lib/net/ -I/home/bo/tinyos-morten/support/sdk/c/blip/ -I/home/bo/tinyos-morten/tos/lib/net/blip/ -I/home/bo/tinyos-morten/tos/lib/net/blip/interfaces/ -I/home/bo/tinyos-morten/tos/lib/net/blip/nwprog/ -I/home/bo/tinyos-morten/tos/lib/net/blip/shell/ -I/home/bo/tinyos-morten/tos/lib/net/blip/serial/ -I/home/bo/tinyos-morten/tos/lib/net/blip/platform/ -I/home/bo/tinyos-morten/tos/lib/net/blip/icmp/ -I/home/bo/tinyos-morten/tos/lib/net/blip/dhcp/ -Isimbuild/micaz -I/home/bo/tinyos-morten/apps/PppRouter/ -I/home/bo/tinyos-morten/tos/sensorboards/micasb -I/home/bo/tinyos-morten/tos/platforms/micaz/sim -I/home/bo/tinyos-morten/tos/platforms/micaz -I/home/bo/tinyos-morten/tos/platforms/mica -I/home/bo/tinyos-morten/tos/platforms/micaz/chips/cc2420 -I/home/bo/tinyos-morten/tos/chips/cc2420 -I/home/bo/tinyos-morten/tos/lib/rfxlink -I/home/bo/tinyos-morten/tos/lib/rfxlink/layers -I/home/bo/tinyos-morten/tos/lib/rfxlink/util -I/home/bo/tinyos-morten/tos/chips/atm128 -I/home/bo/tinyos-morten/tos/chips/atm128/adc -I/home/bo/tinyos-morten/tos/chips/atm128/pins -I/home/bo/tinyos-morten/tos/chips/atm128/spi -I/home/bo/tinyos-morten/tos/chips/atm128/timer -I/home/bo/tinyos-morten/tos/lib/power -I/home/bo/tinyos-morten/tos/lib/timer -I/home/bo/tinyos-morten/tos/lib/serial -I/home/bo/tinyos-morten/tos/interfaces -I/home/bo/tinyos-morten/tos/types -I/home/bo/tinyos-morten/tos/system
+gcc -_fnesc-gcc=gcc -specs=/usr/lib/ncc/tdspecs -_fnesc-include=nesc_nx -I/usr/lib/ncc -_fnesc-include=tos -_fnesc-scheduler=TinySchedulerC,TinySchedulerC.TaskBasic,TaskBasic,TaskBasic,runTask,postTask -DPLATFORM_MICAZ -DBOARD_MICASB -v -c -shared -fPIC -o simbuild/micaz/sim.o -g -O0 -DENABLE_SPI0_DMA -DRPL_ROUTING -DRPL_STORING_MODE -DIN6_PREFIX="fec0::" -DCC2420_HW_ACKNOWLEDGEMENTS -DCC2420_HW_ADDRESS_RECOGNITION -DPACKET_LINK -DBLIP_L2_RETRIES=3 -DTOSH_DATA_LENGTH=90 -_fnesc-nido-tosnodes=1000 -_fnesc-simulate -_fnesc-nido-motenumber=sim_node() -_fnesc-gcc=gcc -_fnesc-separator=__ -Wall -Wshadow -_Wnesc-all -_fnesc-cfile=simbuild/micaz/app.c -DDEFINED_TOS_AM_GROUP=0x22 --param max-inline-insns-single=100000 -DBASESTATION_ID=0 -DIDENT_APPNAME="UDPEchoC" -DIDENT_USERNAME="bo" -DIDENT_HOSTNAME="bo-laptop" -DIDENT_USERHASH=0xc9ec0e1cL -DIDENT_TIMESTAMP=0x4dc3cf73L -DIDENT_UIDHASH=0x0b7d03bbL -_Wno-nesc-data-race -DNWBYTE_SIM_NCC UDPEchoC.nc -_fnesc-dump=components -_fnesc-dump=variables -_fnesc-dump=constants -_fnesc-dump=typedefs -_fnesc-dump=interfacedefs -_fnesc-dump=tags -_fnesc-dumpfile=app.xml -DTOSSIM -_fnesc-no-debug -_fnesc-scheduler=TinySchedulerC,TinySchedulerC.TaskBasic,TaskBasic,TaskBasic,runTask,postTask -I/home/bo/tinyos-morten/tos/lib/net/rpl/sim -I/home/bo/tinyos-morten/tos/lib/net//sim -I/home/bo/tinyos-morten/support/sdk/c/blip//sim -I/home/bo/tinyos-morten/tos/lib/net/blip//sim -I/home/bo/tinyos-morten/tos/lib/net/blip/interfaces//sim -I/home/bo/tinyos-morten/tos/lib/net/blip/nwprog//sim -I/home/bo/tinyos-morten/tos/lib/net/blip/shell//sim -I/home/bo/tinyos-morten/tos/lib/net/blip/serial//sim -I/home/bo/tinyos-morten/tos/lib/net/blip/platform//sim -I/home/bo/tinyos-morten/tos/lib/net/blip/icmp//sim -I/home/bo/tinyos-morten/tos/lib/net/blip/dhcp//sim -Isimbuild/micaz/sim -I/home/bo/tinyos-morten/apps/PppRouter//sim -I/home/bo/tinyos-morten/tos/sensorboards/micasb/sim -I/home/bo/tinyos-morten/tos/platforms/micaz/sim/sim -I/home/bo/tinyos-morten/tos/platforms/micaz/sim -I/home/bo/tinyos-morten/tos/platforms/mica/sim -I/home/bo/tinyos-morten/tos/platforms/micaz/chips/cc2420/sim -I/home/bo/tinyos-morten/tos/chips/cc2420/sim -I/home/bo/tinyos-morten/tos/lib/rfxlink/sim -I/home/bo/tinyos-morten/tos/lib/rfxlink/layers/sim -I/home/bo/tinyos-morten/tos/lib/rfxlink/util/sim -I/home/bo/tinyos-morten/tos/chips/atm128/sim -I/home/bo/tinyos-morten/tos/chips/atm128/adc/sim -I/home/bo/tinyos-morten/tos/chips/atm128/pins/sim -I/home/bo/tinyos-morten/tos/chips/atm128/spi/sim -I/home/bo/tinyos-morten/tos/chips/atm128/timer/sim -I/home/bo/tinyos-morten/tos/lib/power/sim -I/home/bo/tinyos-morten/tos/lib/timer/sim -I/home/bo/tinyos-morten/tos/lib/serial/sim -I/home/bo/tinyos-morten/tos/interfaces/sim -I/home/bo/tinyos-morten/tos/types/sim -I/home/bo/tinyos-morten/tos/system/sim -I/home/bo/tinyos-morten/tos/lib/tossim -I/home/bo/tinyos-morten/tos/lib/net/rpl -I/home/bo/tinyos-morten/tos/lib/net/ -I/home/bo/tinyos-morten/support/sdk/c/blip/ -I/home/bo/tinyos-morten/tos/lib/net/blip/ -I/home/bo/tinyos-morten/tos/lib/net/blip/interfaces/ -I/home/bo/tinyos-morten/tos/lib/net/blip/nwprog/ -I/home/bo/tinyos-morten/tos/lib/net/blip/shell/ -I/home/bo/tinyos-morten/tos/lib/net/blip/serial/ -I/home/bo/tinyos-morten/tos/lib/net/blip/platform/ -I/home/bo/tinyos-morten/tos/lib/net/blip/icmp/ -I/home/bo/tinyos-morten/tos/lib/net/blip/dhcp/ -Isimbuild/micaz -I/home/bo/tinyos-morten/apps/PppRouter/ -I/home/bo/tinyos-morten/tos/sensorboards/micasb -I/home/bo/tinyos-morten/tos/platforms/micaz/sim -I/home/bo/tinyos-morten/tos/platforms/micaz -I/home/bo/tinyos-morten/tos/platforms/mica -I/home/bo/tinyos-morten/tos/platforms/micaz/chips/cc2420 -I/home/bo/tinyos-morten/tos/chips/cc2420 -I/home/bo/tinyos-morten/tos/lib/rfxlink -I/home/bo/tinyos-morten/tos/lib/rfxlink/layers -I/home/bo/tinyos-morten/tos/lib/rfxlink/util -I/home/bo/tinyos-morten/tos/chips/atm128 -I/home/bo/tinyos-morten/tos/chips/atm128/adc -I/home/bo/tinyos-morten/tos/chips/atm128/pins -I/home/bo/tinyos-morten/tos/chips/atm128/spi -I/home/bo/tinyos-morten/tos/chips/atm128/timer -I/home/bo/tinyos-morten/tos/lib/power -I/home/bo/tinyos-morten/tos/lib/timer -I/home/bo/tinyos-morten/tos/lib/serial -I/home/bo/tinyos-morten/tos/interfaces -I/home/bo/tinyos-morten/tos/types -I/home/bo/tinyos-morten/tos/system -DNESC=131
+nescc: 1.3.1
+Using built-in specs.
+Reading specs from /usr/lib/ncc/tdspecs
+Target: i486-linux-gnu
+Configured with: ../src/configure -v --with-pkgversion='Ubuntu 4.4.1-4ubuntu9' --with-bugurl=file:///usr/share/doc/gcc-4.4/README.Bugs --enable-languages=c,c++,fortran,objc,obj-c++ --prefix=/usr --enable-shared --enable-multiarch --enable-linker-build-id --with-system-zlib --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --with-gxx-include-dir=/usr/include/c++/4.4 --program-suffix=-4.4 --enable-nls --enable-clocale=gnu --enable-libstdcxx-debug --enable-objc-gc --enable-targets=all --disable-werror --with-arch-32=i486 --with-tune=generic --enable-checking=release --build=i486-linux-gnu --host=i486-linux-gnu --target=i486-linux-gnu
+Thread model: posix
+gcc version 4.4.1 (Ubuntu 4.4.1-4ubuntu9) 
+COLLECT_GCC_OPTIONS='-_fnesc-gcc=gcc' '-_fnesc-include=nesc_nx' '-I/usr/lib/ncc' '-_fnesc-include=tos' '-_fnesc-scheduler=TinySchedulerC,TinySchedulerC.TaskBasic,TaskBasic,TaskBasic,runTask,postTask' '-DPLATFORM_MICAZ' '-DBOARD_MICASB' '-v' '-c' '-shared' '-fPIC' '-o' 'simbuild/micaz/sim.o' '-g' '-O0' '-DENABLE_SPI0_DMA' '-DRPL_ROUTING' '-DRPL_STORING_MODE' '-DIN6_PREFIX="fec0::"' '-DCC2420_HW_ACKNOWLEDGEMENTS' '-DCC2420_HW_ADDRESS_RECOGNITION' '-DPACKET_LINK' '-DBLIP_L2_RETRIES=3' '-DTOSH_DATA_LENGTH=90' '-_fnesc-nido-tosnodes=1000' '-_fnesc-simulate' '-_fnesc-nido-motenumber=sim_node()' '-_fnesc-gcc=gcc' '-_fnesc-separator=__' '-Wall' '-Wshadow' '-_Wnesc-all' '-_fnesc-cfile=simbuild/micaz/app.c' '-DDEFINED_TOS_AM_GROUP=0x22' '--param' 'max-inline-insns-single=100000' '-DBASESTATION_ID=0' '-DIDENT_APPNAME="UDPEchoC"' '-DIDENT_USERNAME="bo"' '-DIDENT_HOSTNAME="bo-laptop"' '-DIDENT_USERHASH=0xc9ec0e1cL' '-DIDENT_TIMESTAMP=0x4dc3cf73L' '-DIDENT_UIDHASH=0x0b7d03bbL' '-_Wno-nesc-data-race' '-DNWBYTE_SIM_NCC' '-_fnesc-dump=components' '-_fnesc-dump=variables' '-_fnesc-dump=constants' '-_fnesc-dump=typedefs' '-_fnesc-dump=interfacedefs' '-_fnesc-dump=tags' '-_fnesc-dumpfile=app.xml' '-DTOSSIM' '-_fnesc-no-debug' '-_fnesc-scheduler=TinySchedulerC,TinySchedulerC.TaskBasic,TaskBasic,TaskBasic,runTask,postTask' '-I/home/bo/tinyos-morten/tos/lib/net/rpl/sim' '-I/home/bo/tinyos-morten/tos/lib/net//sim' '-I/home/bo/tinyos-morten/support/sdk/c/blip//sim' '-I/home/bo/tinyos-morten/tos/lib/net/blip//sim' '-I/home/bo/tinyos-morten/tos/lib/net/blip/interfaces//sim' '-I/home/bo/tinyos-morten/tos/lib/net/blip/nwprog//sim' '-I/home/bo/tinyos-morten/tos/lib/net/blip/shell//sim' '-I/home/bo/tinyos-morten/tos/lib/net/blip/serial//sim' '-I/home/bo/tinyos-morten/tos/lib/net/blip/platform//sim' '-I/home/bo/tinyos-morten/tos/lib/net/blip/icmp//sim' '-I/home/bo/tinyos-morten/tos/lib/net/blip/dhcp//sim' '-Isimbuild/micaz/sim' '-I/home/bo/tinyos-morten/apps/PppRouter//sim' '-I/home/bo/tinyos-morten/tos/sensorboards/micasb/sim' '-I/home/bo/tinyos-morten/tos/platforms/micaz/sim/sim' '-I/home/bo/tinyos-morten/tos/platforms/micaz/sim' '-I/home/bo/tinyos-morten/tos/platforms/mica/sim' '-I/home/bo/tinyos-morten/tos/platforms/micaz/chips/cc2420/sim' '-I/home/bo/tinyos-morten/tos/chips/cc2420/sim' '-I/home/bo/tinyos-morten/tos/lib/rfxlink/sim' '-I/home/bo/tinyos-morten/tos/lib/rfxlink/layers/sim' '-I/home/bo/tinyos-morten/tos/lib/rfxlink/util/sim' '-I/home/bo/tinyos-morten/tos/chips/atm128/sim' '-I/home/bo/tinyos-morten/tos/chips/atm128/adc/sim' '-I/home/bo/tinyos-morten/tos/chips/atm128/pins/sim' '-I/home/bo/tinyos-morten/tos/chips/atm128/spi/sim' '-I/home/bo/tinyos-morten/tos/chips/atm128/timer/sim' '-I/home/bo/tinyos-morten/tos/lib/power/sim' '-I/home/bo/tinyos-morten/tos/lib/timer/sim' '-I/home/bo/tinyos-morten/tos/lib/serial/sim' '-I/home/bo/tinyos-morten/tos/interfaces/sim' '-I/home/bo/tinyos-morten/tos/types/sim' '-I/home/bo/tinyos-morten/tos/system/sim' '-I/home/bo/tinyos-morten/tos/lib/tossim' '-I/home/bo/tinyos-morten/tos/lib/net/rpl' '-I/home/bo/tinyos-morten/tos/lib/net/' '-I/home/bo/tinyos-morten/support/sdk/c/blip/' '-I/home/bo/tinyos-morten/tos/lib/net/blip/' '-I/home/bo/tinyos-morten/tos/lib/net/blip/interfaces/' '-I/home/bo/tinyos-morten/tos/lib/net/blip/nwprog/' '-I/home/bo/tinyos-morten/tos/lib/net/blip/shell/' '-I/home/bo/tinyos-morten/tos/lib/net/blip/serial/' '-I/home/bo/tinyos-morten/tos/lib/net/blip/platform/' '-I/home/bo/tinyos-morten/tos/lib/net/blip/icmp/' '-I/home/bo/tinyos-morten/tos/lib/net/blip/dhcp/' '-Isimbuild/micaz' '-I/home/bo/tinyos-morten/apps/PppRouter/' '-I/home/bo/tinyos-morten/tos/sensorboards/micasb' '-I/home/bo/tinyos-morten/tos/platforms/micaz/sim' '-I/home/bo/tinyos-morten/tos/platforms/micaz' '-I/home/bo/tinyos-morten/tos/platforms/mica' '-I/home/bo/tinyos-morten/tos/platforms/micaz/chips/cc2420' '-I/home/bo/tinyos-morten/tos/chips/cc2420' '-I/home/bo/tinyos-morten/tos/lib/rfxlink' '-I/home/bo/tinyos-morten/tos/lib/rfxlink/layers' '-I/home/bo/tinyos-morten/tos/lib/rfxlink/util' '-I/home/bo/tinyos-morten/tos/chips/atm128' '-I/home/bo/tinyos-morten/tos/chips/atm128/adc' '-I/home/bo/tinyos-morten/tos/chips/atm128/pins' '-I/home/bo/tinyos-morten/tos/chips/atm128/spi' '-I/home/bo/tinyos-morten/tos/chips/atm128/timer' '-I/home/bo/tinyos-morten/tos/lib/power' '-I/home/bo/tinyos-morten/tos/lib/timer' '-I/home/bo/tinyos-morten/tos/lib/serial' '-I/home/bo/tinyos-morten/tos/interfaces' '-I/home/bo/tinyos-morten/tos/types' '-I/home/bo/tinyos-morten/tos/system' '-DNESC=131' '-mtune=generic' '-march=i486'
+ perl -S nesc-compile -_fnesc-gcc=gcc -_fnesc-include=nesc_nx -_fnesc-include=tos -_fnesc-scheduler=TinySchedulerC,TinySchedulerC.TaskBasic,TaskBasic,TaskBasic,runTask,postTask -_fnesc-nido-tosnodes=1000 -_fnesc-simulate -_fnesc-nido-motenumber=sim_node() -_fnesc-gcc=gcc -_fnesc-separator=__ -_Wnesc-all -_fnesc-cfile=simbuild/micaz/app.c -_Wno-nesc-data-race -_fnesc-dump=components -_fnesc-dump=variables -_fnesc-dump=constants -_fnesc-dump=typedefs -_fnesc-dump=interfacedefs -_fnesc-dump=tags -_fnesc-dumpfile=app.xml -_fnesc-no-debug -_fnesc-scheduler=TinySchedulerC,TinySchedulerC.TaskBasic,TaskBasic,TaskBasic,runTask,postTask -mtune=generic -march=i486 -DPLATFORM_MICAZ -DBOARD_MICASB -DENABLE_SPI0_DMA -DRPL_ROUTING -DRPL_STORING_MODE -DIN6_PREFIX="fec0::" -DCC2420_HW_ACKNOWLEDGEMENTS -DCC2420_HW_ADDRESS_RECOGNITION -DPACKET_LINK -DBLIP_L2_RETRIES=3 -DTOSH_DATA_LENGTH=90 -DDEFINED_TOS_AM_GROUP=0x22 -DBASESTATION_ID=0 -DIDENT_APPNAME="UDPEchoC" -DIDENT_USERNAME="bo" -DIDENT_HOSTNAME="bo-laptop" -DIDENT_USERHASH=0xc9ec0e1cL -DIDENT_TIMESTAMP=0x4dc3cf73L -DIDENT_UIDHASH=0x0b7d03bbL -DNWBYTE_SIM_NCC -DTOSSIM -DNESC=131 -I/usr/lib/ncc -I/home/bo/tinyos-morten/tos/lib/net/rpl/sim -I/home/bo/tinyos-morten/tos/lib/net//sim -I/home/bo/tinyos-morten/support/sdk/c/blip//sim -I/home/bo/tinyos-morten/tos/lib/net/blip//sim -I/home/bo/tinyos-morten/tos/lib/net/blip/interfaces//sim -I/home/bo/tinyos-morten/tos/lib/net/blip/nwprog//sim -I/home/bo/tinyos-morten/tos/lib/net/blip/shell//sim -I/home/bo/tinyos-morten/tos/lib/net/blip/serial//sim -I/home/bo/tinyos-morten/tos/lib/net/blip/platform//sim -I/home/bo/tinyos-morten/tos/lib/net/blip/icmp//sim -I/home/bo/tinyos-morten/tos/lib/net/blip/dhcp//sim -Isimbuild/micaz/sim -I/home/bo/tinyos-morten/apps/PppRouter//sim -I/home/bo/tinyos-morten/tos/sensorboards/micasb/sim -I/home/bo/tinyos-morten/tos/platforms/micaz/sim/sim -I/home/bo/tinyos-morten/tos/platforms/micaz/sim -I/home/bo/tinyos-morten/tos/platforms/mica/sim -I/home/bo/tinyos-morten/tos/platforms/micaz/chips/cc2420/sim -I/home/bo/tinyos-morten/tos/chips/cc2420/sim -I/home/bo/tinyos-morten/tos/lib/rfxlink/sim -I/home/bo/tinyos-morten/tos/lib/rfxlink/layers/sim -I/home/bo/tinyos-morten/tos/lib/rfxlink/util/sim -I/home/bo/tinyos-morten/tos/chips/atm128/sim -I/home/bo/tinyos-morten/tos/chips/atm128/adc/sim -I/home/bo/tinyos-morten/tos/chips/atm128/pins/sim -I/home/bo/tinyos-morten/tos/chips/atm128/spi/sim -I/home/bo/tinyos-morten/tos/chips/atm128/timer/sim -I/home/bo/tinyos-morten/tos/lib/power/sim -I/home/bo/tinyos-morten/tos/lib/timer/sim -I/home/bo/tinyos-morten/tos/lib/serial/sim -I/home/bo/tinyos-morten/tos/interfaces/sim -I/home/bo/tinyos-morten/tos/types/sim -I/home/bo/tinyos-morten/tos/system/sim -I/home/bo/tinyos-morten/tos/lib/tossim -I/home/bo/tinyos-morten/tos/lib/net/rpl -I/home/bo/tinyos-morten/tos/lib/net/ -I/home/bo/tinyos-morten/support/sdk/c/blip/ -I/home/bo/tinyos-morten/tos/lib/net/blip/ -I/home/bo/tinyos-morten/tos/lib/net/blip/interfaces/ -I/home/bo/tinyos-morten/tos/lib/net/blip/nwprog/ -I/home/bo/tinyos-morten/tos/lib/net/blip/shell/ -I/home/bo/tinyos-morten/tos/lib/net/blip/serial/ -I/home/bo/tinyos-morten/tos/lib/net/blip/platform/ -I/home/bo/tinyos-morten/tos/lib/net/blip/icmp/ -I/home/bo/tinyos-morten/tos/lib/net/blip/dhcp/ -Isimbuild/micaz -I/home/bo/tinyos-morten/apps/PppRouter/ -I/home/bo/tinyos-morten/tos/sensorboards/micasb -I/home/bo/tinyos-morten/tos/platforms/micaz/sim -I/home/bo/tinyos-morten/tos/platforms/micaz -I/home/bo/tinyos-morten/tos/platforms/mica -I/home/bo/tinyos-morten/tos/platforms/micaz/chips/cc2420 -I/home/bo/tinyos-morten/tos/chips/cc2420 -I/home/bo/tinyos-morten/tos/lib/rfxlink -I/home/bo/tinyos-morten/tos/lib/rfxlink/layers -I/home/bo/tinyos-morten/tos/lib/rfxlink/util -I/home/bo/tinyos-morten/tos/chips/atm128 -I/home/bo/tinyos-morten/tos/chips/atm128/adc -I/home/bo/tinyos-morten/tos/chips/atm128/pins -I/home/bo/tinyos-morten/tos/chips/atm128/spi -I/home/bo/tinyos-morten/tos/chips/atm128/timer -I/home/bo/tinyos-morten/tos/lib/power -I/home/bo/tinyos-morten/tos/lib/timer -I/home/bo/tinyos-morten/tos/lib/serial -I/home/bo/tinyos-morten/tos/interfaces -I/home/bo/tinyos-morten/tos/types -I/home/bo/tinyos-morten/tos/system -g -O0 -Wall -Wshadow -v -fPIC -o simbuild/micaz/sim.o --param max-inline-insns-single=100000 UDPEchoC.nc -_ASM
+nesc1 -fnesc-include=deputy_nodeputy -_fnesc-gcc=gcc -_fnesc-include=nesc_nx -_fnesc-include=tos -_fnesc-scheduler=TinySchedulerC,TinySchedulerC.TaskBasic,TaskBasic,TaskBasic,runTask,postTask -_fnesc-nido-tosnodes=1000 -_fnesc-simulate -_fnesc-nido-motenumber=sim_node() -_fnesc-gcc=gcc -_fnesc-separator=__ -_Wnesc-all -_Wno-nesc-data-race -_fnesc-dump=components -_fnesc-dump=variables -_fnesc-dump=constants -_fnesc-dump=typedefs -_fnesc-dump=interfacedefs -_fnesc-dump=tags -_fnesc-dumpfile=app.xml -_fnesc-no-debug -_fnesc-scheduler=TinySchedulerC,TinySchedulerC.TaskBasic,TaskBasic,TaskBasic,runTask,postTask -mtune=generic -march=i486 -DPLATFORM_MICAZ -DBOARD_MICASB -DENABLE_SPI0_DMA -DRPL_ROUTING -DRPL_STORING_MODE -DIN6_PREFIX="fec0::" -DCC2420_HW_ACKNOWLEDGEMENTS -DCC2420_HW_ADDRESS_RECOGNITION -DPACKET_LINK -DBLIP_L2_RETRIES=3 -DTOSH_DATA_LENGTH=90 -DDEFINED_TOS_AM_GROUP=0x22 -DBASESTATION_ID=0 -DIDENT_APPNAME="UDPEchoC" -DIDENT_USERNAME="bo" -DIDENT_HOSTNAME="bo-laptop" -DIDENT_USERHASH=0xc9ec0e1cL -DIDENT_TIMESTAMP=0x4dc3cf73L -DIDENT_UIDHASH=0x0b7d03bbL -DNWBYTE_SIM_NCC -DTOSSIM -DNESC=131 -I/usr/lib/ncc -I/home/bo/tinyos-morten/tos/lib/net/rpl/sim -I/home/bo/tinyos-morten/tos/lib/net//sim -I/home/bo/tinyos-morten/support/sdk/c/blip//sim -I/home/bo/tinyos-morten/tos/lib/net/blip//sim -I/home/bo/tinyos-morten/tos/lib/net/blip/interfaces//sim -I/home/bo/tinyos-morten/tos/lib/net/blip/nwprog//sim -I/home/bo/tinyos-morten/tos/lib/net/blip/shell//sim -I/home/bo/tinyos-morten/tos/lib/net/blip/serial//sim -I/home/bo/tinyos-morten/tos/lib/net/blip/platform//sim -I/home/bo/tinyos-morten/tos/lib/net/blip/icmp//sim -I/home/bo/tinyos-morten/tos/lib/net/blip/dhcp//sim -Isimbuild/micaz/sim -I/home/bo/tinyos-morten/apps/PppRouter//sim -I/home/bo/tinyos-morten/tos/sensorboards/micasb/sim -I/home/bo/tinyos-morten/tos/platforms/micaz/sim/sim -I/home/bo/tinyos-morten/tos/platforms/micaz/sim -I/home/bo/tinyos-morten/tos/platforms/mica/sim -I/home/bo/tinyos-morten/tos/platforms/micaz/chips/cc2420/sim -I/home/bo/tinyos-morten/tos/chips/cc2420/sim -I/home/bo/tinyos-morten/tos/lib/rfxlink/sim -I/home/bo/tinyos-morten/tos/lib/rfxlink/layers/sim -I/home/bo/tinyos-morten/tos/lib/rfxlink/util/sim -I/home/bo/tinyos-morten/tos/chips/atm128/sim -I/home/bo/tinyos-morten/tos/chips/atm128/adc/sim -I/home/bo/tinyos-morten/tos/chips/atm128/pins/sim -I/home/bo/tinyos-morten/tos/chips/atm128/spi/sim -I/home/bo/tinyos-morten/tos/chips/atm128/timer/sim -I/home/bo/tinyos-morten/tos/lib/power/sim -I/home/bo/tinyos-morten/tos/lib/timer/sim -I/home/bo/tinyos-morten/tos/lib/serial/sim -I/home/bo/tinyos-morten/tos/interfaces/sim -I/home/bo/tinyos-morten/tos/types/sim -I/home/bo/tinyos-morten/tos/system/sim -I/home/bo/tinyos-morten/tos/lib/tossim -I/home/bo/tinyos-morten/tos/lib/net/rpl -I/home/bo/tinyos-morten/tos/lib/net/ -I/home/bo/tinyos-morten/support/sdk/c/blip/ -I/home/bo/tinyos-morten/tos/lib/net/blip/ -I/home/bo/tinyos-morten/tos/lib/net/blip/interfaces/ -I/home/bo/tinyos-morten/tos/lib/net/blip/nwprog/ -I/home/bo/tinyos-morten/tos/lib/net/blip/shell/ -I/home/bo/tinyos-morten/tos/lib/net/blip/serial/ -I/home/bo/tinyos-morten/tos/lib/net/blip/platform/ -I/home/bo/tinyos-morten/tos/lib/net/blip/icmp/ -I/home/bo/tinyos-morten/tos/lib/net/blip/dhcp/ -Isimbuild/micaz -I/home/bo/tinyos-morten/apps/PppRouter/ -I/home/bo/tinyos-morten/tos/sensorboards/micasb -I/home/bo/tinyos-morten/tos/platforms/micaz/sim -I/home/bo/tinyos-morten/tos/platforms/micaz -I/home/bo/tinyos-morten/tos/platforms/mica -I/home/bo/tinyos-morten/tos/platforms/micaz/chips/cc2420 -I/home/bo/tinyos-morten/tos/chips/cc2420 -I/home/bo/tinyos-morten/tos/lib/rfxlink -I/home/bo/tinyos-morten/tos/lib/rfxlink/layers -I/home/bo/tinyos-morten/tos/lib/rfxlink/util -I/home/bo/tinyos-morten/tos/chips/atm128 -I/home/bo/tinyos-morten/tos/chips/atm128/adc -I/home/bo/tinyos-morten/tos/chips/atm128/pins -I/home/bo/tinyos-morten/tos/chips/atm128/spi -I/home/bo/tinyos-morten/tos/chips/atm128/timer -I/home/bo/tinyos-morten/tos/lib/power -I/home/bo/tinyos-morten/tos/lib/timer -I/home/bo/tinyos-morten/tos/lib/serial -I/home/bo/tinyos-morten/tos/interfaces -I/home/bo/tinyos-morten/tos/types -I/home/bo/tinyos-morten/tos/system -Wall -Wshadow -v -fPIC UDPEchoC.nc -o simbuild/micaz/app.c
+#include "..." and component search starts here:
+#include <...> search starts here:
+ /usr/lib/ncc/
+ /home/bo/tinyos-morten/tos/lib/net/rpl/sim/
+ /home/bo/tinyos-morten/tos/lib/net//sim/
+ /home/bo/tinyos-morten/support/sdk/c/blip//sim/
+ /home/bo/tinyos-morten/tos/lib/net/blip//sim/
+ /home/bo/tinyos-morten/tos/lib/net/blip/interfaces//sim/
+ /home/bo/tinyos-morten/tos/lib/net/blip/nwprog//sim/
+ /home/bo/tinyos-morten/tos/lib/net/blip/shell//sim/
+ /home/bo/tinyos-morten/tos/lib/net/blip/serial//sim/
+ /home/bo/tinyos-morten/tos/lib/net/blip/platform//sim/
+ /home/bo/tinyos-morten/tos/lib/net/blip/icmp//sim/
+ /home/bo/tinyos-morten/tos/lib/net/blip/dhcp//sim/
+ simbuild/micaz/sim/
+ /home/bo/tinyos-morten/apps/PppRouter//sim/
+ /home/bo/tinyos-morten/tos/sensorboards/micasb/sim/
+ /home/bo/tinyos-morten/tos/platforms/micaz/sim/sim/
+ /home/bo/tinyos-morten/tos/platforms/micaz/sim/
+ /home/bo/tinyos-morten/tos/platforms/mica/sim/
+ /home/bo/tinyos-morten/tos/platforms/micaz/chips/cc2420/sim/
+ /home/bo/tinyos-morten/tos/chips/cc2420/sim/
+ /home/bo/tinyos-morten/tos/lib/rfxlink/sim/
+ /home/bo/tinyos-morten/tos/lib/rfxlink/layers/sim/
+ /home/bo/tinyos-morten/tos/lib/rfxlink/util/sim/
+ /home/bo/tinyos-morten/tos/chips/atm128/sim/
+ /home/bo/tinyos-morten/tos/chips/atm128/adc/sim/
+ /home/bo/tinyos-morten/tos/chips/atm128/pins/sim/
+ /home/bo/tinyos-morten/tos/chips/atm128/spi/sim/
+ /home/bo/tinyos-morten/tos/chips/atm128/timer/sim/
+ /home/bo/tinyos-morten/tos/lib/power/sim/
+ /home/bo/tinyos-morten/tos/lib/timer/sim/
+ /home/bo/tinyos-morten/tos/lib/serial/sim/
+ /home/bo/tinyos-morten/tos/interfaces/sim/
+ /home/bo/tinyos-morten/tos/types/sim/
+ /home/bo/tinyos-morten/tos/system/sim/
+ /home/bo/tinyos-morten/tos/lib/tossim/
+ /home/bo/tinyos-morten/tos/lib/net/rpl/
+ /home/bo/tinyos-morten/tos/lib/net/
+ /home/bo/tinyos-morten/support/sdk/c/blip/
+ /home/bo/tinyos-morten/tos/lib/net/blip/
+ /home/bo/tinyos-morten/tos/lib/net/blip/interfaces/
+ /home/bo/tinyos-morten/tos/lib/net/blip/nwprog/
+ /home/bo/tinyos-morten/tos/lib/net/blip/shell/
+ /home/bo/tinyos-morten/tos/lib/net/blip/serial/
+ /home/bo/tinyos-morten/tos/lib/net/blip/platform/
+ /home/bo/tinyos-morten/tos/lib/net/blip/icmp/
+ /home/bo/tinyos-morten/tos/lib/net/blip/dhcp/
+ simbuild/micaz/
+ /home/bo/tinyos-morten/apps/PppRouter/
+ /home/bo/tinyos-morten/tos/sensorboards/micasb/
+ /home/bo/tinyos-morten/tos/platforms/micaz/sim/
+ /home/bo/tinyos-morten/tos/platforms/micaz/
+ /home/bo/tinyos-morten/tos/platforms/mica/
+ /home/bo/tinyos-morten/tos/platforms/micaz/chips/cc2420/
+ /home/bo/tinyos-morten/tos/chips/cc2420/
+ /home/bo/tinyos-morten/tos/lib/rfxlink/
+ /home/bo/tinyos-morten/tos/lib/rfxlink/layers/
+ /home/bo/tinyos-morten/tos/lib/rfxlink/util/
+ /home/bo/tinyos-morten/tos/chips/atm128/
+ /home/bo/tinyos-morten/tos/chips/atm128/adc/
+ /home/bo/tinyos-morten/tos/chips/atm128/pins/
+ /home/bo/tinyos-morten/tos/chips/atm128/spi/
+ /home/bo/tinyos-morten/tos/chips/atm128/timer/
+ /home/bo/tinyos-morten/tos/lib/power/
+ /home/bo/tinyos-morten/tos/lib/timer/
+ /home/bo/tinyos-morten/tos/lib/serial/
+ /home/bo/tinyos-morten/tos/interfaces/
+ /home/bo/tinyos-morten/tos/types/
+ /home/bo/tinyos-morten/tos/system/
+ /usr/local/include/
+ /usr/lib/gcc/i486-linux-gnu/4.4.1/include/
+ /usr/lib/gcc/i486-linux-gnu/4.4.1/include-fixed/
+ /usr/include/
+End of search list.
+preprocessing /usr/lib/ncc/deputy_nodeputy.h
+preprocessing /usr/lib/ncc/nesc_nx.h
+preprocessing /home/bo/tinyos-morten/tos/lib/tossim/tos.h
+preprocessing /home/bo/tinyos-morten/tos/lib/tossim/TinySchedulerC.nc
+preprocessing /home/bo/tinyos-morten/tos/interfaces/Scheduler.nc
+preprocessing /home/bo/tinyos-morten/tos/interfaces/TaskBasic.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/tossim/SimSchedulerBasicP.nc
+preprocessing UDPEchoC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/tossim/MainC.nc
+preprocessing /home/bo/tinyos-morten/tos/interfaces/Boot.nc
+preprocessing /home/bo/tinyos-morten/tos/interfaces/Init.nc
+preprocessing /home/bo/tinyos-morten/tos/platforms/mica/sim/PlatformC.nc
+preprocessing /home/bo/tinyos-morten/tos/platforms/mica/PlatformP.nc
+preprocessing /home/bo/tinyos-morten/tos/platforms/micaz/MotePlatformC.nc
+preprocessing /home/bo/tinyos-morten/tos/platforms/micaz/MotePlatformP.nc
+preprocessing /home/bo/tinyos-morten/tos/interfaces/GeneralIO.nc
+preprocessing /home/bo/tinyos-morten/tos/chips/atm128/pins/sim/HplAtm128GeneralIOC.nc
+preprocessing /home/bo/tinyos-morten/tos/chips/atm128/pins/HplAtm128GeneralIOPortP.nc
+preprocessing /home/bo/tinyos-morten/tos/chips/atm128/pins/sim/HplAtm128GeneralIOPinP.nc
+preprocessing /home/bo/tinyos-morten/tos/chips/atm128/pins/HplAtm128GeneralIOSlowPinP.nc
+preprocessing /home/bo/tinyos-morten/tos/platforms/mica/sim/MeasureClockC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/tossim/SimMainP.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/tossim/SimMoteP.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/tossim/SimMote.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/sim/ActiveMessageC.nc
+preprocessing /home/bo/tinyos-morten/tos/interfaces/SplitControl.nc
+preprocessing /home/bo/tinyos-morten/tos/interfaces/AMSend.nc
+preprocessing /home/bo/tinyos-morten/tos/interfaces/Receive.nc
+preprocessing /home/bo/tinyos-morten/tos/interfaces/SendNotifier.nc
+preprocessing /home/bo/tinyos-morten/tos/interfaces/Packet.nc
+preprocessing /home/bo/tinyos-morten/tos/interfaces/AMPacket.nc
+preprocessing /home/bo/tinyos-morten/tos/interfaces/PacketAcknowledgements.nc
+preprocessing /home/bo/tinyos-morten/tos/interfaces/LowPowerListening.nc
+preprocessing /home/bo/tinyos-morten/tos/interfaces/PacketLink.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/util/RadioChannel.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/util/PacketField.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/timer/LocalTime.nc
+preprocessing /home/bo/tinyos-morten/tos/interfaces/PacketTimeStamp.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/sim/TossimRadioC.nc
+preprocessing /home/bo/tinyos-morten/tos/interfaces/Ieee154Send.nc
+preprocessing /home/bo/tinyos-morten/tos/interfaces/Resource.nc
+preprocessing /home/bo/tinyos-morten/tos/interfaces/Ieee154Packet.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/sim/TossimRadioP.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/layers/SoftwareAckConfig.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/layers/UniqueConfig.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/layers/CsmaConfig.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/layers/TrafficMonitorConfig.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/layers/RandomCollisionConfig.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/layers/SlottedCollisionConfig.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/layers/ActiveMessageConfig.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/layers/DummyConfig.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/layers/Ieee154PacketLayer.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/util/RadioAlarm.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/util/RadioPacket.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/sim/RadioAlarmC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/sim/RadioAlarmP.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/layers/ActiveMessageLayerC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/util/BareSend.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/util/BareReceive.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/layers/ActiveMessageLayerP.nc
+preprocessing /home/bo/tinyos-morten/tos/interfaces/ActiveMessageAddress.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/tossim/ActiveMessageAddressC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/layers/AutoResourceAcquireLayerC.nc
+preprocessing /home/bo/tinyos-morten/tos/system/SimpleFcfsArbiterC.nc
+preprocessing /home/bo/tinyos-morten/tos/interfaces/ResourceRequested.nc
+preprocessing /home/bo/tinyos-morten/tos/interfaces/ArbiterInfo.nc
+preprocessing /home/bo/tinyos-morten/tos/interfaces/ResourceConfigure.nc
+preprocessing /home/bo/tinyos-morten/tos/system/FcfsResourceQueueC.nc
+preprocessing /home/bo/tinyos-morten/tos/interfaces/ResourceQueue.nc
+preprocessing /home/bo/tinyos-morten/tos/system/SimpleArbiterP.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/layers/Ieee154MessageLayerC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/layers/TinyosNetworkLayerC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/layers/Ieee154PacketLayerC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/layers/Ieee154PacketLayerP.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/layers/UniqueLayerC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/util/RadioReceive.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/layers/UniqueLayerP.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/util/Neighborhood.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/util/NeighborhoodFlag.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/util/NeighborhoodC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/util/NeighborhoodP.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/util/NeighborhoodFlagC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/layers/LowPowerListeningDummyC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/layers/LowPowerListeningDummyP.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/layers/PacketLinkLayerC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/layers/PacketLinkLayerP.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/timer/Timer.nc
+preprocessing /home/bo/tinyos-morten/tos/system/TimerMilliC.nc
+preprocessing /home/bo/tinyos-morten/tos/system/TimerMilliP.nc
+preprocessing /home/bo/tinyos-morten/tos/platforms/mica/sim/HilTimerMilliC.nc
+preprocessing /home/bo/tinyos-morten/tos/platforms/mica/AlarmCounterMilliP.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/timer/Alarm.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/timer/Counter.nc
+preprocessing /home/bo/tinyos-morten/tos/chips/atm128/timer/Atm128AlarmAsyncC.nc
+preprocessing /home/bo/tinyos-morten/tos/chips/atm128/timer/Atm128AlarmAsyncP.nc
+preprocessing /home/bo/tinyos-morten/tos/chips/atm128/timer/HplAtm128Timer.nc
+preprocessing /home/bo/tinyos-morten/tos/chips/atm128/timer/HplAtm128TimerCtrl8.nc
+preprocessing /home/bo/tinyos-morten/tos/chips/atm128/timer/HplAtm128Compare.nc
+preprocessing /home/bo/tinyos-morten/tos/chips/atm128/timer/HplAtm128TimerAsync.nc
+preprocessing /home/bo/tinyos-morten/tos/chips/atm128/timer/sim/HplAtm128Timer0AsyncC.nc
+preprocessing /home/bo/tinyos-morten/tos/chips/atm128/timer/sim/HplAtm128Timer0AsyncP.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/timer/AlarmToTimerC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/timer/VirtualizeTimerC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/timer/CounterToLocalTimeC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/layers/MessageBufferLayerC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/util/RadioState.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/util/RadioSend.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/layers/MessageBufferLayerP.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/util/Tasklet.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/util/TaskletC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/layers/DummyLayerC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/util/RadioCCA.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/layers/RandomCollisionLayerC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/layers/RandomCollisionLayerP.nc
+preprocessing /home/bo/tinyos-morten/tos/interfaces/Random.nc
+preprocessing /home/bo/tinyos-morten/tos/system/RandomC.nc
+preprocessing /home/bo/tinyos-morten/tos/interfaces/ParameterInit.nc
+preprocessing /home/bo/tinyos-morten/tos/system/RandomMlcgC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/layers/SoftwareAckLayerC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/util/PacketFlag.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/layers/CsmaLayerC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/layers/CsmaLayerP.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/layers/TimeStampingLayerC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/layers/TimeStampingLayerP.nc
+preprocessing /home/bo/tinyos-morten/tos/system/LocalTimeMilliC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/layers/MetadataFlagsLayerC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/sim/TossimDriverLayerC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/sim/TossimDriverLayerP.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/tossim/GainRadioModel.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/tossim/CpmModelC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/sim/AMPacketInjectorP.nc
+preprocessing /home/bo/tinyos-morten/tos/system/LedsC.nc
+preprocessing /home/bo/tinyos-morten/tos/interfaces/Leds.nc
+preprocessing /home/bo/tinyos-morten/tos/system/LedsP.nc
+preprocessing /home/bo/tinyos-morten/tos/platforms/mica/PlatformLedsC.nc
+preprocessing UDPEchoP.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/RootControl.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/blip/interfaces/UDP.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/blip/interfaces/BlipStatistics.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/blip/IPStackC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/blip/interfaces/IP.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/blip/interfaces/ForwardingTable.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/blip/interfaces/ForwardingEvents.nc
+preprocessing /home/bo/tinyos-morten/tos/interfaces/StdControl.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/blip/IPProtocolsP.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/blip/interfaces/IPAddress.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/blip/IPForwardingEngineP.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/blip/interfaces/IPForward.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/blip/interfaces/IPPacket.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/blip/IPNeighborDiscoveryC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/blip/interfaces/NeighborDiscovery.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/blip/interfaces/IPLower.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/blip/IPNeighborDiscoveryP.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/blip/interfaces/Ieee154Address.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/blip/IPAddressC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/blip/IPAddressP.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/blip/Ieee154AddressC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/blip/Ieee154AddressP.nc
+preprocessing /home/bo/tinyos-morten/tos/interfaces/LocalIeeeEui64.nc
+/home/bo/tinyos-morten/tos/lib/net/blip/Ieee154AddressP.nc:49:2: warning: #warning "FIXME: is short addr getting set in rfx stack?"
+preprocessing /home/bo/tinyos-morten/tos/platforms/micaz/LocalIeeeEui64C.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/blip/IPDispatchC.nc
+preprocessing /home/bo/tinyos-morten/tos/system/NoLedsC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/blip/IPDispatchP.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/blip/interfaces/ReadLqi.nc
+preprocessing /home/bo/tinyos-morten/tos/interfaces/Pool.nc
+preprocessing /home/bo/tinyos-morten/tos/interfaces/Queue.nc
+/home/bo/tinyos-morten/tos/lib/net/blip/IPDispatchP.nc:442:2: warning: #warning "taking 15.4 short address"
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/sim/Ieee154MessageC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/rfxlink/sim/Ieee154PacketInjectorP.nc
+/home/bo/tinyos-morten/tos/lib/rfxlink/sim/Ieee154PacketInjectorP.nc:86:3: warning: #warning "FIXME? Already present in AMPacketInjector, which is pulled in by ActiveMessageC. Remove ActiveMessageC somehow?"
+/home/bo/tinyos-morten/tos/lib/net/blip/IPDispatchC.nc:73:2: warning: #warning "ReadLqi is not implemented yet"
+preprocessing /home/bo/tinyos-morten/tos/system/PoolC.nc
+preprocessing /home/bo/tinyos-morten/tos/system/PoolP.nc
+preprocessing /home/bo/tinyos-morten/tos/system/QueueC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/blip/IPStackControlP.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/blip/icmp/ICMPCoreP.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/blip/IPPacketP.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/blip/dhcp/NoDhcpC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/blip/UdpSocketC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/blip/UdpC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/blip/UdpP.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/rpl/RPLRoutingC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/rpl/RPLRankC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/rpl/RPLRank.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/rpl/RPLRankP.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/rpl/RPLParentTable.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/rpl/RPLRoutingEngine.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/rpl/RPLOF.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/rpl/RPLRoutingEngineC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/rpl/RPLRoutingEngineP.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/rpl/RPLDAORoutingEngine.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/rpl/RPLDAORoutingEngineC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/rpl/RPLDAORoutingEngineP.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/blip/icmp/ICMPCodeDispatchC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/blip/icmp/ICMPCodeDispatchP.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/rpl/RPLOF0P.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/blip/shell/UDPShellC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/blip/shell/UDPShellP.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/blip/shell/ShellCommand.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/blip/shell/RegisterShellCommand.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/blip/interfaces/ICMPPing.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/blip/icmp/ICMPPingC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/blip/icmp/ICMPPingP.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/blip/shell/RouteCmdC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/blip/shell/RouteCmdP.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/blip/shell/ShellCommandC.nc
+preprocessing /home/bo/tinyos-morten/tos/lib/net/blip/shell/ShellCommandP.nc
+/home/bo/tinyos-morten/tos/lib/net/blip/shell/UDPShellP.nc:248: warning: call via function pointer
+gcc -B/usr/lib/ncc -mtune=generic -march=i486 -g -O0 -Wall -Wshadow -v -fPIC --param max-inline-insns-single=100000 -o simbuild/micaz/sim.o -c -fdollars-in-identifiers simbuild/micaz/app.c
+Using built-in specs.
+Target: i486-linux-gnu
+Configured with: ../src/configure -v --with-pkgversion='Ubuntu 4.4.1-4ubuntu9' --with-bugurl=file:///usr/share/doc/gcc-4.4/README.Bugs --enable-languages=c,c++,fortran,objc,obj-c++ --prefix=/usr --enable-shared --enable-multiarch --enable-linker-build-id --with-system-zlib --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --with-gxx-include-dir=/usr/include/c++/4.4 --program-suffix=-4.4 --enable-nls --enable-clocale=gnu --enable-libstdcxx-debug --enable-objc-gc --enable-targets=all --disable-werror --with-arch-32=i486 --with-tune=generic --enable-checking=release --build=i486-linux-gnu --host=i486-linux-gnu --target=i486-linux-gnu
+Thread model: posix
+gcc version 4.4.1 (Ubuntu 4.4.1-4ubuntu9) 
+COLLECT_GCC_OPTIONS='-B/usr/lib/ncc' '-mtune=generic' '-march=i486' '-g' '-O0' '-Wall' '-Wshadow' '-v' '-fPIC' '--param' 'max-inline-insns-single=100000' '-o' 'simbuild/micaz/sim.o' '-c' '-fdollars-in-identifiers'
+ /usr/lib/gcc/i486-linux-gnu/4.4.1/cc1 -quiet -v simbuild/micaz/app.c -D_FORTIFY_SOURCE=2 -quiet -dumpbase app.c -mtune=generic -march=i486 -auxbase-strip simbuild/micaz/sim.o -g -O0 -Wall -Wshadow -version -fPIC -fdollars-in-identifiers --param max-inline-insns-single=100000 -fstack-protector -o /tmp/ccriJjZB.s
+ignoring nonexistent directory "/usr/local/include/i486-linux-gnu"
+ignoring nonexistent directory "/usr/lib/gcc/i486-linux-gnu/4.4.1/../../../../i486-linux-gnu/include"
+ignoring nonexistent directory "/usr/include/i486-linux-gnu"
+#include "..." search starts here:
+#include <...> search starts here:
+ /usr/local/include
+ /usr/lib/gcc/i486-linux-gnu/4.4.1/include
+ /usr/lib/gcc/i486-linux-gnu/4.4.1/include-fixed
+ /usr/include
+End of search list.
+GNU C (Ubuntu 4.4.1-4ubuntu9) version 4.4.1 (i486-linux-gnu)
+	compiled by GNU C version 4.4.1, GMP version 4.3.1, MPFR version 2.4.1-p2.
+GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+Compiler executable checksum: 8f30a5fdc2c06e07cc337ee4c8f69ccf
+COLLECT_GCC_OPTIONS='-B/usr/lib/ncc' '-mtune=generic' '-march=i486' '-g' '-O0' '-Wall' '-Wshadow' '-v' '-fPIC' '--param' 'max-inline-insns-single=100000' '-o' 'simbuild/micaz/sim.o' '-c' '-fdollars-in-identifiers'
+ as -V -Qy -o simbuild/micaz/sim.o /tmp/ccriJjZB.s
+GNU assembler version 2.20 (i486-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.20
+COMPILER_PATH=/usr/lib/ncc/:/usr/lib/gcc/i486-linux-gnu/4.4.1/:/usr/lib/gcc/i486-linux-gnu/4.4.1/:/usr/lib/gcc/i486-linux-gnu/:/usr/lib/gcc/i486-linux-gnu/4.4.1/:/usr/lib/gcc/i486-linux-gnu/:/usr/lib/gcc/i486-linux-gnu/4.4.1/:/usr/lib/gcc/i486-linux-gnu/
+LIBRARY_PATH=/usr/lib/ncc/:/usr/lib/gcc/i486-linux-gnu/4.4.1/:/usr/lib/gcc/i486-linux-gnu/4.4.1/:/usr/lib/gcc/i486-linux-gnu/4.4.1/../../../../lib/:/lib/../lib/:/usr/lib/../lib/:/usr/lib/gcc/i486-linux-gnu/4.4.1/../../../:/lib/:/usr/lib/:/usr/lib/i486-linux-gnu/
+COLLECT_GCC_OPTIONS='-B/usr/lib/ncc' '-mtune=generic' '-march=i486' '-g' '-O0' '-Wall' '-Wshadow' '-v' '-fPIC' '--param' 'max-inline-insns-single=100000' '-o' 'simbuild/micaz/sim.o' '-c' '-fdollars-in-identifiers'
+COMPILER_PATH=/usr/lib/gcc/i486-linux-gnu/4.4.1/:/usr/lib/gcc/i486-linux-gnu/4.4.1/:/usr/lib/gcc/i486-linux-gnu/:/usr/lib/gcc/i486-linux-gnu/4.4.1/:/usr/lib/gcc/i486-linux-gnu/:/usr/lib/gcc/i486-linux-gnu/4.4.1/:/usr/lib/gcc/i486-linux-gnu/
+LIBRARY_PATH=/usr/lib/gcc/i486-linux-gnu/4.4.1/:/usr/lib/gcc/i486-linux-gnu/4.4.1/:/usr/lib/gcc/i486-linux-gnu/4.4.1/../../../../lib/:/lib/../lib/:/usr/lib/../lib/:/usr/lib/gcc/i486-linux-gnu/4.4.1/../../../:/lib/:/usr/lib/:/usr/lib/i486-linux-gnu/
+COLLECT_GCC_OPTIONS='-_fnesc-gcc=gcc' '-_fnesc-include=nesc_nx' '-I/usr/lib/ncc' '-_fnesc-include=tos' '-_fnesc-scheduler=TinySchedulerC,TinySchedulerC.TaskBasic,TaskBasic,TaskBasic,runTask,postTask' '-DPLATFORM_MICAZ' '-DBOARD_MICASB' '-v' '-c' '-shared' '-fPIC' '-o' 'simbuild/micaz/sim.o' '-g' '-O0' '-DENABLE_SPI0_DMA' '-DRPL_ROUTING' '-DRPL_STORING_MODE' '-DIN6_PREFIX="fec0::"' '-DCC2420_HW_ACKNOWLEDGEMENTS' '-DCC2420_HW_ADDRESS_RECOGNITION' '-DPACKET_LINK' '-DBLIP_L2_RETRIES=3' '-DTOSH_DATA_LENGTH=90' '-_fnesc-nido-tosnodes=1000' '-_fnesc-simulate' '-_fnesc-nido-motenumber=sim_node()' '-_fnesc-gcc=gcc' '-_fnesc-separator=__' '-Wall' '-Wshadow' '-_Wnesc-all' '-_fnesc-cfile=simbuild/micaz/app.c' '-DDEFINED_TOS_AM_GROUP=0x22' '--param' 'max-inline-insns-single=100000' '-DBASESTATION_ID=0' '-DIDENT_APPNAME="UDPEchoC"' '-DIDENT_USERNAME="bo"' '-DIDENT_HOSTNAME="bo-laptop"' '-DIDENT_USERHASH=0xc9ec0e1cL' '-DIDENT_TIMESTAMP=0x4dc3cf73L' '-DIDENT_UIDHASH=0x0b7d03bbL' '-_Wno-nesc-data-race' '-DNWBYTE_SIM_NCC' '-_fnesc-dump=components' '-_fnesc-dump=variables' '-_fnesc-dump=constants' '-_fnesc-dump=typedefs' '-_fnesc-dump=interfacedefs' '-_fnesc-dump=tags' '-_fnesc-dumpfile=app.xml' '-DTOSSIM' '-_fnesc-no-debug' '-_fnesc-scheduler=TinySchedulerC,TinySchedulerC.TaskBasic,TaskBasic,TaskBasic,runTask,postTask' '-I/home/bo/tinyos-morten/tos/lib/net/rpl/sim' '-I/home/bo/tinyos-morten/tos/lib/net//sim' '-I/home/bo/tinyos-morten/support/sdk/c/blip//sim' '-I/home/bo/tinyos-morten/tos/lib/net/blip//sim' '-I/home/bo/tinyos-morten/tos/lib/net/blip/interfaces//sim' '-I/home/bo/tinyos-morten/tos/lib/net/blip/nwprog//sim' '-I/home/bo/tinyos-morten/tos/lib/net/blip/shell//sim' '-I/home/bo/tinyos-morten/tos/lib/net/blip/serial//sim' '-I/home/bo/tinyos-morten/tos/lib/net/blip/platform//sim' '-I/home/bo/tinyos-morten/tos/lib/net/blip/icmp//sim' '-I/home/bo/tinyos-morten/tos/lib/net/blip/dhcp//sim' '-Isimbuild/micaz/sim' '-I/home/bo/tinyos-morten/apps/PppRouter//sim' '-I/home/bo/tinyos-morten/tos/sensorboards/micasb/sim' '-I/home/bo/tinyos-morten/tos/platforms/micaz/sim/sim' '-I/home/bo/tinyos-morten/tos/platforms/micaz/sim' '-I/home/bo/tinyos-morten/tos/platforms/mica/sim' '-I/home/bo/tinyos-morten/tos/platforms/micaz/chips/cc2420/sim' '-I/home/bo/tinyos-morten/tos/chips/cc2420/sim' '-I/home/bo/tinyos-morten/tos/lib/rfxlink/sim' '-I/home/bo/tinyos-morten/tos/lib/rfxlink/layers/sim' '-I/home/bo/tinyos-morten/tos/lib/rfxlink/util/sim' '-I/home/bo/tinyos-morten/tos/chips/atm128/sim' '-I/home/bo/tinyos-morten/tos/chips/atm128/adc/sim' '-I/home/bo/tinyos-morten/tos/chips/atm128/pins/sim' '-I/home/bo/tinyos-morten/tos/chips/atm128/spi/sim' '-I/home/bo/tinyos-morten/tos/chips/atm128/timer/sim' '-I/home/bo/tinyos-morten/tos/lib/power/sim' '-I/home/bo/tinyos-morten/tos/lib/timer/sim' '-I/home/bo/tinyos-morten/tos/lib/serial/sim' '-I/home/bo/tinyos-morten/tos/interfaces/sim' '-I/home/bo/tinyos-morten/tos/types/sim' '-I/home/bo/tinyos-morten/tos/system/sim' '-I/home/bo/tinyos-morten/tos/lib/tossim' '-I/home/bo/tinyos-morten/tos/lib/net/rpl' '-I/home/bo/tinyos-morten/tos/lib/net/' '-I/home/bo/tinyos-morten/support/sdk/c/blip/' '-I/home/bo/tinyos-morten/tos/lib/net/blip/' '-I/home/bo/tinyos-morten/tos/lib/net/blip/interfaces/' '-I/home/bo/tinyos-morten/tos/lib/net/blip/nwprog/' '-I/home/bo/tinyos-morten/tos/lib/net/blip/shell/' '-I/home/bo/tinyos-morten/tos/lib/net/blip/serial/' '-I/home/bo/tinyos-morten/tos/lib/net/blip/platform/' '-I/home/bo/tinyos-morten/tos/lib/net/blip/icmp/' '-I/home/bo/tinyos-morten/tos/lib/net/blip/dhcp/' '-Isimbuild/micaz' '-I/home/bo/tinyos-morten/apps/PppRouter/' '-I/home/bo/tinyos-morten/tos/sensorboards/micasb' '-I/home/bo/tinyos-morten/tos/platforms/micaz/sim' '-I/home/bo/tinyos-morten/tos/platforms/micaz' '-I/home/bo/tinyos-morten/tos/platforms/mica' '-I/home/bo/tinyos-morten/tos/platforms/micaz/chips/cc2420' '-I/home/bo/tinyos-morten/tos/chips/cc2420' '-I/home/bo/tinyos-morten/tos/lib/rfxlink' '-I/home/bo/tinyos-morten/tos/lib/rfxlink/layers' '-I/home/bo/tinyos-morten/tos/lib/rfxlink/util' '-I/home/bo/tinyos-morten/tos/chips/atm128' '-I/home/bo/tinyos-morten/tos/chips/atm128/adc' '-I/home/bo/tinyos-morten/tos/chips/atm128/pins' '-I/home/bo/tinyos-morten/tos/chips/atm128/spi' '-I/home/bo/tinyos-morten/tos/chips/atm128/timer' '-I/home/bo/tinyos-morten/tos/lib/power' '-I/home/bo/tinyos-morten/tos/lib/timer' '-I/home/bo/tinyos-morten/tos/lib/serial' '-I/home/bo/tinyos-morten/tos/interfaces' '-I/home/bo/tinyos-morten/tos/types' '-I/home/bo/tinyos-morten/tos/system' '-DNESC=131' '-mtune=generic' '-march=i486'
