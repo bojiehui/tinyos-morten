@@ -2,7 +2,7 @@ import gc
 import logging
 
 #from sim.evaluation.graph.packet.PacketGraph import *
-#from sim.evaluation.graph.trickle.TrickleGraph import *
+from sim.evaluation.graph.sn.SN import *
 #from sim.evaluation.graph.contour.ContourGraph import *
 #from sim.evaluation.graph.contour.ContourGraphSentPackets import *
 #from sim.evaluation.graph.hist.HistGraph import *
@@ -30,14 +30,14 @@ class GraphEvaluation:
         # pg = PacketGraph()
         # pg.execute(executable_info, scenario_info)
 
-        if GRAPH_EVAL_LIST.count("TrickleGraph") > 0:
-            tg = TrickleGraph()
-            #tg.execute(executable_info, scenario_info)
-            tg.execute(scenario_info)	
-            del tg
+        #
+        if GRAPH_EVAL_LIST.count("SN") > 0:
+            sn = SN()
+            sn.execute(scenario_info)	
+            del sn
             gc.collect()
         else:
-            logger.warn("????TrickleGraph evaluation disabled")
+            logger.warn("????SN evaluation disabled")
 
         if GRAPH_EVAL_LIST.count("ContourGraph") > 0:
             cg = ContourGraph()

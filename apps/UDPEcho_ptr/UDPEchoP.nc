@@ -1,4 +1,4 @@
-/*
+ /*
  * Copyright (c) 2008-2010 The Regents of the University  of California.
  * All rights reserved."
  *
@@ -86,7 +86,7 @@ module UDPEchoP {
 #ifdef RPL_ROUTING
     /* Basestation Mote will be grounded */
     if (TOS_NODE_ID == BASESTATION_ID) {
-      dbg ("UDPEchoP", "Basestation ID = %d. is grounded\n", TOS_NODE_ID);
+      //dbg ("UDPEchoP", "Basestation ID = %d. is grounded\n", TOS_NODE_ID);
       call RootControl.setRoot();
       call UDPReceive.bind(BASESTATION_PORT);
     }
@@ -94,7 +94,7 @@ module UDPEchoP {
 #endif
 
 #ifdef DEST_IP
-    if (TOS_NODE_ID == ECHO_SOURCE_MOTE) { 
+    if (TOS_NODE_ID == ECHO_SOURCE_ID) { 
       route_dest.sin6_port = htons(ECHO_DEST_PORT);
       inet_pton6(DEST_IP, &route_dest.sin6_addr);
       dbg ("UDPEchoP", "Bind in TOS_ID = %i to Port = %i\n", TOS_NODE_ID, ECHO_SOURCE_PORT);
@@ -103,17 +103,16 @@ module UDPEchoP {
 	  
 }
 
-    if (TOS_NODE_ID == ECHO_DEST_MOTE) {
+    if (TOS_NODE_ID == ECHO_DEST_ID) {
       dbg ("UDPEchoP", "Bind in TOS_ID = %i to Port = %i\n", TOS_NODE_ID, ECHO_DEST_PORT);
       route_dest.sin6_port = htons(ECHO_DEST_PORT);
-      inet_pton6(DEST_IP, &route_dest.sin6_addr);
       call UDPReceive.bind(ECHO_DEST_PORT);
       call StatusTimer.startOneShot(WAITTIME);
     }
 #endif
 
-    dbg("Boot", "booted: %i\n", TOS_NODE_ID);
-  }
+    //dbg("Boot", "booted: %i\n", TOS_NODE_ID);
+    }
 
   event void RadioControl.startDone(error_t e) {
   }
@@ -122,25 +121,32 @@ module UDPEchoP {
   }
 
   event void StatusTimer.fired() {
+    
     if (!timerStarted) {
       call StatusTimer.startPeriodic(1024 * REPORT_PERIOD);
       timerStarted = TRUE;
     }
-
-    if (TOS_NODE_ID == ECHO_SOURCE_MOTE) {
-      stats.seqno++;
-      stats.sender = TOS_NODE_ID;
-      payload.counter = sequence_nr++;
-      payload.ist = WAITTIME;
-      payload.senderID = ECHO_SOURCE_MOTE;
-      payload.receiverID = ECHO_DEST_MOTE;
-      payload.data[0]= 0xFF;
-      payload.data[DATA_SIZE-1]= 0xFF;
-      call Leds.led1Toggle();
-      dbg ("MsgExchange", "MsgExchang: Send: Node %i is sending UDP Message to Node = %X ....%X... %X on Port = %i   \n",TOS_NODE_ID, ntohs(route_dest.sin6_addr.s6_addr16[0]), ntohs(route_dest.sin6_addr.s6_addr16[3]), ntohs(route_dest.sin6_addr.s6_addr16[7]), ntohs(route_dest.sin6_port) );
-      dbg ("MsgExchange", "MsgExchang: Time: %s \n", sim_time_string());
-      dbg ("MsgRequests", "Request: Node %i calls Node %i %s \n",ECHO_SOURCE_MOTE, ECHO_DEST_MOTE, sim_time_string());
-      call UDPSend.sendto(&route_dest, &payload, sizeof(payload));
+    
+    if (TOS_NODE_ID == ECHO_SOURCE_ID) {
+      if (stats.seqno == 50){
+	printf ("Ping: Pinged 50 times\n");
+	dbg ("Ping","Pinged 50 times\n");     
+      }
+      else {
+	stats.seqno++;
+        stats.sender = TOS_NODE_ID;
+        payload.counter = sequence_nr++;
+        payload.ist = WAITTIME;
+        payload.senderID = ECHO_SOURCE_ID;
+        payload.receiverID = ECHO_DEST_ID;
+        payload.data[0]= 0xFF;
+        payload.data[DATA_SIZE-1]= 0xFF;
+        call Leds.led1Toggle();
+        dbg ("Ping", "Ping: Seqence No.= %i\n",payload.counter);
+        dbg ("Ping", "Send: Node %i is sending UDP Message to Node = %X:%X:%X on Port = %i\n",TOS_NODE_ID, ntohs(route_dest.sin6_addr.s6_addr16[0]), ntohs(route_dest.sin6_addr.s6_addr16[3]), ntohs(route_dest.sin6_addr.s6_addr16[7]), ntohs(route_dest.sin6_port));
+        dbg ("Ping", "Send at %s \n", sim_time_string());
+        //dbg ("Ping", "Ping: Request: Node %i calls Node %i %s \n",ECHO_SOURCE_ID, ECHO_DEST_ID, sim_time_string());
+        call UDPSend.sendto(&route_dest, &payload, sizeof(payload));}
     }
   }
 
@@ -150,15 +156,12 @@ module UDPEchoP {
     static char print_buf3[128];
 
     inet_ntop6(&from->sin6_addr, print_buf3, 128);
-    dbg ("MsgExchange", "MsgExchange: Receive: Received Data from address = %s Port = %i\n", print_buf3, ntohs(from->sin6_port));
-    dbg ("MsgExchange", "MsgExchange: Time: %s \n", sim_time_string());
-    dbg ("MsgExchange", "MsgExchange: Receive: Received Data: %i \n", data);
-    dbg ("MsgExchange", "Time: %s \n", sim_time_string());
-    dbg ("MsgExchange", "MsgExchange: Send: Sending response to address = %s Port = %i\n", print_buf3, ntohs(from->sin6_port));
-    dbg ("MsgExchange", "MsgExchange: Time: %s \n", sim_time_string());
+    dbg ("Ping", "Receive: Received Data from address = %s Port = %i\n", print_buf3, ntohs(from->sin6_port));
+    dbg ("Ping", "Ping: Receive: Received Data: %i \n", data);
+    //dbg ("Ping", "ReceiveTime: %s \n", sim_time_string());
+    dbg ("Ping", "Send: Sending response to address = %s Port = %i\n", print_buf3, ntohs(from->sin6_port));
+    dbg ("Ping", "SendTime: %s \n", sim_time_string());
     call UDPReceive.sendto(from, data, len);
-
-
   }
 
   event void UDPSend.recvfrom(struct sockaddr_in6 *from, void *data, 
@@ -167,9 +170,10 @@ module UDPEchoP {
     static char print_buf3[128];
 
     inet_ntop6(&from->sin6_addr, print_buf3, 128);
-    dbg ("MsgExchange", "MsgExchange: Receive: Got response from address = %s Port = %i\n", print_buf3, ntohs(from->sin6_port));
-    dbg ("MsgExchange", "MsgExchange: Time: %s \n", sim_time_string());
-    dbg ("MsgRequests", "Response: Node %i answered Node %i %s \n",ECHO_DEST_MOTE, ECHO_SOURCE_MOTE , sim_time_string());
+    printf ("#### %d\n",payload.counter);
+    dbg ("Ping", "Receive: Got response from address = %s Port = %i\n", print_buf3, ntohs(from->sin6_port));
+    dbg ("Ping", "Receive at %s \n", sim_time_string());
+    //dbg ("Ping", "Response: Node %i answered Node %i %s \n",ECHO_DEST_ID, ECHO_SOURCE_ID , sim_time_string());
     /* dbg_clear("LogFile", "%i, %s, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i \n",TOS_NODE_ID, sim_time_string(), message_rec->counter, message_rec->ist, message_rec->rssi, message_rec->lqi, message_rec->power, message_rec->distance, message_rec->senderID, message_rec->receiverID, message_rec->voltage_sender, message_rec->voltage_receiver, message_rec->crc_ok, message_rec->data[0], message_rec->data[DATA_SIZE-1]); */
   }
 

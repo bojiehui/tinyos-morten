@@ -11,10 +11,10 @@ from tinyos.tossim.TossimHelp import *
 from TOSSIM import *
 
 sys.path.append("..")
-print "Python version 2.6 required (for some reason).  You have", sys.version
-if sys.version < '2.6':
-     print "Python version 2.6 required (for some reason).  You have", sys.version
-     sys.exit(1)
+#print "Python version 2.6 required (for some reason).  You have", sys.version
+#if sys.version < '2.6':
+#     print "Python version 2.6 required (for some reason).  You have", sys.version
+#     sys.exit(1)
 
 tosroot = os.environ.get("TOSROOT")
 
@@ -29,33 +29,33 @@ print "-"*10, "[[[[ Setting up TOSSIM ]]]]", "-"*10
 t = Tossim([])
 # r = t.radio()
 
-channels = ["Boot","UDPEchoP"
+channels = [#"Boot"
+            # ,"UDPEchoP"
             # ,"CpmModelC"
             # ,"Bo-RoutingEngine"
             # ,"Driver.debug"
             # ,"Bo-Csma"
-            # # ,"Bo-SoftwareAck"
+            # ,"Bo-SoftwareAck"
             # ,"Bo-Collision"
             # ,"Bo-MessageBuffer"
             # ,"Bo-Unique"
-            # # ,"Bo-LPL"
+            # ,"Bo-LPL"
             # ,"Bo-PLink"
             # ,"Bo-Network"
-            # # ,"Bo-AM"
-
+            # ,"Bo-AM"
             # ,"Bo-154Message"
             # ,"Bo-AutoResource"
             # ,"MsgExchange"
             # ,"IPND"
-            ,"ECHO"
-             ,"IPForwardingEngine"
-            ,"MsgRequests"
-            ,"MsgExchange"
-        ,"IPForwardingEngine-PTr"
-       # ,"UDP"
+            #"IPForwardingEngine"
+             "Ping"
+            # ,"IPForwardingEngine-PTr"
+            # ,"UDP"
             # ,"IPProtocols"
             # ,"ICMPCore"
             # ,"RPLDAORoutingEngine"
+            # "OF00"
+            # ,"OF0"
             ]
 file_log = ["LogFile"]
 

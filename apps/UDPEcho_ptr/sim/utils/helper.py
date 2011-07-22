@@ -42,6 +42,9 @@ class Time:
 
     def in_second(self):
         return ((24*self.h)+60*self.m) + self.s
+    
+    def in_milisecond(self):
+        return 1000*self.in_second()
 
     def __str__(self):
         return ""

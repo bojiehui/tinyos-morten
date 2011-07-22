@@ -38,7 +38,7 @@ enum {
   AM_RADIO_COUNT_MSG = 10,
   AM_TEST_MSG = 10,
   NO_PACKET = 3000, //was 500 originally used by mote
-  WAITTIME = 1000, //was 10000 originally used by mote
+  WAITTIME = 10000, //was 10000 originally used by mote
   START_DELAY_TIMER = 3000, //to delay mote starting to send
   BUTTON_DELAY_TIMER = 5000,
 };

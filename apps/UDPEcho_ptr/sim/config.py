@@ -71,10 +71,11 @@ stdout_channels = [
 
 file_channels = [
     "Boot",
-    "CpmModelC,SNRLoss",
-    "CpmModelC,SNR",
-    "ICMPResponder", "mab",
-    "CpmModelC","ICMPPing", "base",
+    #"CpmModelC,SNRLoss",
+    #"CpmModelC,SNR",
+    #"ICMPResponder", "mab",
+    #"CpmModelC","ICMPPing", "base",
+    "Ping","UDPEchoP",
     #"TossimPacketModelC",
 
     # "Packet",
@@ -95,10 +96,10 @@ METRIC_EVAL = False
 GRAPH_EVAL = True
 #GRAPH_EVAL = False
 GRAPH_EVAL_LIST = [
-#    "TrickleGraph",
+    "SN",
 #    "ContourGraph",
 #    "HistGraph",
-    "TopologyGraph",
+#    "TopologyGraph",
     ]
 
 #MONTECARLO_EVAL = True
